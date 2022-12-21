@@ -1,14 +1,14 @@
 <template>
   <ul class="sidebar-menu">
     <li class="header">Administracion</li>
-    <router-link tag="li" class="pageLink" to="/">
+    <router-link tag="li" class="pageLink" to="/" v-if="user.roles === MANAGER">
       <a>
         <i class="fa fa-desktop"></i>
         <span class="page">Dashboard</span>
       </a>
     </router-link>
 
-    <li class="treeview">
+    <li class="treeview" v-if="user.roles === MANAGER">
       <a href="#">
         <i class="fa fa-users"></i>
         <span class="treeview-title">Usuarios</span>
@@ -34,7 +34,18 @@
         </li>
       </ul>
     </li>
-
+    <router-link tag="li" class="pageLink" to="/talents"  v-if="user.roles === AGENCY">
+      <a>
+        <i class="fa fa-user"></i>
+        <span class="page">Talentos</span>
+      </a>
+    </router-link>
+    <router-link tag="li" class="pageLink" to="/proyects"  v-if="user.roles === MANAGER">
+      <a>
+        <i class="fa fa-table"></i>
+        <span class="page">Proyectos</span>
+      </a>
+    </router-link>
     <!--<router-link tag="li" class="pageLink" to="/tables">
       <a>
         <i class="fa fa-table"></i>
@@ -119,8 +130,21 @@
   </ul>
 </template>
 <script>
+import util from '../../utils/util'
+
 export default {
-  name: 'SidebarMenu'
+  name: 'SidebarMenu',
+  props: ['user'],
+  data: function () {
+    return {
+      MANAGER: util.MANAGER,
+      AGENCY: util.AGENCY,
+      TALENT: util.TALENT
+    }
+  },
+  mounted() {
+    console.log(this.user)
+  }
 }
 </script>
 <style>

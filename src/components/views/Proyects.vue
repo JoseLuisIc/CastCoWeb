@@ -12,7 +12,6 @@
               data-target="#modalUserEdit" />
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalUserDelete" />
-            <input id="btnModalPwd" type="hidden" data-target="#pwdModal" data-toggle="modal" />
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -56,10 +55,8 @@
                         <td>
                           <button class="btn" v-on:click="confirmDelete(user)"><i class="fa fa-trash"></i></button>
                           <button class="btn" v-on:click="editUser(user)"><i class="fa fa-edit"></i></button>
-                          <button class="btn" v-on:click="modalResetPwd(user)"><i class="fa fa-lock"></i></button>
                         </td>
                       </tr>
-
                     </tbody>
                   </table>
                 </div>
@@ -117,7 +114,7 @@
     </div>
     <div class="modal fade" id="modalUserEdit" tabindex="-1" role="dialog" aria-labelledby="modalUserEditLabel"
       aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="modalUserEditLabel">Actualizar Usuario</h5>
@@ -127,60 +124,147 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group">
-                <label for="email" class="col-form-label">Email:</label>
-                <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-                <div v-if=error.email class="text-red">
-                  <p>{{ error.email }}</p>
+              <div class="row">
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="email" class="col-form-label">Email:</label>
+                    <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
+                    <div v-if=error.email class="text-red">
+                      <p>{{ error.email }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="first_name" class="col-form-label">Nombres:</label>
+                    <input class="form-control" id="first_name" v-model="user.first_name" />
+                  </div>
+                  <div class="form-group">
+                    <label for="last_name" class="col-form-label">Apellidos:</label>
+                    <input class="form-control" id="last_name" v-model="user.last_name" />
+                  </div>
+                  <div class="form-group">
+                    <label for="age" class="col-form-label">Edad:</label>
+                    <input type="number" class="form-control" id="age" v-model="user.age" max="100" min="18" />
+                    <div v-if=error.age class="text-red">
+                      <p>{{ error.age }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="photo" class="col-form-label">Foto:</label>
+                    <input type="file" class="form-control" id="state" @change="onFileChange" />
+                  </div>
+                  <div class="form-group">
+                    <label for="state" class="col-form-label">Estado:</label>
+                    <select name="state" class="form-control" id="state" v-model="user.state">
+                      <option value="0" selected>Elegir Estado</option>
+                      <option v-for="(state, index) in states" :key="index" :value="state.id">{{ state.name }}</option>
+                    </select>
+                    <div v-if=error.state class="text-red">
+                      <p>{{ error.state }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="agency" class="col-form-label">Agencia:</label>
+                    <select name="agency" class="form-control" id="agency" v-model="user.agency">
+                      <option value="0" selected>Elegir Agencia</option>
+                      <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.first_name
+                      }}
+                      </option>
+                    </select>
+                    <div v-if=error.agency class="text-red">
+                      <p>{{ error.agency }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="gender" class="col-form-label">Genero:</label>
+                    <select name="gender" class="form-control" id="gender" v-model="user.gender">
+                      <option value="0" selected>Elegir Genero</option>
+                      <option value="1">Hombre</option>
+                      <option value="2">Mujer</option>
+                      <option value="3">No binario</option>
+                    </select>
+                    <div v-if=error.gender class="text-red">
+                      <p>{{ error.gender }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="lgtbq" class="col-form-label">LGTBQ:</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" v-model="user.lgtbq">
+                    <label class="form-check-label" for="flexCheckChecked">
+                      Pertenesco a la comunidad
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label for="name" class="col-form-label">Nombre:</label>
-                <input class="form-control" id="name" v-model="user.name" />
-                <div v-if=error.name class="text-red">
-                  <p>{{ error.name }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="booker_name" class="col-form-label">Nombre del encargado:</label>
-                <input class="form-control" id="booker_name" v-model="user.booker_name" />
-                <div v-if=error.booker_name class="text-red">
-                  <p>{{ error.booker_name }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="first_name" class="col-form-label">Nombres:</label>
-                <input class="form-control" id="first_name" v-model="user.first_name" />
-                <div v-if=error.first_name class="text-red">
-                  <p>{{ error.first_name }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="last_name" class="col-form-label">Apellidos:</label>
-                <input class="form-control" id="last_name" v-model="user.last_name" />
-                <div v-if=error.last_name class="text-red">
-                  <p>{{ error.last_name }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="phone" class="col-form-label">Telefono:</label>
-                <input class="form-control" id="phone" v-model="user.phone" />
-                <div v-if=error.phone class="text-red">
-                  <p>{{ error.phone }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="city" class="col-form-label">Ciudad:</label>
-                <input class="form-control" id="city" v-model="user.city" />
-                <div v-if=error.city class="text-red">
-                  <p>{{ error.city }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="instagram" class="col-form-label">Instagram:</label>
-                <input class="form-control" id="instagram" v-model="user.instagram" />
-                <div v-if=error.instagram class="text-red">
-                  <p>{{ error.instagram }}</p>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="instagram" class="col-form-label">Instagram:</label>
+                    <input class="form-control" id="instagram" v-model="user.instagram" />
+                  </div>
+                  <div class="form-group">
+                    <label for="phone" class="col-form-label">Telefono:</label>
+                    <input class="form-control" id="phone" v-model="user.phone" />
+                    <div v-if=error.phone class="text-red">
+                      <p>{{ error.phone }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="height" class="col-form-label">Altura:</label>
+                    <input class="form-control" id="height" v-model="user.height" />
+                    <div v-if=error.height class="text-red">
+                      <p>{{ error.height }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="shoe_size" class="col-form-label"># Calzado:</label>
+                    <input class="form-control" id="shoe_size" v-model="user.shoe_size" />
+                    <div v-if=error.shoe_size class="text-red">
+                      <p>{{ error.shoe_size }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="pant_size" class="col-form-label"># Pantalon:</label>
+                    <select name="pant_size" class="form-control" id="pant_size" v-model="user.pant_size">
+                      <option value="0" selected>Elegir Talla</option>
+                      <option value="1">XCH</option>
+                      <option value="2">CH</option>
+                      <option value="3">MD</option>
+                      <option value="4">GD</option>
+                      <option value="5">XGD</option>
+                    </select>
+                    <div v-if=error.pant_size class="text-red">
+                      <p>{{ error.pant_size }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="shirt_size" class="col-form-label"># Camisa:</label>
+                    <select name="shirt_size" class="form-control" id="shirt_size" v-model="user.shirt_size">
+                      <option value="0" selected>Elegir Talla</option>
+                      <option value="1">XCH</option>
+                      <option value="2">CH</option>
+                      <option value="3">MD</option>
+                      <option value="4">GD</option>
+                      <option value="5">XGD</option>
+                    </select>
+                    <div v-if=error.shirt_size class="text-red">
+                      <p>{{ error.shirt_size }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="job_occupation" class="col-form-label">Ocupacion:</label>
+                    <input class="form-control" id="job_occupation" v-model="user.job_occupation" />
+                    <div v-if=error.job_occupation class="text-red">
+                      <p>{{ error.job_occupation }}</p>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="skills" class="col-form-label">Skills:</label>
+                    <textarea class="form-control" id="skills" v-model="user.skills"></textarea>
+                    <div v-if=error.skills class="text-red">
+                      <p>{{ error.skills }}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -216,48 +300,6 @@
         </div>
       </div>
     </div>
-    <div id="pwdModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" id="closePwd" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h1 class="text-center">¿Cuál es mi contraseña?</h1>
-          </div>
-          <div class="modal-body">
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-body">
-                  <div class="text-center">
-
-                    <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
-                    <div class="panel-body">
-                      <fieldset>
-                        <div class="form-group">
-                          <label for="password" class="col-form-label">Contraseña:</label>
-                          <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
-                        </div>
-                        <div class="form-group">
-
-                          <label for="confirm_password" class="col-form-label">Contraseña:</label>
-                          <input class="form-control input-lg" name="confirm_password" type="password"
-                            v-model="reset.confirm_password">
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div class="col-md-12">
-              <button class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
-              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </section>
 
 </template>
@@ -275,35 +317,57 @@ export default {
   name: 'Admins',
   data() {
     return {
-      reset: {
-        password: '',
-        confirm_password: ''
-      },
       user: {
         id: 0,
         email: '',
-        name: '',
-        booker_name: '',
         first_name: '',
         last_name: '',
         instagram: '',
-        phone: '',
-        city: '',
-        role: util.AGENCY
+        photo: null,
+        age: 18,
+        state: 0,
+        agency: 0,
+        gender: 0,
+        lgtbq: false,
+        phone: null,
+        height: 0,
+        shoe_size: 0,
+        pant_size: 0,
+        shirt_size: 0,
+        job_occupation: '',
+        skills: '',
+        role: util.TALENT
       },
       error: {
+        id: 0,
         email: '',
         first_name: '',
         last_name: '',
-        instagram: ''
+        instagram: '',
+        photo: null,
+        age: 0,
+        state: 0,
+        agency: 0,
+        gender: 0,
+        lgtbq: false,
+        phone: null,
+        height: 0,
+        shoe_size: 0,
+        pant_size: 0,
+        shirt_size: 0,
+        job_occupation: '',
+        skills: '',
+        role: util.TALENT
       },
       users: [],
-      table: null
+      agencies: [],
+      states: []
     }
   },
   mounted() {
     this.$nextTick(() => {
       this.callUser()
+      this.getStates()
     })
   },
   methods: {
@@ -311,27 +375,47 @@ export default {
       this.user = {
         id: 0,
         email: '',
-        name: '',
-        booker_name: '',
         first_name: '',
         last_name: '',
         instagram: '',
-        phone: '',
-        city: '',
-        role: util.AGENCY
+        photo: null,
+        age: 0,
+        state: 0,
+        agency: 0,
+        gender: 0,
+        lgtbq: false,
+        phone: null,
+        height: 0,
+        shoe_size: 0,
+        pant_size: 0,
+        shirt_size: 0,
+        job_occupation: '',
+        skills: '',
+        role: util.TALENT
       }
     },
     updateUser(dUser) {
+      var userFormData = new FormData()
+      Object.keys(this.user).forEach(key => {
+        if (key !== 'role' && key !== 'extras') {
+          userFormData.append(key, this.user[key])
+        }
+      })
       api
-        .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           location.reload(true)
           $('#closeEdit').trigger('click')
         })
         .catch(error => {
+          Object.keys(this.error).forEach(key => {
+            this.error[key] = ''
+          })
           if (error.response) {
             var errors = error.response.data
-            this.error.email = errors.email[0]
+            Object.keys(errors).forEach(key => {
+              this.error[key] = errors[key][0]
+            })
           }
         })
     },
@@ -351,13 +435,23 @@ export default {
     },
     editUser(dUser) {
       this.isNew = false
+      const params = new URLSearchParams()
+      console.log(dUser)
+      params.append('role', util.AGENCY)
+      api
+        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.agencies = response.data.results
+        })
+        .catch(console.log)
       Object.assign(this.user, dUser)
+      dUser.extras.photo = ''
       Object.assign(this.user, dUser.extras)
       $('#btnModalEdit').trigger('click')
     },
     callUser() {
       const params = new URLSearchParams()
-      params.append('role', util.AGENCY)
+      params.append('role', util.TALENT)
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
@@ -392,6 +486,33 @@ export default {
           }
         })
     },
+    onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files
+      if (files.length) {
+        this.createImage(files[0])
+      }
+    },
+    createImage(file) {
+      console.log(file)
+      var vm = this
+      vm.user.photo = file
+    },
+    removeImage: function (e) {
+      this.photo = ''
+    },
+    getStates() {
+      api
+        .request('get', 'states/?', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.states = response.data.results
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            this.error.email = errors.email[0]
+          }
+        })
+    },
     validateEmail(e) {
       var email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -399,30 +520,6 @@ export default {
       } else {
         this.error.email = 'Ingrese un correo valido'
       }
-    },
-    modalResetPwd(dUser) {
-      Object.assign(this.user, dUser)
-      dUser.extras.photo = ''
-      Object.assign(this.user, dUser.extras)
-      $('#btnModalPwd').trigger('click')
-    },
-    resetPassword() {
-      var json = {
-        id: this.user.id,
-        password: this.reset.password,
-        confirm_password: this.reset.confirm_password
-      }
-      api
-        .request('post', 'reset/password/', json, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          $('#closePwd').trigger('click')
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
     }
   }
 }

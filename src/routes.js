@@ -13,6 +13,8 @@ import ReposView from './components/views/Repos.vue'
 import AdminView from './components/views/Admin.vue'
 import TalentView from './components/views/Talent.vue'
 import AgencyView from './components/views/Agency.vue'
+import ProyectsView from './components/views/Proyects.vue'
+
 // Routes
 const routes = [
   {
@@ -80,6 +82,12 @@ const routes = [
         component: AgencyView,
         name: 'Agencias',
         meta: {description: 'Listado de Agencias', requiresAuth: true}
+      },
+      {
+        path: 'proyects',
+        component: ProyectsView,
+        name: 'Proyectos',
+        meta: {description: 'Listado de Proyectos', requiresAuth: true}
       }
     ]
   }, {

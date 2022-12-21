@@ -29,6 +29,7 @@ import MessagesMenu from './MessagesMenu'
 import NotificationsMenu from './NotificationsMenu'
 import TasksMenu from './TasksMenu'
 import UserMenu from './UserMenu'
+import SidebarMenu from './SidebarMenu.vue'
 
 export default {
   name: 'DashHeader',
@@ -36,7 +37,8 @@ export default {
     MessagesMenu,
     NotificationsMenu,
     TasksMenu,
-    UserMenu
+    UserMenu,
+    SidebarMenu
   },
   props: ['user'],
   computed: {

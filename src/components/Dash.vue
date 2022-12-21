@@ -60,7 +60,6 @@ export default {
   computed: {
     user () {
       var user = JSON.parse(localStorage.getItem('user'))
-
       return {
         displayName: user.first_name,
         avatar: faker.image.avatar(),

@@ -12,6 +12,8 @@
               data-target="#modalUserEdit" />
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalUserDelete" />
+            <input id="btnModalPwd" type="hidden" data-target="#pwdModal" data-toggle="modal" />
+
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -55,6 +57,7 @@
                         <td>
                           <button class="btn" v-on:click="confirmDelete(user)"><i class="fa fa-trash"></i></button>
                           <button class="btn" v-on:click="editUser(user)"><i class="fa fa-edit"></i></button>
+                          <button class="btn" v-on:click="modalResetPwd(user)"><i class="fa fa-lock"></i></button>
                         </td>
                       </tr>
                     </tbody>
@@ -300,6 +303,48 @@
         </div>
       </div>
     </div>
+    <div id="pwdModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" id="closePwd" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h1 class="text-center">¿Cuál es mi contraseña?</h1>
+          </div>
+          <div class="modal-body">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="text-center">
+
+                    <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
+                    <div class="panel-body">
+                      <fieldset>
+                        <div class="form-group">
+                          <label for="password" class="col-form-label">Contraseña:</label>
+                          <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
+                        </div>
+                        <div class="form-group">
+
+                          <label for="confirm_password" class="col-form-label">Contraseña:</label>
+                          <input class="form-control input-lg" name="confirm_password" type="password"
+                            v-model="reset.confirm_password">
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-md-12">
+              <button class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
+              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
 </template>
@@ -308,6 +353,7 @@
 import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
+import session from '../../utils/session'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -317,6 +363,10 @@ export default {
   name: 'Admins',
   data() {
     return {
+      reset: {
+        password: '',
+        confirm_password: ''
+      },
       user: {
         id: 0,
         email: '',
@@ -452,6 +502,9 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('role', util.TALENT)
+      if (session.user.role === util.AGENCY) {
+        params.append('agency', session.user.id)
+      }
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
@@ -520,6 +573,30 @@ export default {
       } else {
         this.error.email = 'Ingrese un correo valido'
       }
+    },
+    modalResetPwd(dUser) {
+      Object.assign(this.user, dUser)
+      dUser.extras.photo = ''
+      Object.assign(this.user, dUser.extras)
+      $('#btnModalPwd').trigger('click')
+    },
+    resetPassword() {
+      var json = {
+        id: this.user.id,
+        password: this.reset.password,
+        confirm_password: this.reset.confirm_password
+      }
+      api
+        .request('post', 'reset/password/', json, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          $('#closePwd').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     }
   }
 }
