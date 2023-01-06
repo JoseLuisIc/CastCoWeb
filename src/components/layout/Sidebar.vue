@@ -7,7 +7,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img :src="user.avatar" />
+          <img :src="'https://ui-avatars.com/api/?background=random&name=' + user.displayName" />
         </div>
         <div class="pull-left info">
           <div>

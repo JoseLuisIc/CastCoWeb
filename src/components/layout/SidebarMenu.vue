@@ -8,7 +8,7 @@
       </a>
     </router-link>
 
-    <li class="treeview" v-if="user.roles === MANAGER">
+    <li class="treeview" v-if="user.roles === MANAGER" v-bind:class="{ active: isActive }">
       <a href="#">
         <i class="fa fa-users"></i>
         <span class="treeview-title">Usuarios</span>
@@ -17,32 +17,32 @@
         </span>
       </a>
       <ul class="treeview-menu">
-        <li>
+        <li v-bind:class="{ active: slug === 'admins' }">
           <a href="/admins">
             <i class="fa fa-user"></i> Administradores
           </a>
         </li>
-        <li>
+        <li v-bind:class="{ active: slug === 'talents' }">
           <a href="/talents">
             <i class="fa fa-user"></i> Talentos
           </a>
         </li>
-        <li>
+        <li v-bind:class="{ active: slug === 'agencies' }">
           <a href="/agencies">
             <i class="fa fa-user"></i> Agencias
           </a>
         </li>
       </ul>
     </li>
-    <router-link tag="li" class="pageLink" to="/talents"  v-if="user.roles === AGENCY">
+    <router-link tag="li" class="pageLink" to="/talents" v-if="user.roles === AGENCY">
       <a>
         <i class="fa fa-user"></i>
         <span class="page">Talentos</span>
       </a>
     </router-link>
-    <router-link tag="li" class="pageLink" to="/proyects"  v-if="user.roles === MANAGER">
+    <router-link tag="li" class="pageLink" to="/proyects" v-if="user.roles === MANAGER">
       <a>
-        <i class="fa fa-table"></i>
+        <i class="fa fa-list-alt"></i>
         <span class="page">Proyectos</span>
       </a>
     </router-link>
@@ -139,22 +139,29 @@ export default {
     return {
       MANAGER: util.MANAGER,
       AGENCY: util.AGENCY,
-      TALENT: util.TALENT
+      TALENT: util.TALENT,
+      isActive: false,
+      slug: this.$route.path.replace('/', '')
     }
   },
   mounted() {
     console.log(this.user)
+    if (['admins', 'talents', 'agencies'].includes(this.slug)) {
+      this.isActive = true
+    } else {
+      this.isActive = false
+    }
   }
 }
 </script>
 <style>
 /* override default */
-.sidebar-menu > li > a {
+.sidebar-menu>li>a {
   padding: 12px 15px 12px 15px;
 }
 
-.sidebar-menu li.active > a > .fa-angle-left,
-.sidebar-menu li.active > a > .pull-right-container > .fa-angle-left {
+.sidebar-menu li.active>a>.fa-angle-left,
+.sidebar-menu li.active>a>.pull-right-container>.fa-angle-left {
   animation-name: rotate;
   animation-duration: 0.2s;
   animation-fill-mode: forwards;

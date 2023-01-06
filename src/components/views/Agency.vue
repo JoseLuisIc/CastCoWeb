@@ -34,33 +34,29 @@
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
                         <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Nombres</th>
+                          class="sorting">Nombre agencia</th>
                         <th style="width: 142px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Apellidos
+                          class="sorting">Encargado
                         </th>
                         <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Instagram</th>
+                          class="sorting">Telefono</th>
                         <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Rol</th>
+                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Ciudad</th>
                         <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Acciones</th>
                       </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="even" role="row" v-for="(user, index) in users" :key="index">
-                        <td class="sorting_1">{{ user.email }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.instagram }}</td>
-                        <td>{{ user.role }}</td>
-                        <td>
-                          <button class="btn" v-on:click="confirmDelete(user)"><i class="fa fa-trash"></i></button>
-                          <button class="btn" v-on:click="editUser(user)"><i class="fa fa-edit"></i></button>
-                          <button class="btn" v-on:click="modalResetPwd(user)"><i class="fa fa-lock"></i></button>
-                        </td>
+                      <tr role="row">
+                        <th rowspan="1" colspan="1"><input type="text" placeholder="Email" data-index="0"></th>
+                        <th rowspan="1" colspan="1"><input type="text" placeholder="Nombre agencia" data-index="1"></th>
+                        <th rowspan="1" colspan="1"><input type="text" placeholder="Encargado" data-index="2"></th>
+                        <th rowspan="1" colspan="1"><input type="text" placeholder="Telefono" data-index="3"></th>
+                        <th rowspan="1" colspan="1"><input type="text" placeholder="Ciudad" data-index="5"></th>
+                        <th rowspan="1" colspan="1"><input type="text" placeholder="Ciudad" data-index="6"></th>
+                        <th rowspan="1" colspan="1"></th>
                       </tr>
-
-                    </tbody>
+                    </thead>
                   </table>
                 </div>
               </div>
@@ -266,7 +262,7 @@
 import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
-
+import config from '../../config'
 // Require needed datatables modules
 require('datatables.net')
 require('datatables.net-bs')
@@ -325,6 +321,7 @@ export default {
       api
         .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
+          console.log(response.data)
           location.reload(true)
           $('#closeEdit').trigger('click')
         })
@@ -339,8 +336,9 @@ export default {
       api
         .request('post', 'users/', this.user, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          location.reload(true)
+          var user = response.data
           $('#closeCreate').trigger('click')
+          this.editUser(user.id)
         })
         .catch(error => {
           if (error.response) {
@@ -349,32 +347,110 @@ export default {
           }
         })
     },
-    editUser(dUser) {
+    editUser(idUser) {
+      console.log(idUser)
       this.isNew = false
-      Object.assign(this.user, dUser)
-      Object.assign(this.user, dUser.extras)
-      $('#btnModalEdit').trigger('click')
+      api
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          var userData = response.data
+          Object.assign(this.user, userData)
+          Object.assign(this.user, userData.extras)
+          $('#btnModalEdit').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     callUser() {
       const params = new URLSearchParams()
-      params.append('role', util.AGENCY)
-      api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          this.users = response.data.results
-          setTimeout(() => {
-            $('#tableUsers').DataTable({
-              'language': {
-                'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-              }
+      params.append('format', 'datatables')
+      var that = this
+      var table = $('#tableUsers').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'ajax': {
+          url: config.serverURI + 'users/?' + params,
+          type: 'GET',
+          headers: { 'Authorization': localStorage.getItem('token') },
+          complete: function () {
+            $('.delete').on('click', function () {
+              that.confirmDelete(this.id)
             })
-          }, 1000)
-        })
-        .catch(console.log)
+            $('.edit').on('click', function () {
+              that.editUser(this.id)
+            })
+          }
+        },
+        'searchCols': [
+          null,
+          null,
+          null,
+          null,
+          { 'search': util.AGENCY },
+          null
+        ],
+        'columns': [
+          { 'data': 'email' },
+          { 'data': 'extras.name', 'name': 'name' },
+          { 'data': 'extras.booker_name', 'name': 'booker_name' },
+          { 'data': 'extras.phone', 'name': 'phone' },
+          { 'data': 'role' },
+          { 'data': 'extras.city', 'name': 'city' },
+          {
+            'data': 'id',
+            className: 'dt-center editor-edit',
+            defaultContent: '',
+            orderable: false,
+            'render': (data, type, row, meta) => {
+              return this.renderView(data, row)
+            }
+          }
+        ],
+        columnDefs: [
+          {
+            target: 4,
+            visible: false,
+            searchable: false
+          }
+        ],
+        'language': {
+          'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+        }
+      })
+      // $('#tableUsers tfoot th').each(function (i) {
+      //   var title = $('#tableUsers thead th').eq($(this).index()).text()
+      //   if (title !== 'Acciones') {
+      //     $(this).html('<input type="text" placeholder="' + title + '" data-index="' + i + '" />')
+      //   }
+      // })
+      // Filter event handler
+      $('#tableUsers').on('keyup', 'thead input', function () {
+        table
+          .column($(this).data('index'))
+          .search(this.value)
+          .draw()
+      })
     },
-    confirmDelete(dUser) {
-      this.user = dUser
-      $('#btnModalDelete').trigger('click')
+    renderView(data, row) {
+      return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
+    },
+    confirmDelete(idUser) {
+      api
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.user = response.data
+          $('#btnModalDelete').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     deleteUser() {
       $('#closeDelete').trigger('click')
@@ -383,7 +459,6 @@ export default {
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           this.callUser()
-          $('#closeCreate').trigger('click')
         })
         .catch(error => {
           if (error.response) {

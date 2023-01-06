@@ -45,7 +45,7 @@
                           class="sorting">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <!--<tbody>
                       <tr class="even" role="row" v-for="(user, index) in users" :key="index">
                         <td class="sorting_1">{{ user.email }}</td>
                         <td>{{ user.first_name }}</td>
@@ -58,7 +58,7 @@
                         </td>
                       </tr>
 
-                    </tbody>
+                    </tbody>-->
                   </table>
                 </div>
               </div>
@@ -81,12 +81,10 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group">
+              <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-                <div v-if=error.email class="text-red">
-                  <p>{{ error.email }}</p>
-                </div>
+                <span  v-if=error.email class="help-block">{{ error.email }}</span>
               </div>
               <div class="form-group">
                 <label for="first_name" class="col-form-label">Nombres:</label>
@@ -125,9 +123,10 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group">
+              <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
+                <span  v-if=error.email class="help-block">{{ error.email }}</span>
               </div>
               <div class="form-group">
                 <label for="first_name" class="col-form-label">Nombres:</label>
@@ -182,6 +181,7 @@
 import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
+import config from '../../config'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -252,32 +252,100 @@ export default {
           }
         })
     },
-    editUser(dUser) {
-      console.log(dUser)
+    editUser(idUser) {
+      console.log(idUser)
       this.isNew = false
-      this.user = dUser
-      $('#btnModalEdit').trigger('click')
+      api
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.user = response.data
+          $('#btnModalEdit').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     callUser() {
       const params = new URLSearchParams()
-      params.append('role', util.MANAGER)
-      api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          this.users = response.data.results
-          setTimeout(() => {
-            $('#tableUsers').DataTable({
-              'language': {
-                'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-              }
+      params.append('format', 'datatables')
+      var that = this
+      var table = $('#tableUsers').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'ajax': {
+          url: config.serverURI + 'users/?' + params,
+          type: 'GET',
+          headers: { 'Authorization': localStorage.getItem('token') },
+          complete: function () {
+            $('.delete').on('click', function () {
+              that.confirmDelete(this.id)
             })
-          }, 1000)
-        })
-        .catch(console.log)
+            $('.edit').on('click', function () {
+              that.editUser(this.id)
+            })
+          }
+        },
+        'searchCols': [
+          null,
+          null,
+          null,
+          null,
+          { 'search': util.MANAGER },
+          null
+        ],
+        'columns': [
+          { 'data': 'email' },
+          { 'data': 'first_name' },
+          { 'data': 'last_name' },
+          { 'data': 'instagram' },
+          { 'data': 'role' },
+          {
+            'data': 'id',
+            className: 'dt-center editor-edit',
+            defaultContent: '',
+            orderable: false,
+            'render': (data, type, row, meta) => {
+              return this.renderView(data, row)
+            }
+          }
+        ],
+        'language': {
+          'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
+        }
+      })
+      // $('#tableProyects tfoot th').each(function (i) {
+      //  var title = $('#tableProyects thead th').eq($(this).index()).text()
+      //  if (title !== 'Acciones') {
+      //    $(this).html('<input type="text" placeholder="' + title + '" data-index="' + i + '" />')
+      //  }
+      // })
+      // Filter event handler
+      $('#tableUsers').on('keyup', 'thead input', function () {
+        table
+          .column($(this).data('index'))
+          .search(this.value)
+          .draw()
+      })
     },
-    confirmDelete(dUser) {
-      this.user = dUser
-      $('#btnModalDelete').trigger('click')
+    renderView(data, row) {
+      return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
+    },
+    confirmDelete(idUser) {
+      api
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.user = response.data
+          $('#btnModalDelete').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     deleteUser() {
       $('#closeDelete').trigger('click')
@@ -286,7 +354,6 @@ export default {
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           this.callUser()
-          $('#closeCreate').trigger('click')
         })
         .catch(error => {
           if (error.response) {
