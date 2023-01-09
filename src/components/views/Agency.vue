@@ -220,29 +220,24 @@
             <h1 class="text-center">¿Cuál es mi contraseña?</h1>
           </div>
           <div class="modal-body">
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-body">
-                  <div class="text-center">
 
-                    <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
-                    <div class="panel-body">
-                      <fieldset>
-                        <div class="form-group">
-                          <label for="password" class="col-form-label">Contraseña:</label>
-                          <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
-                        </div>
-                        <div class="form-group">
-
-                          <label for="confirm_password" class="col-form-label">Contraseña:</label>
-                          <input class="form-control input-lg" name="confirm_password" type="password"
-                            v-model="reset.confirm_password">
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
+            <div class="text-center">
+              <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
+              <fieldset>
+                <div class="form-group">
+                  <label for="password" class="col-form-label">Contraseña:</label>
+                  <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
                 </div>
-              </div>
+                <div class="form-group">
+
+                  <label for="confirm_password" class="col-form-label">Contraseña:</label>
+                  <input class="form-control input-lg" name="confirm_password" type="password"
+                    v-model="reset.confirm_password">
+                </div>
+                <div v-if=reset.error class="text-red">
+                  <p>{{ reset.error }}</p>
+                </div>
+              </fieldset>
             </div>
           </div>
           <div class="modal-footer">
@@ -273,7 +268,8 @@ export default {
     return {
       reset: {
         password: '',
-        confirm_password: ''
+        confirm_password: '',
+        error: ''
       },
       user: {
         id: 0,
@@ -383,6 +379,9 @@ export default {
             $('.edit').on('click', function () {
               that.editUser(this.id)
             })
+            $('.reset').on('click', function () {
+              that.modalResetPwd(this.id)
+            })
           }
         },
         'searchCols': [
@@ -436,7 +435,18 @@ export default {
       })
     },
     renderView(data, row) {
-      return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
+      return `
+      <td>
+        <button class="btn delete" id="${data}">
+          <i class="fa fa-trash"></i>
+        </button>
+        <button class="btn edit" id="${data}">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button class="btn reset" id="${data}">
+          <i class="fa fa-key"></i>
+        </button>
+      </td>`
     },
     confirmDelete(idUser) {
       api
@@ -475,10 +485,8 @@ export default {
         this.error.email = 'Ingrese un correo valido'
       }
     },
-    modalResetPwd(dUser) {
-      Object.assign(this.user, dUser)
-      dUser.extras.photo = ''
-      Object.assign(this.user, dUser.extras)
+    modalResetPwd(idUser) {
+      this.user.id = idUser
       $('#btnModalPwd').trigger('click')
     },
     resetPassword() {
@@ -490,12 +498,15 @@ export default {
       api
         .request('post', 'reset/password/', json, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
+          this.reset.password = ''
+          this.reset.confirm_password = ''
+          this.reset.error = ''
           $('#closePwd').trigger('click')
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
-            console.log(errors)
+            this.reset.error = errors.password[0]
           }
         })
     }

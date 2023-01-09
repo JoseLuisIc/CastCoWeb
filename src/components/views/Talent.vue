@@ -170,8 +170,7 @@
                     <label for="agency" class="col-form-label">Agencia:</label>
                     <select name="agency" class="form-control" id="agency" v-model="user.agency">
                       <option value="0" selected>Elegir Agencia</option>
-                      <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.first_name
-}}
+                      <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.name}}
                       </option>
                     </select>
                     <div v-if=error.agency class="text-red">
@@ -311,29 +310,21 @@
             <h1 class="text-center">¿Cuál es mi contraseña?</h1>
           </div>
           <div class="modal-body">
-            <div class="col-md-12">
-              <div class="panel panel-default">
-                <div class="panel-body">
-                  <div class="text-center">
 
-                    <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
-                    <div class="panel-body">
-                      <fieldset>
-                        <div class="form-group">
-                          <label for="password" class="col-form-label">Contraseña:</label>
-                          <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
-                        </div>
-                        <div class="form-group">
-
-                          <label for="confirm_password" class="col-form-label">Contraseña:</label>
-                          <input class="form-control input-lg" name="confirm_password" type="password"
-                            v-model="reset.confirm_password">
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
+            <div class="text-center">
+              <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
+              <fieldset>
+                <div class="form-group">
+                  <label for="password" class="col-form-label">Contraseña:</label>
+                  <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
                 </div>
-              </div>
+                <div class="form-group">
+
+                  <label for="confirm_password" class="col-form-label">Contraseña:</label>
+                  <input class="form-control input-lg" name="confirm_password" type="password"
+                    v-model="reset.confirm_password">
+                </div>
+              </fieldset>
             </div>
           </div>
           <div class="modal-footer">
@@ -516,7 +507,7 @@ export default {
       const params = new URLSearchParams()
       params.append('format', 'datatables')
       if (session.user.role === util.AGENCY) {
-        params.append('agency', session.user.id)
+        // params.append('agency', session.user.id)
       }
       var that = this
       var table = $('#tableUsers').DataTable({
@@ -532,6 +523,9 @@ export default {
             })
             $('.edit').on('click', function () {
               that.editUser(this.id)
+            })
+            $('.reset').on('click', function () {
+              that.modalResetPwd(this.id)
             })
           }
         },
@@ -578,7 +572,18 @@ export default {
       })
     },
     renderView(data, row) {
-      return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
+      return `
+      <td>
+        <button class="btn delete" id="${data}">
+          <i class="fa fa-trash"></i>
+        </button>
+        <button class="btn edit" id="${data}">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button class="btn reset" id="${data}">
+          <i class="fa fa-key"></i>
+        </button>
+      </td>`
     },
     confirmDelete(idUser) {
       api
@@ -644,11 +649,19 @@ export default {
         this.error.email = 'Ingrese un correo valido'
       }
     },
-    modalResetPwd(dUser) {
-      Object.assign(this.user, dUser)
-      dUser.extras.photo = ''
-      Object.assign(this.user, dUser.extras)
-      $('#btnModalPwd').trigger('click')
+    modalResetPwd(idUser) {
+      api
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.user = response.data
+          $('#btnModalPwd').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     resetPassword() {
       var json = {
@@ -659,12 +672,15 @@ export default {
       api
         .request('post', 'reset/password/', json, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
+          this.reset.password = ''
+          this.reset.confirm_password = ''
+          this.reset.error = ''
           $('#closePwd').trigger('click')
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
-            console.log(errors)
+            this.reset.error = errors.password[0]
           }
         })
     }

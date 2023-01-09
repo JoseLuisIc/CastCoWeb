@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import faker from 'faker'
 import config from '../config'
 import DashFooter from './layout/DashFooter'
 import DashHeader from './layout/DashHeader'
@@ -62,7 +61,7 @@ export default {
       var user = JSON.parse(localStorage.getItem('user'))
       return {
         displayName: user.first_name,
-        avatar: faker.image.avatar(),
+        avatar: '',
         roles: user.role
       }
     }
