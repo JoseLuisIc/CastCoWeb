@@ -331,14 +331,15 @@
 import $ from 'jquery'
 import api from '../../api'
 import config from '../../config'
-import axios from 'axios'
 
 // Require needed datatables modules
 require('datatables.net')
+
 export default {
   name: 'Admins',
   data() {
     return {
+      table: null,
       project: {
         id: 0,
         name: '',
@@ -432,7 +433,7 @@ export default {
       api
         .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          location.reload(true)
+          this.table.ajax.reload()
           $('#closeEdit').trigger('click')
         })
         .catch(error => {
@@ -451,7 +452,7 @@ export default {
       api
         .request('post', 'projects/', this.project, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          location.reload(true)
+          this.table.ajax.reload()
           $('#closeCreate').trigger('click')
         })
         .catch(error => {
@@ -481,7 +482,7 @@ export default {
       const params = new URLSearchParams()
       params.append('format', 'datatables')
       var that = this
-      var table = $('#tableProyects').DataTable({
+      this.table = $('#tableProyects').DataTable({
         'processing': true,
         'serverSide': true,
         'ajax': {
@@ -525,7 +526,7 @@ export default {
       // })
       // Filter event handler
       $('#tableProyects').on('keyup', 'thead input', function () {
-        table
+        this.table
           .column($(this).data('index'))
           .search(this.value)
           .draw()
@@ -549,27 +550,18 @@ export default {
         })
     },
     deleteProyect() {
-      // api
-      //   .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
-      //   .then(response => {
-      //     this.callProyect()
-      //     $('#closeDelete').trigger('click')
-      //   })
-      //   .catch(error => {
-      //     if (error.response) {
-      //       var errors = error.response.data
-      //       console.log(errors)
-      //     }
-      //   })
-      axios({
-        method: 'delete',
-        url: config.serverURI + 'projects/' + this.project.id + '/',
-        responseType: 'text',
-        headers: { 'Authorization': localStorage.getItem('token') }
-      })
-        .then(function (response) {
-          console.log(response)
-        }).catch(console.log)
+      api
+        .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.table.ajax.reload()
+          $('#closeDelete').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files
@@ -608,7 +600,6 @@ export default {
   }
 }
 </script>
-
 <style>
 /* Using the bootstrap style, but overriding the font to not draw in
    the Glyphicons Halflings font as an additional requirement for sorting icons.

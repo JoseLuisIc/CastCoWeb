@@ -346,11 +346,9 @@ import api from '../../api'
 import util from '../../utils/util'
 import session from '../../utils/session'
 import config from '../../config'
-import 'datatables.net-searchpanes'
 
 // Require needed datatables modules
 require('datatables.net')
-require('datatables.net-bs')
 
 export default {
   name: 'Admins',
