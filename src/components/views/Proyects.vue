@@ -49,19 +49,6 @@
                         <th rowspan="1" colspan="1"></th>
                       </tr>
                     </thead>
-                    <!--<tbody>
-                      <tr class="even" role="row" v-for="(project, index) in projects" :key="index">
-                        <td class="sorting_1">{{ project.producer }}</td>
-                        <td>{{ project.name }}</td>
-                        <td>{{ project.public_name }}</td>
-                        <td>{{ project.description }}</td>
-                        <td>{{ project.producer }}</td>
-                        <td>
-                          <button class="btn" v-on:click="confirmDelete(project)"><i class="fa fa-trash"></i></button>
-                          <button class="btn" v-on:click="editProyect(project)"><i class="fa fa-edit"></i></button>
-                        </td>
-                      </tr>
-                    </tbody>-->
                   </table>
                 </div>
               </div>

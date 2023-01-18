@@ -42,6 +42,8 @@
                           tabindex="0" class="sorting_asc">Foto</th>
                         <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Ciudad</th>
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Edad</th>
                         <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Instagram</th>
                         <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
@@ -524,6 +526,7 @@ export default {
           null,
           null,
           null,
+          null,
           { 'search': util.TALENT },
           null
         ],
@@ -540,12 +543,18 @@ export default {
             }
           },
           {
-            'data': 'extras',
+            'data': 'city',
             render: function (data, type, row) {
               if (Object.keys(row.extras).length === 0 || row.extras.state == null) {
                 return 'S/A'
               }
               return row.extras.state.name
+            }
+          },
+          {
+            'data': 'age',
+            render: function (data, type, row) {
+              return row.extras.age
             }
           },
           { 'data': 'instagram' },
@@ -562,7 +571,7 @@ export default {
         ],
         'columnDefs': [
           {
-            'targets': [1, 2, 6],
+            'targets': [1, 2, 7],
             'visible': false,
             'searchable': false
           }
