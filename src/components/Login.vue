@@ -30,6 +30,7 @@
 <script>
 import api from '../api'
 import jwtdecode from 'jwt-decode'
+import util from '../utils/util'
 
 export default {
   name: 'Login',
@@ -62,16 +63,26 @@ export default {
             var token = 'Bearer ' + data.access
 
             var decoded = jwtdecode(data.access)
-            console.log(decoded)
             this.$store.commit('SET_USER', decoded.user)
             this.$store.commit('SET_TOKEN', token)
 
             if (window.localStorage) {
               window.localStorage.setItem('user', JSON.stringify(decoded.user))
               window.localStorage.setItem('token', token)
+              window.localStorage.setItem('access', data.access)
+              window.localStorage.setItem('refresh', data.refresh)
             }
-
-            this.$router.push(data.redirect ? data.redirect : 'dashboard')
+            switch (decoded.user.role) {
+              case util.MANAGER:
+                this.$router.push(data.redirect ? data.redirect : 'admins')
+                break
+              case util.AGENCY:
+                this.$router.push(data.redirect ? data.redirect : 'talents')
+                break
+              default:
+                this.$router.push(data.redirect ? data.redirect : 'dashboard')
+                break
+            }
           }
         })
         .catch(error => {

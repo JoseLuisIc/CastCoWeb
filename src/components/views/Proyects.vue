@@ -30,14 +30,14 @@
                     class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Productora</th>
-                        <th style="width: 207px;" colspan="1" rowspan="1" class="sorting">Nombre</th>
-                        <th style="width: 142px;" colspan="1" rowspan="1" class="sorting">Nombre público
+                        <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting_asc">Productora</th>
+                        <th colspan="1" rowspan="1" class="sorting">Nombre</th>
+                        <th colspan="1" rowspan="1" class="sorting">Nombre público
                         </th>
-                        <th style="width: 182px;" colspan="1" rowspan="1" class="sorting">Descripción</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" class="sorting">Tipo de material</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" class="no-sort">Acciones</th>
+                        <th colspan="1" rowspan="1" class="sorting">Descripción</th>
+                        <th colspan="1" rowspan="1" class="sorting">Tipo de material</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Acciones</th>
                       </tr>
                       <tr>
                         <th rowspan="1" colspan="1"><input type="text" placeholder="Productora" data-index="0"></th>
@@ -394,7 +394,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.callProyect()
-      this.getStates()
     })
   },
   methods: {
@@ -464,31 +463,32 @@ export default {
     },
     editProyect(idProject) {
       this.isNew = false
-      console.log(idProject)
-      api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          this.project = response.data
-          $('#btnModalEdit').trigger('click')
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
+      this.$router.push({ path: `/proyects/${idProject}/edit`, params: { id: idProject } })
+      // api
+      // .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
+      // .then(response => {
+      //   this.project = response.data
+      //   $('#btnModalEdit').trigger('click')
+      // })
+      // .catch(error => {
+      //   if (error.response) {
+      //     var errors = error.response.data
+      //     console.log(errors)
+      //   }
+      // })
     },
     callProyect() {
       const params = new URLSearchParams()
       params.append('format', 'datatables')
       var that = this
       this.table = $('#tableProyects').DataTable({
+        'lengthMenu': [10, 25, 50, 75, 100, 'All'],
+        'responsive': true,
         'processing': true,
         'serverSide': true,
         'ajax': {
           url: config.serverURI + 'projects/?' + params,
           type: 'GET',
-          headers: { 'Authorization': localStorage.getItem('token') },
           complete: function () {
             $('.delete').on('click', function () {
               that.confirmDelete(this.id)
@@ -496,6 +496,9 @@ export default {
             $('.edit').on('click', function () {
               that.editProyect(this.id)
             })
+          },
+          error: function (jqXHR, ajaxOptions, thrownError) {
+
           }
         },
         'columns': [
@@ -531,9 +534,13 @@ export default {
           .search(this.value)
           .draw()
       })
+      $(this).ajaxError(function (event, request, settings) {
+        console.log(event, request, settings)
+      })
     },
-    renderView(data, row) {
-      return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
+    renderView(id, row) {
+      return `<td><button class="btn delete" id="${id}"><i class="fa fa-trash"></i>
+        </button><button class="btn edit" id="${id}"><i class="fa fa-edit"></i></button></td> `
     },
     confirmDelete(idProject) {
       api

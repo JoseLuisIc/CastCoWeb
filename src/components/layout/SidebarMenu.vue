@@ -1,12 +1,12 @@
 <template>
   <ul class="sidebar-menu">
-    <li class="header">Administracion</li>
-    <router-link tag="li" class="pageLink" to="/" v-if="user.roles === MANAGER">
+    <li class="header" v-if="user.roles === MANAGER">Administracion</li>
+    <!--<router-link tag="li" class="pageLink" to="/" v-if="user.roles === MANAGER">
       <a>
         <i class="fa fa-desktop"></i>
         <span class="page">Dashboard</span>
       </a>
-    </router-link>
+    </router-link>-->
 
     <li class="treeview" v-if="user.roles === MANAGER" v-bind:class="{ active: isActive }">
       <a href="#">
