@@ -34,33 +34,24 @@
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
+                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
+                          tabindex="0" class="sorting_asc">Nombre</th>
+                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
+                          tabindex="0" class="sorting_asc">Apellidos</th>
+                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
+                          tabindex="0" class="sorting_asc">Foto</th>
                         <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Nombres</th>
-                        <th style="width: 142px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Apellidos
-                        </th>
+                          class="sorting">Ciudad</th>
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting">Edad</th>
                         <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Instagram</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Rol</th>
                         <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Acciones</th>
                       </tr>
                     </thead>
-                    <!--<tbody>
-                      <tr class="even" role="row" v-for="(user, index) in users" :key="index">
-                        <td class="sorting_1">{{ user.email }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.instagram }}</td>
-                        <td>{{ user.role }}</td>
-                        <td>
-                          <button class="btn" v-on:click="confirmDelete(user)"><i class="fa fa-trash"></i></button>
-                          <button class="btn" v-on:click="editUser(user)"><i class="fa fa-edit"></i></button>
-                          <button class="btn" v-on:click="modalResetPwd(user)"><i class="fa fa-lock"></i></button>
-                        </td>
-                      </tr>
-                    </tbody>-->
                   </table>
                 </div>
               </div>
@@ -148,12 +139,12 @@
                   </div>
                   <div class="form-group" v-bind:class="error.photo !== null ? 'has-error' : ''">
                     <label for="photo" class="col-form-label">Foto:</label>
-                    <input type="file" class="form-control" id="state" @change="onFileChange" />
+                    <input type="file" class="form-control" id="file" @change="onFileChange" />
                   </div>
 
                   <div class="form-group" v-bind:class="error.state !== 0 ? 'has-error' : ''">
                     <label for="state" class="col-form-label">Estado:</label>
-                    <select name="state" class="form-control" id="state" v-model="user.state">
+                    <select name="state" class="form-control" id="state" v-model="user.state.id">
                       <option value="0" selected>Elegir Estado</option>
                       <option v-for="(state, index) in states" :key="index" :value="state.id">{{ state.name }}</option>
                     </select>
@@ -165,7 +156,7 @@
                     <label for="agency" class="col-form-label">Agencia:</label>
                     <select name="agency" class="form-control" id="agency" v-model="user.agency">
                       <option value="0" selected>Elegir Agencia</option>
-                      <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.name}}
+                      <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.name }}
                       </option>
                     </select>
                     <div v-if=error.agency class="text-red">
@@ -341,12 +332,10 @@ import api from '../../api'
 import util from '../../utils/util'
 import session from '../../utils/session'
 import config from '../../config'
-import 'datatables.net-searchpanes'
 import modelUser from '../../models/user'
 
 // Require needed datatables modules
 require('datatables.net')
-require('datatables.net-bs')
 
 export default {
   name: 'Admins',
@@ -417,6 +406,7 @@ export default {
       const params = new URLSearchParams()
       console.log(idUser)
       params.append('format', 'json')
+      params.append('length', 100)
       this.error = modelUser.error
       api
         .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
@@ -430,6 +420,7 @@ export default {
           var userData = response.data
           Object.assign(this.user, userData)
           Object.assign(this.user, userData.extras)
+          console.log(this.user)
           $('#btnModalEdit').trigger('click')
         })
         .catch(error => {
@@ -452,7 +443,6 @@ export default {
         'ajax': {
           url: config.serverURI + 'users/?' + params,
           type: 'GET',
-          headers: { 'Authorization': localStorage.getItem('token') },
           complete: function () {
             $('.delete').on('click', function () {
               that.confirmDelete(this.id)
@@ -470,13 +460,39 @@ export default {
           null,
           null,
           null,
+          null,
+          null,
+          null,
           { 'search': util.TALENT },
           null
         ],
         'columns': [
           { 'data': 'email' },
-          { 'data': 'first_name' },
-          { 'data': 'last_name' },
+          { 'data': 'first_name', 'name': 'first_name' },
+          { 'data': 'last_name', 'name': 'last_name' },
+          {
+            'data': 'extras',
+            render: function (data, type, row) {
+              return ` <div class="widget-user-image">
+                <img class="img-circle" src="${row.extras.photo}" alt="Avatar">
+              </div> ${row.first_name + ' ' + row.last_name}`
+            }
+          },
+          {
+            'data': 'city',
+            render: function (data, type, row) {
+              if (Object.keys(row.extras).length === 0 || row.extras.state == null) {
+                return 'S/A'
+              }
+              return row.extras.state.name
+            }
+          },
+          {
+            'data': 'age',
+            render: function (data, type, row) {
+              return row.extras.age
+            }
+          },
           { 'data': 'instagram' },
           { 'data': 'role' },
           {
@@ -487,6 +503,13 @@ export default {
             'render': (data, type, row, meta) => {
               return this.renderView(data, row)
             }
+          }
+        ],
+        'columnDefs': [
+          {
+            'targets': [1, 2, 7],
+            'visible': false,
+            'searchable': false
           }
         ],
         'language': {
@@ -565,8 +588,12 @@ export default {
       this.photo = ''
     },
     getStates() {
+      const params = new URLSearchParams()
+      params.append('search', '')
+      params.append('ordering', '')
+      params.append('length', 32)
       api
-        .request('get', 'states/?', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'states/?' + params, {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           this.states = response.data.results
         })
@@ -669,5 +696,10 @@ table.dataTable thead .sorting_asc:after {
 
 table.dataTable thead .sorting_desc:after {
   content: '\f0de';
+}
+
+.img-circle {
+  width: 36px;
+  height: 36px;
 }
 </style>

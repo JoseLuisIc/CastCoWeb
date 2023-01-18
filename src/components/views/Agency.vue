@@ -212,7 +212,6 @@ import util from '../../utils/util'
 import config from '../../config'
 // Require needed datatables modules
 require('datatables.net')
-require('datatables.net-bs')
 
 export default {
   name: 'Admins',
@@ -323,7 +322,6 @@ export default {
         'ajax': {
           url: config.serverURI + 'users/?' + params,
           type: 'GET',
-          headers: { 'Authorization': localStorage.getItem('token') },
           complete: function () {
             $('.delete').on('click', function () {
               that.confirmDelete(this.id)

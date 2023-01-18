@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <!-- search form (Optional) -->
+      <!-- search form (Optional) 
       <form v-on:submit.prevent class="sidebar-form" id="searchForm">
         <div class="input-group" id="searchContainer">
           <span class="input-group-btn">
@@ -36,7 +36,7 @@
           </span>
         </div>
       </form>
-      <!-- /.search form -->
+      search form -->
 
       <!-- Sidebar Menu -->
       <sidebar-menu :user="user"/>

@@ -30,14 +30,14 @@
                     class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Productora</th>
-                        <th style="width: 207px;" colspan="1" rowspan="1" class="sorting">Nombre</th>
-                        <th style="width: 142px;" colspan="1" rowspan="1" class="sorting">Nombre público
+                        <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting_asc">Productora</th>
+                        <th colspan="1" rowspan="1" class="sorting">Nombre</th>
+                        <th colspan="1" rowspan="1" class="sorting">Nombre público
                         </th>
-                        <th style="width: 182px;" colspan="1" rowspan="1" class="sorting">Descripción</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" class="sorting">Tipo de material</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" class="no-sort">Acciones</th>
+                        <th colspan="1" rowspan="1" class="sorting">Descripción</th>
+                        <th colspan="1" rowspan="1" class="sorting">Tipo de material</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Acciones</th>
                       </tr>
                       <tr>
                         <th rowspan="1" colspan="1"><input type="text" placeholder="Productora" data-index="0"></th>
@@ -49,19 +49,6 @@
                         <th rowspan="1" colspan="1"></th>
                       </tr>
                     </thead>
-                    <!--<tbody>
-                      <tr class="even" role="row" v-for="(project, index) in projects" :key="index">
-                        <td class="sorting_1">{{ project.producer }}</td>
-                        <td>{{ project.name }}</td>
-                        <td>{{ project.public_name }}</td>
-                        <td>{{ project.description }}</td>
-                        <td>{{ project.producer }}</td>
-                        <td>
-                          <button class="btn" v-on:click="confirmDelete(project)"><i class="fa fa-trash"></i></button>
-                          <button class="btn" v-on:click="editProyect(project)"><i class="fa fa-edit"></i></button>
-                        </td>
-                      </tr>
-                    </tbody>-->
                   </table>
                 </div>
               </div>
@@ -331,14 +318,15 @@
 import $ from 'jquery'
 import api from '../../api'
 import config from '../../config'
-import axios from 'axios'
 
 // Require needed datatables modules
 require('datatables.net')
+
 export default {
   name: 'Admins',
   data() {
     return {
+      table: null,
       project: {
         id: 0,
         name: '',
@@ -393,7 +381,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.callProyect()
-      this.getStates()
     })
   },
   methods: {
@@ -432,7 +419,7 @@ export default {
       api
         .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          location.reload(true)
+          this.table.ajax.reload()
           $('#closeEdit').trigger('click')
         })
         .catch(error => {
@@ -451,7 +438,7 @@ export default {
       api
         .request('post', 'projects/', this.project, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          location.reload(true)
+          this.table.ajax.reload()
           $('#closeCreate').trigger('click')
         })
         .catch(error => {
@@ -463,31 +450,32 @@ export default {
     },
     editProyect(idProject) {
       this.isNew = false
-      console.log(idProject)
-      api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          this.project = response.data
-          $('#btnModalEdit').trigger('click')
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
+      this.$router.push({ path: `/proyects/${idProject}/edit`, params: { id: idProject } })
+      // api
+      // .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
+      // .then(response => {
+      //   this.project = response.data
+      //   $('#btnModalEdit').trigger('click')
+      // })
+      // .catch(error => {
+      //   if (error.response) {
+      //     var errors = error.response.data
+      //     console.log(errors)
+      //   }
+      // })
     },
     callProyect() {
       const params = new URLSearchParams()
       params.append('format', 'datatables')
       var that = this
-      var table = $('#tableProyects').DataTable({
+      this.table = $('#tableProyects').DataTable({
+        'lengthMenu': [10, 25, 50, 75, 100, 'All'],
+        'responsive': true,
         'processing': true,
         'serverSide': true,
         'ajax': {
           url: config.serverURI + 'projects/?' + params,
           type: 'GET',
-          headers: { 'Authorization': localStorage.getItem('token') },
           complete: function () {
             $('.delete').on('click', function () {
               that.confirmDelete(this.id)
@@ -495,6 +483,9 @@ export default {
             $('.edit').on('click', function () {
               that.editProyect(this.id)
             })
+          },
+          error: function (jqXHR, ajaxOptions, thrownError) {
+
           }
         },
         'columns': [
@@ -525,14 +516,18 @@ export default {
       // })
       // Filter event handler
       $('#tableProyects').on('keyup', 'thead input', function () {
-        table
+        this.table
           .column($(this).data('index'))
           .search(this.value)
           .draw()
       })
+      $(this).ajaxError(function (event, request, settings) {
+        console.log(event, request, settings)
+      })
     },
-    renderView(data, row) {
-      return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
+    renderView(id, row) {
+      return `<td><button class="btn delete" id="${id}"><i class="fa fa-trash"></i>
+        </button><button class="btn edit" id="${id}"><i class="fa fa-edit"></i></button></td> `
     },
     confirmDelete(idProject) {
       api
@@ -549,27 +544,18 @@ export default {
         })
     },
     deleteProyect() {
-      // api
-      //   .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
-      //   .then(response => {
-      //     this.callProyect()
-      //     $('#closeDelete').trigger('click')
-      //   })
-      //   .catch(error => {
-      //     if (error.response) {
-      //       var errors = error.response.data
-      //       console.log(errors)
-      //     }
-      //   })
-      axios({
-        method: 'delete',
-        url: config.serverURI + 'projects/' + this.project.id + '/',
-        responseType: 'text',
-        headers: { 'Authorization': localStorage.getItem('token') }
-      })
-        .then(function (response) {
-          console.log(response)
-        }).catch(console.log)
+      api
+        .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.table.ajax.reload()
+          $('#closeDelete').trigger('click')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files
@@ -608,7 +594,6 @@ export default {
   }
 }
 </script>
-
 <style>
 /* Using the bootstrap style, but overriding the font to not draw in
    the Glyphicons Halflings font as an additional requirement for sorting icons.

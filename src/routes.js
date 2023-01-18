@@ -14,7 +14,8 @@ import AdminView from './components/views/Admin.vue'
 import TalentView from './components/views/Talent.vue'
 import AgencyView from './components/views/Agency.vue'
 import ProyectsView from './components/views/Proyects.vue'
-
+import EditProyectView from './components/views/EditProyect.vue'
+import ProfileView from './components/views/Profile.vue'
 // Routes
 const routes = [
   {
@@ -38,56 +39,68 @@ const routes = [
         path: 'tables',
         component: TablesView,
         name: 'Tables',
-        meta: {description: 'Simple and advance table in CastCo'}
+        meta: { description: 'Simple and advance table in CastCo' }
       }, {
         path: 'tasks',
         component: TasksView,
         name: 'Tasks',
-        meta: {description: 'Tasks page in the form of a timeline'}
+        meta: { description: 'Tasks page in the form of a timeline' }
       }, {
         path: 'setting',
         component: SettingView,
         name: 'Settings',
-        meta: {description: 'User settings page'}
+        meta: { description: 'User settings page' }
       }, {
         path: 'access',
         component: AccessView,
         name: 'Access',
-        meta: {description: 'Example of using maps'}
+        meta: { description: 'Example of using maps' }
       }, {
         path: 'server',
         component: ServerView,
         name: 'Servers',
-        meta: {description: 'List of our servers', requiresAuth: true}
+        meta: { description: 'List of our servers', requiresAuth: true }
       }, {
         path: 'repos',
         component: ReposView,
         name: 'Repository',
-        meta: {description: 'List of popular javascript repos'}
+        meta: { description: 'List of popular javascript repos' }
       },
       {
         path: 'admins',
         component: AdminView,
         name: 'Administadores',
-        meta: {description: 'Listado de Administradores', requiresAuth: true}
+        meta: { description: 'Listado de Administradores', requiresAuth: true }
       },
       {
         path: 'talents',
         component: TalentView,
         name: 'Talentos',
-        meta: {description: 'Listado de Talentos', requiresAuth: true}
+        meta: { description: 'Listado de Talentos', requiresAuth: true }
       },
       {
         path: 'agencies',
         component: AgencyView,
         name: 'Agencias',
-        meta: {description: 'Listado de Agencias', requiresAuth: true}
+        meta: { description: 'Listado de Agencias', requiresAuth: true }
       },
       {
         path: 'proyects',
         component: ProyectsView,
         name: 'Proyectos',
-        meta: {description: 'Listado de Proyectos', requiresAuth: true}
+        meta: { description: 'Listado de Proyectos', requiresAuth: true }
+      },
+      {
+        path: '/proyects/:id/edit',
+        component: EditProyectView,
+        name: 'Proyecto',
+        meta: { description: 'Editar de Proyecto', requiresAuth: true }
+      },
+      {
+        path: '/profile',
+        component: ProfileView,
+        name: 'Perfil',
+        meta: { description: 'Editar de Perfil', requiresAuth: true }
       }
     ]
   }, {
