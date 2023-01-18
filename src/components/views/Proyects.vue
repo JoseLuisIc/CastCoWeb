@@ -93,35 +93,35 @@
                       <p>{{ error.name }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.productora !== '' ? 'has-error' : ''">
                     <label for="producer" class="col-form-label">Productora:</label>
                     <input class="form-control" id="producer" v-model="project.producer" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.lugarprodu !== '' ? 'has-error' : ''">
                     <label for="production_place" class="col-form-label">Lugar de produccion:</label>
                     <input class="form-control" id="production_place" v-model="project.production_place" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.temporalidad !== '' ? 'has-error' : ''">
                     <label for="temporality" class="col-form-label">Temporalidad:</label>
                     <input class="form-control" id="temporality" v-model="project.temporality" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.presupuesto !== '' ? 'has-error' : ''">
                     <label for="budget" class="col-form-label">Presuspueto:</label>
                     <input class="form-control" id="budget" v-model="project.budget" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.tmaterial !== '' ? 'has-error' : ''">
                     <label for="material_type" class="col-form-label">Tipo de material:</label>
                     <input class="form-control" id="material_type" v-model="project.material_type" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.fgrabacion !== '' ? 'has-error' : ''">
                     <label for="recording_date" class="col-form-label">Fechas de grabación:</label>
                     <input class="form-control" type="date" id="recording_date" v-model="project.recording_date" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.fitting !== '' ? 'has-error' : ''">
                     <label for="fitting_date" class="col-form-label">Fechas de fitting:</label>
                     <input class="form-control" type="date" id="fitting_date" v-model="project.fitting_date" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.creacion !== '' ? 'has-error' : ''">
                     <label for="created_at" class="col-form-label">Fecha creación:</label>
                     <input class="form-control" type="date" id="created_at" v-model="project.created_at" />
                   </div>
@@ -136,40 +136,40 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.publico !== '' ? 'has-error' : ''">
                     <label for="public_name" class="col-form-label">Nombre publico:</label>
                     <input class="form-control" id="public_name" v-model="project.public_name" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.proyecto !== '' ? 'has-error' : ''">
                     <label for="description" class="col-form-label">Descripción del proyecto:</label>
                     <input class="form-control" id="description" v-model="project.description" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.competencia !== '' ? 'has-error' : ''">
                     <label for="competition" class="col-form-label">Competencia:</label>
                     <input class="form-control" id="competition" v-model="project.competition" />
                   </div>
 
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.usodeimagen !== '' ? 'has-error' : ''">
                     <label for="use_of_image" class="col-form-label">Uso de imagen:</label>
                     <input class="form-control" id="use_of_image" v-model="project.use_of_image" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.presupuesto !== '' ? 'has-error' : ''">
                     <label for="agency_budget" class="col-form-label">Presuspueto Agencia:</label>
                     <input class="form-control" id="agency_budget" v-model="project.agency_budget" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.caracteristicas !== '' ? 'has-error' : ''">
                     <label for="characteristics" class="col-form-label">Caracteristicas:</label>
                     <input class="form-control" id="characteristics" v-model="project.characteristics" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.callback !== '' ? 'has-error' : ''">
                     <label for="callback_date" class="col-form-label">Fecha de callback:</label>
                     <input class="form-control" type="date" id="callback_date" v-model="project.callback_date" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.inicio !== '' ? 'has-error' : ''">
                     <label for="start_date" class="col-form-label">Fecha de inicio:</label>
                     <input class="form-control" type="date" id="start_date" v-model="project.start_date" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.fin !== '' ? 'has-error' : ''">
                     <label for="end_date" class="col-form-label">Fecha de fin:</label>
                     <input class="form-control" type="date" id="end_date" v-model="project.end_date" />
                   </div>
@@ -201,7 +201,7 @@
             <form>
               <div class="row">
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.nombre !== '' ? 'has-error' : ''">
                     <label for="name" class="col-form-label">Nombre:</label>
                     <input type="text" class="form-control" id="name" v-model="project.name">
                     <div v-if=error.name class="text-red">

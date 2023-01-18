@@ -83,20 +83,12 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group">
+              <div class="form-group"  v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                 <div v-if=error.email class="text-red">
                   <p>{{ error.email }}</p>
                 </div>
-              </div>
-              <div class="form-group">
-                <label for="first_name" class="col-form-label">Nombres:</label>
-                <input class="form-control" id="first_name" v-model="user.first_name" />
-              </div>
-              <div class="form-group">
-                <label for="last_name" class="col-form-label">Apellidos:</label>
-                <input class="form-control" id="last_name" v-model="user.last_name" />
               </div>
               <div class="form-group">
                 <label for="instagram" class="col-form-label">Instagram:</label>
@@ -130,7 +122,7 @@
               <div class="row">
 
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="form-group"  v-bind:class="error.email !== '' ? 'has-error' : ''">
                     <label for="email" class="col-form-label">Email:</label>
                     <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                     <div v-if=error.email class="text-red">
@@ -139,24 +131,27 @@
                   </div>
                   <div class="form-group">
                     <label for="first_name" class="col-form-label">Nombres:</label>
-                    <input class="form-control" id="first_name" v-model="user.first_name" />
+                    <input class="form-control" id="first_name" v-model="user.first_name"  />
+                    <div v-if=error.first_name class="text-red"></div>
+                    <p>{{ error.first_name }}</p>
                   </div>
                   <div class="form-group">
                     <label for="last_name" class="col-form-label">Apellidos:</label>
                     <input class="form-control" id="last_name" v-model="user.last_name" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.age !== 0 ? 'has-error' : ''">
                     <label for="age" class="col-form-label">Edad:</label>
                     <input type="number" class="form-control" id="age" v-model="user.age" max="100" min="18" />
                     <div v-if=error.age class="text-red">
                       <p>{{ error.age }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.photo !== null ? 'has-error' : ''">
                     <label for="photo" class="col-form-label">Foto:</label>
                     <input type="file" class="form-control" id="state" @change="onFileChange" />
                   </div>
-                  <div class="form-group">
+
+                  <div class="form-group" v-bind:class="error.state !== 0 ? 'has-error' : ''">
                     <label for="state" class="col-form-label">Estado:</label>
                     <select name="state" class="form-control" id="state" v-model="user.state">
                       <option value="0" selected>Elegir Estado</option>
@@ -166,7 +161,7 @@
                       <p>{{ error.state }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.agency !== 0 ? 'has-error' : ''">
                     <label for="agency" class="col-form-label">Agencia:</label>
                     <select name="agency" class="form-control" id="agency" v-model="user.agency">
                       <option value="0" selected>Elegir Agencia</option>
@@ -177,7 +172,7 @@
                       <p>{{ error.agency }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.gender !== 0 ? 'has-error' : ''">
                     <label for="gender" class="col-form-label">Genero:</label>
                     <select name="gender" class="form-control" id="gender" v-model="user.gender">
                       <option value="0" selected>Elegir Genero</option>
@@ -211,21 +206,21 @@
                       <p>{{ error.phone }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group"  v-bind:class="error.height !== 0 ? 'has-error' : ''">
                     <label for="height" class="col-form-label">Altura:</label>
                     <input class="form-control" id="height" v-model="user.height" />
                     <div v-if=error.height class="text-red">
                       <p>{{ error.height }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.shoe_size !== 0 ? 'has-error' : ''">
                     <label for="shoe_size" class="col-form-label"># Calzado:</label>
                     <input class="form-control" id="shoe_size" v-model="user.shoe_size" />
                     <div v-if=error.shoe_size class="text-red">
                       <p>{{ error.shoe_size }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.pant_size !== 0 ? 'has-error' : ''">
                     <label for="pant_size" class="col-form-label"># Pantalon:</label>
                     <select name="pant_size" class="form-control" id="pant_size" v-model="user.pant_size">
                       <option value="0" selected>Elegir Talla</option>
@@ -239,7 +234,7 @@
                       <p>{{ error.pant_size }}</p>
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.shirt_size !== 0 ? 'has-error' : ''">
                     <label for="shirt_size" class="col-form-label"># Camisa:</label>
                     <select name="shirt_size" class="form-control" id="shirt_size" v-model="user.shirt_size">
                       <option value="0" selected>Elegir Talla</option>
@@ -347,6 +342,7 @@ import util from '../../utils/util'
 import session from '../../utils/session'
 import config from '../../config'
 import 'datatables.net-searchpanes'
+import modelUser from '../../models/user'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -360,48 +356,8 @@ export default {
         password: '',
         confirm_password: ''
       },
-      user: {
-        id: 0,
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: '',
-        photo: null,
-        age: 18,
-        state: 0,
-        agency: 0,
-        gender: 0,
-        lgtbq: false,
-        phone: null,
-        height: 0,
-        shoe_size: 0,
-        pant_size: 0,
-        shirt_size: 0,
-        job_occupation: '',
-        skills: '',
-        role: util.TALENT
-      },
-      error: {
-        id: 0,
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: '',
-        photo: null,
-        age: 0,
-        state: 0,
-        agency: 0,
-        gender: 0,
-        lgtbq: false,
-        phone: null,
-        height: 0,
-        shoe_size: 0,
-        pant_size: 0,
-        shirt_size: 0,
-        job_occupation: '',
-        skills: '',
-        role: util.TALENT
-      },
+      user: modelUser.user,
+      error: modelUser.error,
       users: [],
       agencies: [],
       states: []
@@ -415,27 +371,7 @@ export default {
   },
   methods: {
     openModal() {
-      this.user = {
-        id: 0,
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: '',
-        photo: null,
-        age: 0,
-        state: 0,
-        agency: 0,
-        gender: 0,
-        lgtbq: false,
-        phone: null,
-        height: 0,
-        shoe_size: 0,
-        pant_size: 0,
-        shirt_size: 0,
-        job_occupation: '',
-        skills: '',
-        role: util.TALENT
-      }
+      this.user = modelUser.user
     },
     updateUser(dUser) {
       var userFormData = new FormData()
@@ -451,9 +387,7 @@ export default {
           $('#closeEdit').trigger('click')
         })
         .catch(error => {
-          Object.keys(this.error).forEach(key => {
-            this.error[key] = ''
-          })
+          this.error = modelUser.error
           if (error.response) {
             var errors = error.response.data
             Object.keys(errors).forEach(key => {
@@ -474,6 +408,7 @@ export default {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
+            this.error.age = errors.age[0]
           }
         })
     },
@@ -482,6 +417,7 @@ export default {
       const params = new URLSearchParams()
       console.log(idUser)
       params.append('format', 'json')
+      this.error = modelUser.error
       api
         .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
@@ -638,6 +574,7 @@ export default {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
+            this.error.age = errors.age[0]
           }
         })
     },
@@ -647,6 +584,22 @@ export default {
         this.error.email = ''
       } else {
         this.error.email = 'Ingrese un correo valido'
+      }
+    },
+    validatAge(e) {
+      var age = e.target.value
+      if (/^[123456789]\d{9}$/.test(age)) {
+        this.error.age = ''
+      } else {
+        this.error.age = 'Ingrese una edad '
+      }
+    },
+    validatestate(e) {
+      var state = e.target.value
+      if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(state)) {
+        this.error.state = ''
+      } else {
+        this.error.state = ''
       }
     },
     modalResetPwd(idUser) {

@@ -1,0 +1,45 @@
+import util from '../utils/util'
+export default {
+  user: {
+    id: 0,
+    email: '',
+    first_name: '',
+    last_name: '',
+    instagram: '',
+    photo: null,
+    age: 0,
+    state: 0,
+    agency: 0,
+    gender: 0,
+    lgtbq: false,
+    phone: null,
+    height: 0,
+    shoe_size: 0,
+    pant_size: 0,
+    shirt_size: 0,
+    job_occupation: '',
+    skills: '',
+    role: util.TALENT
+  },
+  error: {
+    id: 0,
+    email: '',
+    first_name: '',
+    last_name: '',
+    instagram: '',
+    photo: null,
+    age: 0,
+    state: 0,
+    agency: 0,
+    gender: 0,
+    lgtbq: false,
+    phone: null,
+    height: 0,
+    shoe_size: 0,
+    pant_size: 0,
+    shirt_size: 0,
+    job_occupation: '',
+    skills: '',
+    role: util.TALENT
+  }
+}

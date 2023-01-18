@@ -19,7 +19,6 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div id="example1_length" class="dataTables_length">
-
                   </div>
                 </div>
               </div>
@@ -88,9 +87,9 @@
               </div>
               <div class="form-group">
                 <label for="first_name" class="col-form-label">Nombres:</label>
-                <input class="form-control" id="first_name" v-model="user.first_name" />
+                <input class="form-control" id="first_name" v-model="user.first_name">
               </div>
-              <div class="form-group">
+              <div class="form-group" >
                 <label for="last_name" class="col-form-label">Apellidos:</label>
                 <input class="form-control" id="last_name" v-model="user.last_name" />
               </div>
@@ -249,6 +248,7 @@ export default {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
+            this.error.nombres = errors.nombres[1]
           }
         })
     },

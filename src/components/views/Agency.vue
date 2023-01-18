@@ -79,21 +79,14 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group">
+              <div class="form-group"  v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                 <div v-if=error.email class="text-red">
                   <p>{{ error.email }}</p>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="first_name" class="col-form-label">Nombres:</label>
-                <input class="form-control" id="first_name" v-model="user.first_name" />
-              </div>
-              <div class="form-group">
-                <label for="last_name" class="col-form-label">Apellidos:</label>
-                <input class="form-control" id="last_name" v-model="user.last_name" />
-              </div>
+              
               <div class="form-group">
                 <label for="instagram" class="col-form-label">Instagram:</label>
                 <input class="form-control" id="instagram" v-model="user.instagram" />
@@ -123,55 +116,14 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group">
+              <div class="form-group"  v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                 <div v-if=error.email class="text-red">
                   <p>{{ error.email }}</p>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="name" class="col-form-label">Nombre:</label>
-                <input class="form-control" id="name" v-model="user.name" />
-                <div v-if=error.name class="text-red">
-                  <p>{{ error.name }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="booker_name" class="col-form-label">Nombre del encargado:</label>
-                <input class="form-control" id="booker_name" v-model="user.booker_name" />
-                <div v-if=error.booker_name class="text-red">
-                  <p>{{ error.booker_name }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="first_name" class="col-form-label">Nombres:</label>
-                <input class="form-control" id="first_name" v-model="user.first_name" />
-                <div v-if=error.first_name class="text-red">
-                  <p>{{ error.first_name }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="last_name" class="col-form-label">Apellidos:</label>
-                <input class="form-control" id="last_name" v-model="user.last_name" />
-                <div v-if=error.last_name class="text-red">
-                  <p>{{ error.last_name }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="phone" class="col-form-label">Telefono:</label>
-                <input class="form-control" id="phone" v-model="user.phone" />
-                <div v-if=error.phone class="text-red">
-                  <p>{{ error.phone }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="city" class="col-form-label">Ciudad:</label>
-                <input class="form-control" id="city" v-model="user.city" />
-                <div v-if=error.city class="text-red">
-                  <p>{{ error.city }}</p>
-                </div>
-              </div>
+             
               <div class="form-group">
                 <label for="instagram" class="col-form-label">Instagram:</label>
                 <input class="form-control" id="instagram" v-model="user.instagram" />
