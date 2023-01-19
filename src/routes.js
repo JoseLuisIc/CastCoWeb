@@ -97,6 +97,12 @@ const routes = [
         meta: { description: 'Editar de Proyecto', requiresAuth: true }
       },
       {
+        path: '/proyects/create',
+        component: EditProyectView,
+        name: 'Proyecto',
+        meta: { description: 'Editar de Proyecto', requiresAuth: true }
+      },
+      {
         path: '/profile',
         component: ProfileView,
         name: 'Perfil',

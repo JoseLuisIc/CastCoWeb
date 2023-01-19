@@ -11,6 +11,7 @@
           <div class="box-body">
             <div class="row">
               <div class="col-md-12">
+                <alert v-if="isAlert" :type="type" :title="title" :iconClasses="iconClass">{{ message }}</alert>
                 <form>
                   <div class="row">
                     <div class="col-md-6">
@@ -111,7 +112,10 @@
               </div>
               <div class="modal-footer">
                 <router-link to="/proyects" class="btn btn-default">Regresar</router-link>
-                <button type="button" class="btn btn-primary" v-on:click="updateProyect(project)">Actualizar</button>
+                <button v-if="project.id !== undefined" type="button" class="btn btn-primary"
+                  v-on:click="updateProyect(project)">Actualizar</button>
+                <button v-if="project.id === undefined" type="button" class="btn btn-primary"
+                  v-on:click="saveProyect">Guardar</button>
               </div>
             </div>
           </div>
@@ -126,9 +130,13 @@
 <script>
 import $ from 'jquery'
 import api from '../../api'
+import Alert from '../widgets/Alert.vue'
 
 export default {
   name: 'Admins',
+  components: {
+    Alert
+  },
   data() {
     return {
       table: null,
@@ -180,41 +188,23 @@ export default {
       },
       projects: [],
       agencies: [],
-      states: []
+      states: [],
+      isAlert: false,
+      type: '',
+      message: '',
+      title: '',
+      iconClass: ''
     }
   },
   mounted() {
     this.$nextTick(() => {
-      console.log(this.$route.params.id)
-      this.fetchProyect(this.$route.params.id)
+      if (this.$route.params.id !== 0) {
+        this.project.id = this.$route.params.id
+        this.fetchProyect(this.$route.params.id)
+      }
     })
   },
   methods: {
-    openModal() {
-      this.project = {
-        id: 0,
-        name: '',
-        producer: '',
-        material_type: '',
-        production_place: '',
-        temporality: '',
-        budget: '',
-        fitting_date: '',
-        recording_date: '',
-        created_at: '',
-        public_name: '',
-        competition: '',
-        agency_budget: '',
-        use_of_image: '',
-        callback_date: '',
-        start_date: '',
-        end_date: '',
-        updated_at: '',
-        is_active: false,
-        characteristics: '',
-        description: ''
-      }
-    },
     fetchProyect(idProject) {
       api
         .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
@@ -238,10 +228,10 @@ export default {
       api
         .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          this.table.ajax.reload()
-          $('#closeEdit').trigger('click')
+          this.alertShow('Guardar', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
         })
         .catch(error => {
+          this.alertShow('Guardar', 'No se pudo guardar intente nuevamente', 'error', 'fa fa-ban')
           Object.keys(this.error).forEach(key => {
             this.error[key] = ''
           })
@@ -257,34 +247,15 @@ export default {
       api
         .request('post', 'projects/', this.project, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          this.table.ajax.reload()
-          $('#closeCreate').trigger('click')
+          this.alertShow('Actualizacion', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
         })
         .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            this.error.email = errors.email[0]
-          }
-        })
-    },
-    editProyect(idProject) {
-      this.isNew = false
-      console.log(idProject)
-      api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          this.project = response.data
-          $('#btnModalEdit').trigger('click')
-        })
-        .catch(error => {
+          this.alertShow('Actualizacion', 'No se pudo actualizar intente nuevamente', 'error', 'fa fa-ban')
           if (error.response) {
             var errors = error.response.data
             console.log(errors)
           }
         })
-    },
-    callProyect() {
-      console.log(this)
     },
     renderView(data, row) {
       return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
@@ -330,23 +301,6 @@ export default {
     removeImage: function (e) {
       this.photo = ''
     },
-    getStates() {
-      const params = new URLSearchParams()
-      params.append('search', '')
-      params.append('ordering', '')
-      params.append('length', 32)
-      api
-        .request('get', 'states/?' + params, {}, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          this.states = response.data.results
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            this.error.email = errors.email[0]
-          }
-        })
-    },
     validateEmail(e) {
       var email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -354,6 +308,13 @@ export default {
       } else {
         this.error.email = 'Ingrese un correo valido'
       }
+    },
+    alertShow(title, message, type, iconClass) {
+      this.message = message
+      this.type = type
+      this.title = title
+      this.iconClass = iconClass
+      this.isAlert = true
     }
   }
 }

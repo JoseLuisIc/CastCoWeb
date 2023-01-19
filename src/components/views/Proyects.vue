@@ -6,10 +6,7 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalProyectCreate"><i class="fa fa-plus"> </i> Agregar Nuevo</button>
-            <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalProyectEdit" />
+              <router-link to="/proyects/create" class="btn btn-primary"> <i class="fa fa-plus"> </i> Agregar Nuevo</router-link>
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalProyectDelete" />
           </div>
@@ -32,23 +29,33 @@
                       <tr role="row">
                         <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting_asc">Productora</th>
-                        <th colspan="1" rowspan="1" class="sorting">Nombre</th>
-                        <th colspan="1" rowspan="1" class="sorting">Nombre público
+                        <th colspan="1" rowspan="1" class="sorting"  tabindex="1">Nombre</th>
+                        <th colspan="1" rowspan="1" class="sorting"  tabindex="2">Nombre público
                         </th>
-                        <th colspan="1" rowspan="1" class="sorting">Descripción</th>
-                        <th colspan="1" rowspan="1" class="sorting">Tipo de material</th>
+                        <th colspan="1" rowspan="1" class="sorting"  tabindex="3">Descripción</th>
+                        <th colspan="1" rowspan="1" class="sorting"  tabindex="4">Tipo de material</th>
+                        <th colspan="1" rowspan="1" class="sorting"  tabindex="5">Status</th>
                         <th colspan="1" rowspan="1" class="no-sort">Acciones</th>
                       </tr>
+                    </thead>
+                    <tfoot>
                       <tr>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Productora" data-index="0"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Nombre" data-index="1"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Nombre público" data-index="2"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Descripción" data-index="3"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Tipo de material" data-index="4">
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" placeholder="Productora" data-index="0"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" placeholder="Nombre" data-index="1"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" placeholder="Nombre público" data-index="2"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" placeholder="Descripción" data-index="3"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" placeholder="Tipo de material" data-index="4">
+                        </th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled">
+                          <select class="form-select" data-index="5">
+                            <option value="">Todos</option>
+                            <option value="true">Activo</option>
+                            <option value="false">Inactivo</option>
+                          </select>
                         </th>
                         <th rowspan="1" colspan="1"></th>
                       </tr>
-                    </thead>
+                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -495,6 +502,12 @@ export default {
           { 'data': 'description' },
           { 'data': 'material_type' },
           {
+            'data': 'is_active',
+            render: function (data, type, row) {
+              return row.is_active ? `<span class="label label-success">Activo</span>` : `<span class="label label-danger">Inactivo</span>`
+            }
+          },
+          {
             'data': 'id',
             className: 'dt-center editor-edit',
             defaultContent: '',
@@ -515,9 +528,19 @@ export default {
       //  }
       // })
       // Filter event handler
-      $('#tableProyects').on('keyup', 'thead input', function () {
-        this.table
-          .column($(this).data('index'))
+      $('#tableProyects').on('keyup', 'tfoot input', function () {
+        var col = $(this).data('index')
+        console.log(col)
+        that.table
+          .column(col)
+          .search(this.value)
+          .draw()
+      })
+      $('#tableProyects').on('change', 'select', function () {
+        var col = $(this).data('index')
+        console.log(col)
+        that.table
+          .column(col)
           .search(this.value)
           .draw()
       })
@@ -627,4 +650,5 @@ table.dataTable thead .sorting_desc:after {
 div#tableProyects_filter {
   display: none;
 }
+th.dt-center, td.dt-center { text-align: center; }
 </style>

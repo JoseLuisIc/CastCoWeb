@@ -39,7 +39,7 @@
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Apellidos</th>
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Foto</th>
+                          tabindex="0" class="sorting_asc">Usuario</th>
                         <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Ciudad</th>
                         <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
