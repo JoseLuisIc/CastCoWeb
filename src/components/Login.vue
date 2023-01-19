@@ -80,7 +80,7 @@ export default {
                 this.$router.push(data.redirect ? data.redirect : 'talents')
                 break
               default:
-                this.$router.push(data.redirect ? data.redirect : 'dashboard')
+                this.$router.push(data.redirect ? data.redirect : 'profile')
                 break
             }
           }
