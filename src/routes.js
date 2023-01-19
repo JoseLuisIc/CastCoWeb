@@ -93,14 +93,14 @@ const routes = [
       {
         path: '/proyects/:id/edit',
         component: EditProyectView,
-        name: 'Proyecto',
-        meta: { description: 'Editar de Proyecto', requiresAuth: true }
+        name: 'Editar',
+        meta: { description: 'Proyecto', requiresAuth: true }
       },
       {
         path: '/proyects/create',
         component: EditProyectView,
-        name: 'Proyecto',
-        meta: { description: 'Editar de Proyecto', requiresAuth: true }
+        name: 'Crear',
+        meta: { description: 'Proyecto', requiresAuth: true }
       },
       {
         path: '/profile',

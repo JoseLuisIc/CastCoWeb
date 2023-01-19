@@ -122,13 +122,46 @@
           <!-- /.box-body -->
         </div>
       </div>
+      <div class="col-md-6" v-show="isMaterial">
+        <div class="box box-default">
+          <div class="box-header with-border">
+            <i class="fa fa-file-photo-o"></i>
+            <h3 class="box-title">Material</h3>
+            <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange">
+          </div><!-- /.box-header -->
+          <div class="box-body">
+            <div class='row margin-bottom'>
+              <div class='col-sm-6'>
+                <div id="preview" v-show="isPreviewFile">
+                  <form id="upload">
+                    <img class='img-responsive' :src='previewSrc' alt='Photo'>
+                  </form>
+                  <br>
+                  <button class="btn btn-success" v-on:click="uploadFile"> <i class="fa fa-upload"></i> Subir
+                    material</button>
+                </div>
+              </div><!-- /.col -->
+              <div class='col-sm-6'>
+                <div class='row'>
+                  <div class='col-sm-6' v-for="(material, index) in materials">
+                    <div class="gallery">
+                      <a target="_blank" :href="material.file">
+                        <img :src='material.file' alt="">
+                      </a>
+                    </div>
+                  </div><!-- /.col -->
+                </div><!-- /.row -->
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div><!-- /.box-body -->
+        </div><!-- /.box -->
+      </div>
     </div>
   </section>
 
 </template>
 
 <script>
-import $ from 'jquery'
 import api from '../../api'
 import Alert from '../widgets/Alert.vue'
 
@@ -140,6 +173,11 @@ export default {
   data() {
     return {
       table: null,
+      materials: [],
+      file: null,
+      previewSrc: '',
+      isPreviewFile: false,
+      isMaterial: false,
       project: {
         id: 0,
         name: '',
@@ -198,9 +236,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      if (this.$route.params.id !== 0) {
+      if (this.$route.params.hasOwnProperty('id')) {
         this.project.id = this.$route.params.id
         this.fetchProyect(this.$route.params.id)
+        this.isMaterial = true
       }
     })
   },
@@ -210,6 +249,7 @@ export default {
         .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           this.project = response.data
+          this.fetchMaterial(this.project.id)
         })
         .catch(error => {
           if (error.response) {
@@ -260,34 +300,6 @@ export default {
     renderView(data, row) {
       return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
     },
-    confirmDelete(idProject) {
-      api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          this.project = response.data
-          $('#btnModalDelete').trigger('click')
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
-    },
-    deleteProyect() {
-      api
-        .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
-        .then(response => {
-          this.table.ajax.reload()
-          $('#closeDelete').trigger('click')
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
-    },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files
       if (files.length) {
@@ -295,11 +307,17 @@ export default {
       }
     },
     createImage(file) {
-      var vm = this
-      vm.project.photo = file
+      var that = this
+      var reader = new FileReader()
+      reader.onload = function (e) {
+        that.file = file
+        that.previewSrc = e.target.result
+        that.isPreviewFile = true
+      }
+      reader.readAsDataURL(file)
     },
     removeImage: function (e) {
-      this.photo = ''
+      this.file = ''
     },
     validateEmail(e) {
       var email = e.target.value
@@ -315,6 +333,38 @@ export default {
       this.title = title
       this.iconClass = iconClass
       this.isAlert = true
+    },
+    uploadFile() {
+      var formData = new FormData()
+      formData.append('file', this.file)
+      api
+        .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          this.materials.push(response.data)
+          document.getElementById('materials').value = ''
+          this.previewSrc = ''
+          this.isPreviewFile = false
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    fetchMaterial(idProject) {
+      var that = this
+      api
+        .request('get', 'projects/' + idProject + '/material/', {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          that.materials = response.data
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     }
   }
 }
@@ -351,5 +401,25 @@ table.dataTable thead .sorting_desc:after {
 
 div#tableProyects_filter {
   display: none;
+}
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: auto;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
 }
 </style>
