@@ -74,13 +74,13 @@ export default {
             }
             switch (decoded.user.role) {
               case util.MANAGER:
-                this.$router.push(data.redirect ? data.redirect : 'admins')
+                this.$router.push('admins')
                 break
               case util.AGENCY:
-                this.$router.push(data.redirect ? data.redirect : 'talents')
+                this.$router.push('talents')
                 break
               default:
-                this.$router.push(data.redirect ? data.redirect : 'profile')
+                this.$router.push('profile')
                 break
             }
           }
