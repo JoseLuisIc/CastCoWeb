@@ -33,7 +33,7 @@
             <div class="row">
               <div class="col-sm-12 table-responsive">
                 <table aria-describedby="example1_info" role="grid" id="tableProyects"
-                  class="table table-bordered table-striped dataTable">
+                  class="table table-bordered table-striped dataTable display responsive nowrap">
                   <thead>
                     <tr role="row">
                       <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
@@ -78,25 +78,25 @@
                         </select>
                       </th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Lugar de producción" data-index="5"></th>
+                          placeholder="Lugar de producción" data-index="6"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Competencia" data-index="6"></th>
+                          placeholder="Competencia" data-index="7"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Caracteristicas" data-index="7"></th>
+                          placeholder="Caracteristicas" data-index="8"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Uso de imagen" data-index="8"></th>
+                          placeholder="Uso de imagen" data-index="9"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Temporalidad" data-index="9"></th>
+                          placeholder="Temporalidad" data-index="10"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Agencia" data-index="10"></th>
+                          placeholder="Agencia" data-index="11"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Presupuesto Agencia" data-index="11"></th>
+                          placeholder="Presupuesto Agencia" data-index="12"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha producción" data-index="12"></th>
+                          placeholder="Fecha producción" data-index="13"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha de montaje" data-index="13"></th>
+                          placeholder="Fecha de montaje" data-index="14"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha de llamada" data-index="14"></th>
+                          placeholder="Fecha de llamada" data-index="15"></th>
                       <th rowspan="1" colspan="1"></th>
                     </tr>
                   </tfoot>
@@ -136,7 +136,7 @@
 import $ from 'jquery'
 import api from '../../api'
 import config from '../../config'
-
+import project from '../../models/project'
 // Datatable Modules
 import 'datatables.net-dt/js/dataTables.dataTables'
 import 'datatables.net-dt/css/jquery.dataTables.min.css'
@@ -145,7 +145,9 @@ import 'datatables.net-buttons/js/buttons.colVis.js'
 import 'datatables.net-buttons/js/buttons.flash.js'
 import 'datatables.net-buttons/js/buttons.html5.js'
 import 'datatables.net-buttons/js/buttons.print.js'
+
 import moment from 'moment'
+import settings from '../../config/settings'
 // Require needed datatables modules
 require('datatables.net')
 export default {
@@ -153,52 +155,8 @@ export default {
   data() {
     return {
       table: null,
-      project: {
-        id: 0,
-        name: '',
-        producer: '',
-        material_type: '',
-        production_place: '',
-        temporality: '',
-        budget: '',
-        fitting_date: '',
-        recording_date: '',
-        created_at: '',
-        public_name: '',
-        competition: '',
-        agency_budget: '',
-        use_of_image: '',
-        callback_date: '',
-        start_date: '',
-        end_date: '',
-        updated_at: '',
-        is_active: false,
-        characteristics: '',
-        description: ''
-      },
-      error: {
-        id: 0,
-        name: '',
-        producer: '',
-        material_type: '',
-        production_place: '',
-        temporality: '',
-        budget: '',
-        fitting_date: '',
-        recording_date: '',
-        created_at: '',
-        public_name: '',
-        competition: '',
-        agency_budget: '',
-        use_of_image: '',
-        callback_date: '',
-        start_date: '',
-        end_date: '',
-        updated_at: '',
-        is_active: false,
-        characteristics: '',
-        description: ''
-      },
+      project: project,
+      error: project,
       projects: [],
       agencies: [],
       states: []
@@ -211,29 +169,7 @@ export default {
   },
   methods: {
     openModal() {
-      this.project = {
-        id: 0,
-        name: '',
-        producer: '',
-        material_type: '',
-        production_place: '',
-        temporality: '',
-        budget: '',
-        fitting_date: '',
-        recording_date: '',
-        created_at: '',
-        public_name: '',
-        competition: '',
-        agency_budget: '',
-        use_of_image: '',
-        callback_date: '',
-        start_date: '',
-        end_date: '',
-        updated_at: '',
-        is_active: false,
-        characteristics: '',
-        description: ''
-      }
+      this.project = project
     },
     editProyect(idProject) {
       this.isNew = false
@@ -258,7 +194,7 @@ export default {
           },
           {
             'extend': 'csv',
-            'title': 'Proyectos_' + moment(new Date()).format('YYYYMMDD'),
+            'title': settings.name + 'Proyectos_' + moment(new Date()).format('YYYYMMDD'),
             'className': 'btn btn-primary',
             'text': '<i class="fa fa-file-excel-o"></i> CSV',
             'titleAttr': 'CSV',
@@ -268,7 +204,7 @@ export default {
           },
           {
             'extend': 'print',
-            'title': 'Proyectos_' + moment(new Date()).format('YYYYMMDD'),
+            'title': settings.name + 'Proyectos_' + moment(new Date()).format('YYYYMMDD'),
             'className': 'btn btn-success',
             'text': '<i class="fa fa-print"></i> Imprimir',
             'titleAttr': 'Imprimir',
@@ -337,18 +273,21 @@ export default {
             }
           }
         ],
+        'columnDefs': [
+          { 'visible': false, 'targets': [6, 7, 8, 9, 10, 11] }
+        ],
         'language': {
           'url': 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json'
         }
       })
       $('#tableProyects thead th').each(function (i) {
         var title = $('#tableProyects thead th').eq($(this).index()).text()
-
+        var checked = !that.table.column(i).visible() ? 'checked' : ''
         $('#hiddenColumns').append(`<li>
                       <!-- Task item -->
                       <div class="form-group" style="margin-bottom: 0px !important;">
                         <div class="form-check" style="padding-left: 5px;">
-                          <input class="form-check-input" type="checkbox" value="${i}">
+                          <input class="form-check-input" type="checkbox" value="${i}" ${checked}>
                           <label class="class="form-check-label"">
                             ${title}
                           </label>
@@ -389,8 +328,12 @@ export default {
       })
     },
     renderView(id, row) {
-      return `<td><button class="btn delete" id="${id}"><i class="fa fa-trash"></i>
-        </button><button class="btn edit" id="${id}"><i class="fa fa-edit"></i></button></td> `
+      return `
+        <td>
+          <button class="btn delete" id="${id}"><i class="fa fa-trash"></i></button>
+          <button class="btn edit" id="${id}"><i class="fa fa-edit"></i></button>
+          <button class="btn view" id="${id}"><i class="fa fa-eye"></i></button>
+        </td>`
     },
     confirmDelete(idProject) {
       api

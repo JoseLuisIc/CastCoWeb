@@ -74,7 +74,7 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group"  v-bind:class="error.email !== '' ? 'has-error' : ''">
+              <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                 <div v-if=error.email class="text-red">
@@ -113,7 +113,7 @@
               <div class="row">
 
                 <div class="col-md-6">
-                  <div class="form-group"  v-bind:class="error.email !== '' ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                     <label for="email" class="col-form-label">Email:</label>
                     <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                     <div v-if=error.email class="text-red">
@@ -122,7 +122,7 @@
                   </div>
                   <div class="form-group">
                     <label for="first_name" class="col-form-label">Nombres:</label>
-                    <input class="form-control" id="first_name" v-model="user.first_name"  />
+                    <input class="form-control" id="first_name" v-model="user.first_name" />
                     <div v-if=error.first_name class="text-red"></div>
                     <p>{{ error.first_name }}</p>
                   </div>
@@ -130,19 +130,19 @@
                     <label for="last_name" class="col-form-label">Apellidos:</label>
                     <input class="form-control" id="last_name" v-model="user.last_name" />
                   </div>
-                  <div class="form-group" v-bind:class="error.age !== 0 ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.age !== '' ? 'has-error' : ''">
                     <label for="age" class="col-form-label">Edad:</label>
                     <input type="number" class="form-control" id="age" v-model="user.age" max="100" min="18" />
                     <div v-if=error.age class="text-red">
                       <p>{{ error.age }}</p>
                     </div>
                   </div>
-                  <div class="form-group" v-bind:class="error.photo !== null ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.photo !== '' ? 'has-error' : ''">
                     <label for="photo" class="col-form-label">Foto:</label>
                     <input type="file" class="form-control" id="file" @change="onFileChange" />
                   </div>
 
-                  <div class="form-group" v-bind:class="error.state !== 0 ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.state !== '' ? 'has-error' : ''">
                     <label for="state" class="col-form-label">Estado:</label>
                     <select name="state" class="form-control" id="state" v-model="user.state.id">
                       <option value="0" selected>Elegir Estado</option>
@@ -152,7 +152,7 @@
                       <p>{{ error.state }}</p>
                     </div>
                   </div>
-                  <div class="form-group" v-bind:class="error.agency !== 0 ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.agency !== '' ? 'has-error' : ''">
                     <label for="agency" class="col-form-label">Agencia:</label>
                     <select name="agency" class="form-control" id="agency" v-model="user.agency">
                       <option value="0" selected>Elegir Agencia</option>
@@ -163,7 +163,7 @@
                       <p>{{ error.agency }}</p>
                     </div>
                   </div>
-                  <div class="form-group" v-bind:class="error.gender !== 0 ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.gender !== '' ? 'has-error' : ''">
                     <label for="gender" class="col-form-label">Genero:</label>
                     <select name="gender" class="form-control" id="gender" v-model="user.gender">
                       <option value="0" selected>Elegir Genero</option>
@@ -197,21 +197,21 @@
                       <p>{{ error.phone }}</p>
                     </div>
                   </div>
-                  <div class="form-group"  v-bind:class="error.height !== 0 ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.height !== '' ? 'has-error' : ''">
                     <label for="height" class="col-form-label">Altura:</label>
                     <input class="form-control" id="height" v-model="user.height" />
                     <div v-if=error.height class="text-red">
                       <p>{{ error.height }}</p>
                     </div>
                   </div>
-                  <div class="form-group" v-bind:class="error.shoe_size !== 0 ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.shoe_size !== '' ? 'has-error' : ''">
                     <label for="shoe_size" class="col-form-label"># Calzado:</label>
                     <input class="form-control" id="shoe_size" v-model="user.shoe_size" />
                     <div v-if=error.shoe_size class="text-red">
                       <p>{{ error.shoe_size }}</p>
                     </div>
                   </div>
-                  <div class="form-group" v-bind:class="error.pant_size !== 0 ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.pant_size !== '' ? 'has-error' : ''">
                     <label for="pant_size" class="col-form-label"># Pantalon:</label>
                     <select name="pant_size" class="form-control" id="pant_size" v-model="user.pant_size">
                       <option value="0" selected>Elegir Talla</option>
@@ -225,7 +225,7 @@
                       <p>{{ error.pant_size }}</p>
                     </div>
                   </div>
-                  <div class="form-group" v-bind:class="error.shirt_size !== 0 ? 'has-error' : ''">
+                  <div class="form-group" v-bind:class="error.shirt_size !== '' ? 'has-error' : ''">
                     <label for="shirt_size" class="col-form-label"># Camisa:</label>
                     <select name="shirt_size" class="form-control" id="shirt_size" v-model="user.shirt_size">
                       <option value="0" selected>Elegir Talla</option>
@@ -366,7 +366,13 @@ export default {
       var userFormData = new FormData()
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
-          userFormData.append(key, this.user[key])
+          if (key === 'state') {
+            var state = this.user[key]
+            console.log(this.user)
+            userFormData.append(key, state.id)
+          } else {
+            userFormData.append(key, this.user[key])
+          }
         }
       })
       api
@@ -376,7 +382,9 @@ export default {
           $('#closeEdit').trigger('click')
         })
         .catch(error => {
-          this.error = modelUser.error
+          Object.keys(this.error).forEach(key => {
+            this.error[key] = ''
+          })
           if (error.response) {
             var errors = error.response.data
             Object.keys(errors).forEach(key => {
@@ -418,9 +426,10 @@ export default {
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           var userData = response.data
+          var state = userData.extras.state === null ? { id: 0, code: '', name: '' } : userData.extras.state
+          userData.extras.state = state
           Object.assign(this.user, userData)
           Object.assign(this.user, userData.extras)
-          console.log(this.user)
           $('#btnModalEdit').trigger('click')
         })
         .catch(error => {

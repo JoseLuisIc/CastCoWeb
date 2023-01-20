@@ -127,31 +127,53 @@
           <div class="box-header with-border">
             <i class="fa fa-file-photo-o"></i>
             <h3 class="box-title">Material</h3>
-            <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange">
+            <div class="form-group">
+              <div class="btn btn-default btn-file">
+                <i class="fa fa-file-o"></i> Cargar material
+                <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange"
+                  accept="image/*,video/mp4">
+              </div>
+              
+              <button v-show="isPreviewFile" class="btn btn-success" style="float: right;" v-on:click="uploadFile"> <i class="fa fa-upload"></i> Subir
+                    material</button>
+              <p class="help-block">Max. 30MB</p>
+            </div>
           </div><!-- /.box-header -->
           <div class="box-body">
             <div class='row margin-bottom'>
               <div class='col-sm-6'>
                 <div id="preview" v-show="isPreviewFile">
                   <form id="upload">
-                    <img class='img-responsive' :src='previewSrc' alt='Photo'>
+                    <img v-show="['jpg', 'png', 'jpeg'].includes(previewSrc.type)" class='img-responsive'
+                      :src='previewSrc.src' alt='Photo'>
+                    <video v-show="['mp4', 'avi'].includes(previewSrc.type)" :src='previewSrc.src' controls
+                      width="500px"></video>
                   </form>
                   <br>
-                  <button class="btn btn-success" v-on:click="uploadFile"> <i class="fa fa-upload"></i> Subir
-                    material</button>
                 </div>
               </div><!-- /.col -->
-              <div class='col-sm-6'>
-                <div class='row'>
-                  <div class='col-sm-6' v-for="(material, index) in materials">
-                    <div class="gallery">
-                      <a target="_blank" :href="material.file">
-                        <img :src='material.file' alt="">
-                      </a>
+              <div class="box-footer">
+                <ul class="mailbox-attachments clearfix">
+                  <li v-for="(material, index) in materials">
+                    <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'avi'].includes(material.type)">
+                      <span class="mailbox-attachment-icon has-img">
+                        <img v-show="['jpg', 'png', 'jpeg'].includes(material.type)" :src='material.file' alt="">
+                        <video v-show="['mp4', 'avi'].includes(material.type)" :src='material.file' controls
+                          width="200px"></video>
+                      </span>
+                      <div class="mailbox-attachment-info">
+                        <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
+                            class="fa fa-trash"></i> Eliminar</a>
+                        <span class="mailbox-attachment-size">
+                          &nbsp;
+                          <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
+                            @click="downloadFile" :id="material.id"><i class="fa fa-cloud-download"></i> Descargar</a>
+                        </span>
+                      </div>
                     </div>
-                  </div><!-- /.col -->
-                </div><!-- /.row -->
-              </div><!-- /.col -->
+                  </li>
+                </ul>
+              </div>
             </div><!-- /.row -->
           </div><!-- /.box-body -->
         </div><!-- /.box -->
@@ -162,6 +184,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import api from '../../api'
 import Alert from '../widgets/Alert.vue'
 
@@ -175,7 +198,7 @@ export default {
       table: null,
       materials: [],
       file: null,
-      previewSrc: '',
+      previewSrc: { src: '', type: '' },
       isPreviewFile: false,
       isMaterial: false,
       project: {
@@ -303,6 +326,9 @@ export default {
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files
       if (files.length) {
+        this.previewSrc.src = ''
+        this.previewSrc.type = ''
+        console.log(this.previewSrc)
         this.createImage(files[0])
       }
     },
@@ -311,8 +337,10 @@ export default {
       var reader = new FileReader()
       reader.onload = function (e) {
         that.file = file
-        that.previewSrc = e.target.result
+        that.previewSrc.src = e.target.result
+        that.previewSrc.type = file.type.split('/').pop()
         that.isPreviewFile = true
+        console.log(that.previewSrc)
       }
       reader.readAsDataURL(file)
     },
@@ -340,9 +368,11 @@ export default {
       api
         .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          this.materials.push(response.data)
+          var material = response.data
+          this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
           document.getElementById('materials').value = ''
-          this.previewSrc = ''
+          this.previewSrc.src = ''
+          this.previewSrc.type = ''
           this.isPreviewFile = false
         })
         .catch(error => {
@@ -357,7 +387,9 @@ export default {
       api
         .request('get', 'projects/' + idProject + '/material/', {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          that.materials = response.data
+          that.materials = response.data.map(function (elem) {
+            return { id: elem['id'], file: elem['file'], type: elem['file'].split('.').pop() }
+          })
         })
         .catch(error => {
           if (error.response) {
@@ -365,6 +397,40 @@ export default {
             console.log(errors)
           }
         })
+    },
+    deleteFile(e) {
+      e.preventDefault()
+      console.log(e.target)
+      var materialId = e.target.id
+      var that = this
+      api
+        .request('delete', `projects/${this.project.id}/material/${materialId}/`, {}, { 'Authorization': localStorage.getItem('token') })
+        .then(response => {
+          that.materials = that.materials.filter(el => el.id !== parseInt(materialId))
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    downloadFile(e) {
+      e.preventDefault()
+      const link = e.target
+      console.log(link.href)
+      this.downloadFile(link.href, moment(new Date()).format('YYYY-MM-DD'))
+    },
+    download(url, filename) {
+      fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+          const link = document.createElement('a')
+          link.href = URL.createObjectURL(blob)
+          link.download = filename
+          link.click()
+        })
+        .catch(console.error)
     }
   }
 }
@@ -402,6 +468,7 @@ table.dataTable thead .sorting_desc:after {
 div#tableProyects_filter {
   display: none;
 }
+
 div.gallery {
   margin: 5px;
   border: 1px solid #ccc;
@@ -421,5 +488,9 @@ div.gallery img {
 div.desc {
   padding: 15px;
   text-align: center;
+}
+
+.box-footer {
+  background-color: transparent !important;
 }
 </style>
