@@ -7,7 +7,7 @@
           <div class="box-header">
             <h3 class="box-title"></h3>
             <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserCreate"><i class="fa fa-plus"> </i> Agregar Nuevo</button>
+              data-target="#modalUserCreate"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
             <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalUserEdit" />
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
@@ -181,6 +181,7 @@ import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
 import config from '../../config'
+import admin from '../../models/admin'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -189,20 +190,9 @@ export default {
   name: 'Admins',
   data() {
     return {
-      user: {
-        id: 0,
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: '',
-        role: util.MANAGER
-      },
-      error: {
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: ''
-      },
+      user: admin,
+      error: admin,
+      table: null,
       users: []
     }
   },
@@ -226,7 +216,7 @@ export default {
       api
         .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          location.reload(true)
+          this.table.ajax.reload()
           $('#closeEdit').trigger('click')
         })
         .catch(error => {
@@ -240,7 +230,7 @@ export default {
       api
         .request('post', 'users/', this.user, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          location.reload(true)
+          this.table.ajax.reload()
           $('#closeCreate').trigger('click')
         })
         .catch(error => {
@@ -271,7 +261,7 @@ export default {
       const params = new URLSearchParams()
       params.append('format', 'datatables')
       var that = this
-      var table = $('#tableUsers').DataTable({
+      this.table = $('#tableUsers').DataTable({
         'processing': true,
         'serverSide': true,
         'ajax': {
@@ -322,7 +312,7 @@ export default {
       // })
       // Filter event handler
       $('#tableUsers').on('keyup', 'thead input', function () {
-        table
+        this.table
           .column($(this).data('index'))
           .search(this.value)
           .draw()

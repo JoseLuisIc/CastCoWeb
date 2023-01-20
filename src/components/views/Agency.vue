@@ -7,7 +7,7 @@
           <div class="box-header">
             <h3 class="box-title"></h3>
             <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserCreate"><i class="fa fa-plus"> </i> Agregar Nuevo</button>
+              data-target="#modalUserCreate"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
             <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalUserEdit" />
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
@@ -28,7 +28,7 @@
               <div class="row">
                 <div class="col-sm-12 table-responsive">
                   <table aria-describedby="example1_info" role="grid" id="tableUsers"
-                    class="table table-bordered table-striped dataTable">
+                    class="table table-bordered table-striped dataTable display responsive nowrap">
                     <thead>
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
@@ -47,16 +47,18 @@
                         <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Acciones</th>
                       </tr>
+                    </thead>
+                    <tfoot>
                       <tr role="row">
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Email" data-index="0"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Nombre agencia" data-index="1"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Encargado" data-index="2"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Telefono" data-index="3"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Ciudad" data-index="5"></th>
-                        <th rowspan="1" colspan="1"><input type="text" placeholder="Ciudad" data-index="6"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Email" data-index="0"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Nombre agencia" data-index="1"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Encargado" data-index="2"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Telefono" data-index="3"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad" data-index="5"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad" data-index="6"></th>
                         <th rowspan="1" colspan="1"></th>
                       </tr>
-                    </thead>
+                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -210,6 +212,7 @@ import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
 import config from '../../config'
+import agency from '../../models/agency'
 // Require needed datatables modules
 require('datatables.net')
 
@@ -222,18 +225,7 @@ export default {
         confirm_password: '',
         error: ''
       },
-      user: {
-        id: 0,
-        email: '',
-        name: '',
-        booker_name: '',
-        first_name: '',
-        last_name: '',
-        instagram: '',
-        phone: '',
-        city: '',
-        role: util.AGENCY
-      },
+      user: agency,
       error: {
         email: '',
         first_name: '',
@@ -251,26 +243,15 @@ export default {
   },
   methods: {
     openModal() {
-      this.user = {
-        id: 0,
-        email: '',
-        name: '',
-        booker_name: '',
-        first_name: '',
-        last_name: '',
-        instagram: '',
-        phone: '',
-        city: '',
-        role: util.AGENCY
-      }
+      this.user = agency
     },
     updateUser(dUser) {
       api
         .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           console.log(response.data)
-          location.reload(true)
           $('#closeEdit').trigger('click')
+          this.table.ajax.reload()
         })
         .catch(error => {
           if (error.response) {
@@ -296,6 +277,9 @@ export default {
     },
     editUser(idUser) {
       console.log(idUser)
+      Object(this.error).keys(key => {
+        this.error[key] = ''
+      })
       this.isNew = false
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
@@ -377,7 +361,7 @@ export default {
       //   }
       // })
       // Filter event handler
-      $('#tableUsers').on('keyup', 'thead input', function () {
+      $('#tableUsers').on('keyup', 'tfoot input', function () {
         table
           .column($(this).data('index'))
           .search(this.value)

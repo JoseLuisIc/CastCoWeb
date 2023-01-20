@@ -187,6 +187,7 @@
 import moment from 'moment'
 import api from '../../api'
 import Alert from '../widgets/Alert.vue'
+import project from '../../models/project'
 
 export default {
   name: 'Admins',
@@ -201,52 +202,8 @@ export default {
       previewSrc: { src: '', type: '' },
       isPreviewFile: false,
       isMaterial: false,
-      project: {
-        id: 0,
-        name: '',
-        producer: '',
-        material_type: '',
-        production_place: '',
-        temporality: '',
-        budget: '',
-        fitting_date: '',
-        recording_date: '',
-        created_at: '',
-        public_name: '',
-        competition: '',
-        agency_budget: '',
-        use_of_image: '',
-        callback_date: '',
-        start_date: '',
-        end_date: '',
-        updated_at: '',
-        is_active: false,
-        characteristics: '',
-        description: ''
-      },
-      error: {
-        id: 0,
-        name: '',
-        producer: '',
-        material_type: '',
-        production_place: '',
-        temporality: '',
-        budget: '',
-        fitting_date: '',
-        recording_date: '',
-        created_at: '',
-        public_name: '',
-        competition: '',
-        agency_budget: '',
-        use_of_image: '',
-        callback_date: '',
-        start_date: '',
-        end_date: '',
-        updated_at: '',
-        is_active: false,
-        characteristics: '',
-        description: ''
-      },
+      project: project,
+      error: project,
       projects: [],
       agencies: [],
       states: [],

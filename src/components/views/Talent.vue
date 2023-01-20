@@ -7,7 +7,7 @@
           <div class="box-header">
             <h3 class="box-title"></h3>
             <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserCreate"><i class="fa fa-plus"> </i> Agregar Nuevo</button>
+              data-target="#modalUserCreate"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
             <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalUserEdit" />
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
@@ -345,6 +345,7 @@ export default {
         password: '',
         confirm_password: ''
       },
+      table: null,
       user: modelUser.user,
       error: modelUser.error,
       users: [],
@@ -360,7 +361,6 @@ export default {
   },
   methods: {
     openModal() {
-      this.user = modelUser.user
     },
     updateUser(dUser) {
       var userFormData = new FormData()
@@ -378,13 +378,11 @@ export default {
       api
         .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
-          location.reload(true)
+          this.table.ajax.reload()
           $('#closeEdit').trigger('click')
         })
         .catch(error => {
-          Object.keys(this.error).forEach(key => {
-            this.error[key] = ''
-          })
+          this.resetErrors()
           if (error.response) {
             var errors = error.response.data
             Object.keys(errors).forEach(key => {
@@ -415,7 +413,7 @@ export default {
       console.log(idUser)
       params.append('format', 'json')
       params.append('length', 100)
-      this.error = modelUser.error
+      this.resetErrors()
       api
         .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
@@ -446,7 +444,7 @@ export default {
         // params.append('agency', session.user.id)
       }
       var that = this
-      var table = $('#tableUsers').DataTable({
+      that.table = $('#tableUsers').DataTable({
         'processing': true,
         'serverSide': true,
         'ajax': {
@@ -533,10 +531,19 @@ export default {
       // })
       // Filter event handler
       $('#tableUsers').on('keyup', 'thead input', function () {
-        table
+        that.table
           .column($(this).data('index'))
           .search(this.value)
           .draw()
+      })
+      $('#btnModalCreate').on('click', function (e) {
+        e.preventDefault()
+
+        console.log(that.user, that.error)
+        Object.keys(that.user).forEach(key => { that.user[key] = '' })
+        Object.keys(that.error).forEach(key => {
+          that.error[key] = ''
+        })
       })
     },
     renderView(data, row) {
@@ -672,6 +679,11 @@ export default {
             this.reset.error = errors.password[0]
           }
         })
+    },
+    resetErrors() {
+      Object.keys(this.error).forEach(key => {
+        this.error[key] = ''
+      })
     }
   }
 }
