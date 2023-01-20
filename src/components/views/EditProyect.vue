@@ -226,7 +226,7 @@ export default {
   methods: {
     fetchProyect(idProject) {
       api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.project = response.data
           this.fetchMaterial(this.project.id)
@@ -246,7 +246,7 @@ export default {
         }
       })
       api
-        .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': localStorage.getItem('token') })
+        .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.alertShow('Guardar', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
         })
@@ -265,7 +265,7 @@ export default {
     },
     saveProyect() {
       api
-        .request('post', 'projects/', this.project, { 'Authorization': localStorage.getItem('token') })
+        .request('post', 'projects/', this.project, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.alertShow('Actualizacion', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
         })
@@ -323,7 +323,7 @@ export default {
       var formData = new FormData()
       formData.append('file', this.file)
       api
-        .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': localStorage.getItem('token') })
+        .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': this.$store.state.token })
         .then(response => {
           var material = response.data
           this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
@@ -342,7 +342,7 @@ export default {
     fetchMaterial(idProject) {
       var that = this
       api
-        .request('get', 'projects/' + idProject + '/material/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'projects/' + idProject + '/material/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           that.materials = response.data.map(function (elem) {
             return { id: elem['id'], file: elem['file'], type: elem['file'].split('.').pop() }
@@ -361,7 +361,7 @@ export default {
       var materialId = e.target.id
       var that = this
       api
-        .request('delete', `projects/${this.project.id}/material/${materialId}/`, {}, { 'Authorization': localStorage.getItem('token') })
+        .request('delete', `projects/${this.project.id}/material/${materialId}/`, {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           that.materials = that.materials.filter(el => el.id !== parseInt(materialId))
         })

@@ -34,7 +34,7 @@ export default {
   mounted() {
     console.log(this.user)
     $.ajaxSetup({
-      headers: { 'Authorization': localStorage.getItem('token') },
+      headers: { 'Authorization': this.$store.state.token },
       error: function (x, status, error) {
         console.log(x, status, error)
       }

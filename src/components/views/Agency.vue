@@ -247,7 +247,7 @@ export default {
     },
     updateUser(dUser) {
       api
-        .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
           console.log(response.data)
           $('#closeEdit').trigger('click')
@@ -262,7 +262,7 @@ export default {
     },
     saveUser() {
       api
-        .request('post', 'users/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
           var user = response.data
           $('#closeCreate').trigger('click')
@@ -282,7 +282,7 @@ export default {
       })
       this.isNew = false
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           var userData = response.data
           Object.assign(this.user, userData)
@@ -384,7 +384,7 @@ export default {
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
           $('#btnModalDelete').trigger('click')
@@ -400,7 +400,7 @@ export default {
       $('#closeDelete').trigger('click')
       console.log(this.user)
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.callUser()
         })
@@ -430,7 +430,7 @@ export default {
         confirm_password: this.reset.confirm_password
       }
       api
-        .request('post', 'reset/password/', json, { 'Authorization': localStorage.getItem('token') })
+        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.reset.password = ''
           this.reset.confirm_password = ''

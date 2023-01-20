@@ -274,7 +274,7 @@ export default {
       var idUser = session.user.id
       var that = this
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           var userData = response.data
           Object.assign(that.user, userData)
@@ -298,7 +298,7 @@ export default {
       params.append('ordering', '')
       params.append('length', 32)
       api
-        .request('get', 'states/?' + params, {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'states/?' + params, {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.states = response.data.results
         })
@@ -339,7 +339,7 @@ export default {
         this.error[key] = ''
       })
       api
-        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': localStorage.getItem('token') })
+        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.alertShow('Exito', 'Se guardo correctamente los datos', 'success', ['fa fa-check'])
         })

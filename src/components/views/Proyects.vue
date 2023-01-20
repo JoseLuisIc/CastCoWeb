@@ -165,6 +165,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.callProyect()
+      console.log(this.$store.state.token)
     })
   },
   methods: {
@@ -337,7 +338,7 @@ export default {
     },
     confirmDelete(idProject) {
       api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.project = response.data
           $('#btnModalDelete').trigger('click')
@@ -355,7 +356,7 @@ export default {
         projectFormData.append(key, dProyect[key])
       })
       api
-        .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': localStorage.getItem('token') })
+        .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
         })
         .catch(error => {
@@ -372,7 +373,7 @@ export default {
     },
     deleteProyect() {
       api
-        .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.table.ajax.reload()
           $('#closeDelete').trigger('click')
@@ -386,7 +387,7 @@ export default {
     },
     getStates() {
       api
-        .request('get', 'states/?', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'states/?', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.states = response.data.results
         })

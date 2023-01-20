@@ -376,7 +376,7 @@ export default {
         }
       })
       api
-        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': localStorage.getItem('token') })
+        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.table.ajax.reload()
           $('#closeEdit').trigger('click')
@@ -393,7 +393,7 @@ export default {
     },
     saveUser() {
       api
-        .request('post', 'users/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
           var user = response.data
           $('#closeCreate').trigger('click')
@@ -415,13 +415,13 @@ export default {
       params.append('length', 100)
       this.resetErrors()
       api
-        .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.agencies = response.data.results
         })
         .catch(console.log)
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           var userData = response.data
           var state = userData.extras.state === null ? { id: 0, code: '', name: '' } : userData.extras.state
@@ -562,7 +562,7 @@ export default {
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
           $('#btnModalDelete').trigger('click')
@@ -578,7 +578,7 @@ export default {
       $('#closeDelete').trigger('click')
       console.log(this.user)
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.callUser()
         })
@@ -609,7 +609,7 @@ export default {
       params.append('ordering', '')
       params.append('length', 32)
       api
-        .request('get', 'states/?' + params, {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'states/?' + params, {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.states = response.data.results
         })
@@ -647,7 +647,7 @@ export default {
     },
     modalResetPwd(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
           $('#btnModalPwd').trigger('click')
@@ -666,7 +666,7 @@ export default {
         confirm_password: this.reset.confirm_password
       }
       api
-        .request('post', 'reset/password/', json, { 'Authorization': localStorage.getItem('token') })
+        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.reset.password = ''
           this.reset.confirm_password = ''

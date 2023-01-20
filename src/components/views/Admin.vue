@@ -214,7 +214,7 @@ export default {
     },
     updateUser(dUser) {
       api
-        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.table.ajax.reload()
           $('#closeEdit').trigger('click')
@@ -228,7 +228,7 @@ export default {
     },
     saveUser() {
       api
-        .request('post', 'users/', this.user, { 'Authorization': localStorage.getItem('token') })
+        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.table.ajax.reload()
           $('#closeCreate').trigger('click')
@@ -245,7 +245,7 @@ export default {
       console.log(idUser)
       this.isNew = false
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
           $('#btnModalEdit').trigger('click')
@@ -323,7 +323,7 @@ export default {
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
           $('#btnModalDelete').trigger('click')
@@ -339,7 +339,7 @@ export default {
       $('#closeDelete').trigger('click')
       console.log(this.user)
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': localStorage.getItem('token') })
+        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.callUser()
         })
