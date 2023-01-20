@@ -69,7 +69,7 @@
                       <label for="photo" class="col-form-label">Foto:</label>
                       <div>
                         <span class="mailbox-attachment-icon has-img">
-                          <img v-show="isPreviewFile" :src='previewSrc' alt="" width="400px">
+                          <img style="border-radius: 50%" v-show="isPreviewFile" :src='previewSrc' alt="" width="400px">
                         </span>
                         <div class="mailbox-attachment-info">
                           <!-- <a class="btn btn-default btn-xs pull-left deleteFile"><i class="fa fa-trash"></i>
@@ -79,7 +79,7 @@
                             <div class="btn btn-default btn-file">
                               <i class="fa fa-file-o"></i> Cambiar Foto
                               <input type="file" name="materials" class="form-control btn btn-default btn-xs pull-right"
-                                id="materials" @change="onFileChange" accept="image/*,video/mp4">
+                                id="materials" @change="onFileChange" accept="image/*">
                             </div>
                           </span>
                         </div>
