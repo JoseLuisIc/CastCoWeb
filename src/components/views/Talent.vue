@@ -113,6 +113,28 @@
               <div class="row">
 
                 <div class="col-md-6">
+                  <div class="form-group" v-bind:class="error.photo !== '' ? 'has-error' : ''">
+                    <label for="photo" class="col-form-label">Foto:</label>
+                    <ul class="mailbox-attachments clearfix">
+                      <li>
+                        <div>
+                          <span class="mailbox-attachment-icon has-img">
+                            <img>
+                          </span>
+                          <div class="mailbox-attachment-info">
+                            <span class="mailbox-attachment-size">
+                              &nbsp;
+                              <div class="btn btn-default btn-file">
+                                <i class="fa fa-file-o"></i> Cargar material
+                                <input type="file" name="materials" class="form-control" id="materials"
+                                  @change="onFileChange" accept="image/*,video/mp4">
+                              </div>
+                            </span>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
                   <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                     <label for="email" class="col-form-label">Email:</label>
                     <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
@@ -136,10 +158,6 @@
                     <div v-if=error.age class="text-red">
                       <p>{{ error.age }}</p>
                     </div>
-                  </div>
-                  <div class="form-group" v-bind:class="error.photo !== '' ? 'has-error' : ''">
-                    <label for="photo" class="col-form-label">Foto:</label>
-                    <input type="file" class="form-control" id="file" @change="onFileChange" />
                   </div>
 
                   <div class="form-group" v-bind:class="error.state !== '' ? 'has-error' : ''">
