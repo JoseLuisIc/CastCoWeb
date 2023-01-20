@@ -5,11 +5,11 @@
         <!-- Profile Image -->
         <div class="box box-primary">
           <div class="box-body box-profile">
-            <img class="profile-user-img img-responsive img-circle" v-bind:src="user.photo" alt="User profile picture">
+            <img class="profile-user-img img-responsive img-circle" v-bind:src="previewSrc" alt="User profile picture">
             <h3 class="profile-username text-center">{{ user.first_name }} {{ user.last_name }}</h3>
             <p class="text-muted text-center">{{ user.job_occupation }}</p>
 
-            <ul class="list-group list-group-unbordered">
+            <!--<ul class="list-group list-group-unbordered">
               <li class="list-group-item">
                 <b>Followers</b> <a class="pull-right">1,322</a>
               </li>
@@ -21,7 +21,7 @@
               </li>
             </ul>
 
-            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>-->
           </div><!-- /.box-body -->
         </div><!-- /.box -->
 
@@ -31,14 +31,8 @@
             <h3 class="box-title">Acerca de mí</h3>
           </div><!-- /.box-header -->
           <div class="box-body">
-            <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
-            <p class="text-muted">
-              B.S. in Computer Science from the University of Tennessee at Knoxville
-            </p>
 
-            <hr>
-
-            <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+            <strong><i class="fa fa-map-marker margin-r-5"></i> Estado</strong>
             <p class="text-muted">{{ user.state.name }}</p>
 
             <hr>
@@ -55,15 +49,15 @@
 
             <hr>
 
-            <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
           </div><!-- /.box-body -->
         </div><!-- /.box -->
       </div><!-- /.col -->
       <div class="col-md-9">
+        <alert v-if="isAlert" :type="type" :title="title" :iconClasses="iconClass" :dismissible="false">{{ message }}
+        </alert>
         <div class="nav-tabs-custom">
           <ul class="nav nav-tabs">
-            <li class="active"><a href="#settings" data-toggle="tab">Settings</a></li>
+            <li class="active"><a href="#settings" data-toggle="tab">Informacion del perfil</a></li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="settings">
@@ -71,6 +65,26 @@
                 <div class="row">
 
                   <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="photo" class="col-form-label">Foto:</label>
+                      <div>
+                        <span class="mailbox-attachment-icon has-img">
+                          <img v-show="isPreviewFile" :src='previewSrc' alt="" width="400px">
+                        </span>
+                        <div class="mailbox-attachment-info">
+                          <!-- <a class="btn btn-default btn-xs pull-left deleteFile"><i class="fa fa-trash"></i>
+                            Eliminar</a> -->
+                          <span class="mailbox-attachment-size">
+                            &nbsp;
+                            <div class="btn btn-default btn-file">
+                              <i class="fa fa-file-o"></i> Cambiar Foto
+                              <input type="file" name="materials" class="form-control btn btn-default btn-xs pull-right"
+                                id="materials" @change="onFileChange" accept="image/*,video/mp4">
+                            </div>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                     <div class="form-group">
                       <label for="email" class="col-form-label">Email:</label>
                       <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
@@ -87,6 +101,18 @@
                       <input class="form-control" id="last_name" v-model="user.last_name" />
                     </div>
                     <div class="form-group">
+                      <label for="lgtbq" class="col-form-label">LGTBQ:</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
+                        v-model="user.lgtbq">
+                      <label class="form-check-label" for="flexCheckChecked">
+                        Pertenesco a la comunidad
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
                       <label for="age" class="col-form-label">Edad:</label>
                       <input type="number" class="form-control" id="age" v-model="user.age" max="100" min="18" />
                       <div v-if=error.age class="text-red">
@@ -94,29 +120,14 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="photo" class="col-form-label">Foto:</label>
-                      <input type="file" class="form-control" id="state" @change="onFileChange" />
-                    </div>
-                    <div class="form-group">
                       <label for="state" class="col-form-label">Estado:</label>
-                      <select name="state" class="form-control" id="state" v-model="user.state">
+                      <select name="state" class="form-control" id="state" v-model="user.state.id">
                         <option value="0" selected>Elegir Estado</option>
                         <option v-for="(state, index) in states" :key="index" :value="state.id">{{ state.name }}
                         </option>
                       </select>
                       <div v-if=error.state class="text-red">
                         <p>{{ error.state }}</p>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="agency" class="col-form-label">Agencia:</label>
-                      <select name="agency" class="form-control" id="agency" v-model="user.agency">
-                        <option value="0" selected>Elegir Agencia</option>
-                        <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.name }}
-                        </option>
-                      </select>
-                      <div v-if=error.agency class="text-red">
-                        <p>{{ error.agency }}</p>
                       </div>
                     </div>
                     <div class="form-group">
@@ -131,18 +142,6 @@
                         <p>{{ error.gender }}</p>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label for="lgtbq" class="col-form-label">LGTBQ:</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
-                        v-model="user.lgtbq">
-                      <label class="form-check-label" for="flexCheckChecked">
-                        Pertenesco a la comunidad
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
                     <div class="form-group">
                       <label for="instagram" class="col-form-label">Instagram:</label>
                       <input class="form-control" id="instagram" v-model="user.instagram" />
@@ -232,11 +231,15 @@
 import moment from 'moment'
 import { timeline } from '../../demo'
 import api from '../../api'
-import util from '../../utils/util'
 import session from '../../utils/session'
+import user from '../../models/user'
+import Alert from '../widgets/Alert.vue'
 
 export default {
   name: 'Tasks',
+  components: {
+    Alert
+  },
   mounted() {
     this.$nextTick(() => {
       this.fetchProfile()
@@ -245,50 +248,17 @@ export default {
   },
   data() {
     return {
-      user: {
-        id: 0,
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: '',
-        photo: null,
-        age: 18,
-        state: 0,
-        agency: 0,
-        gender: 0,
-        lgtbq: false,
-        phone: null,
-        height: 0,
-        shoe_size: 0,
-        pant_size: 0,
-        shirt_size: 0,
-        job_occupation: '',
-        skills: '',
-        role: util.TALENT
-      },
-      error: {
-        id: 0,
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: '',
-        photo: null,
-        age: 0,
-        state: 0,
-        agency: 0,
-        gender: 0,
-        lgtbq: false,
-        phone: null,
-        height: 0,
-        shoe_size: 0,
-        pant_size: 0,
-        shirt_size: 0,
-        job_occupation: '',
-        skills: '',
-        role: util.TALENT
-      },
+      isAlert: false,
+      type: '',
+      message: '',
+      title: '',
+      iconClass: [],
+      user: user.user,
+      error: user.error,
       agencies: [],
-      states: []
+      states: [],
+      previewSrc: '',
+      isPreviewFile: false
     }
   },
   computed: {
@@ -302,12 +272,18 @@ export default {
   methods: {
     fetchProfile() {
       var idUser = session.user.id
+      var that = this
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
           var userData = response.data
-          Object.assign(this.user, userData)
-          Object.assign(this.user, userData.extras)
+          Object.assign(that.user, userData)
+          Object.assign(that.user, userData.extras)
+          if (that.user.photo !== null) {
+            that.isPreviewFile = true
+            that.previewSrc = that.user.photo
+            console.log(that.previewSrc)
+          }
         })
         .catch(error => {
           if (error.response) {
@@ -345,14 +321,30 @@ export default {
       var userFormData = new FormData()
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
-          userFormData.append(key, this.user[key])
+          if (key === 'state') {
+            var state = this.user[key]
+            userFormData.append(key, state.id)
+          } else {
+            if (key === 'photo') {
+              if (this.user[key] instanceof File) {
+                userFormData.append(key, this.user[key])
+              }
+            } else {
+              userFormData.append(key, this.user[key])
+            }
+          }
         }
+      })
+      Object.keys(this.error).forEach(key => {
+        this.error[key] = ''
       })
       api
         .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': localStorage.getItem('token') })
         .then(response => {
+          this.alertShow('Exito', 'Se guardo correctamente los datos', 'success', ['fa fa-check'])
         })
         .catch(error => {
+          this.alertShow('Error', 'No se pudo guardar intente nuevamente', 'error', ['fa fa-ban'])
           Object.keys(this.error).forEach(key => {
             this.error[key] = ''
           })
@@ -371,9 +363,22 @@ export default {
       }
     },
     createImage(file) {
-      console.log(file)
-      var vm = this
-      vm.user.photo = file
+      var that = this
+      var reader = new FileReader()
+      reader.onload = function (e) {
+        that.file = file
+        that.previewSrc = e.target.result
+        that.isPreviewFile = true
+      }
+      reader.readAsDataURL(file)
+      that.user.photo = file
+    },
+    alertShow(title, message, type, iconClass) {
+      this.message = message
+      this.type = type
+      this.title = title
+      this.iconClass = iconClass
+      this.isAlert = true
     }
   }
 }
