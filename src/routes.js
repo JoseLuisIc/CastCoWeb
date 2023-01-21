@@ -12,6 +12,8 @@ import EditProyectView from './components/views/EditProyect.vue'
 import ProfileView from './components/views/Profile.vue'
 import auth from './components/middleware/auth'
 import admin from './components/middleware/admin'
+import ProyectsDetailView from './components/views/ProyectDetail.vue'
+
 // Routes
 const routes = [
   {
@@ -81,6 +83,16 @@ const routes = [
         path: '/proyects/create',
         component: EditProyectView,
         name: 'Crear',
+        meta: {
+          description: 'Proyecto',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/proyects/detail/:id',
+        component: ProyectsDetailView,
+        name: 'Detalle',
         meta: {
           description: 'Proyecto',
           requiresAuth: true,

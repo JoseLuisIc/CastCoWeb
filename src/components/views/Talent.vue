@@ -117,7 +117,7 @@
                     <label for="photo" class="col-form-label">Foto:</label>
                     <div>
                       <span class="mailbox-attachment-icon has-img">
-                        <img style="border-radius: 50%" v-show="isPreviewFile" :src='previewSrc' alt="" width="400px">
+                        <img style="border-radius: 50%" v-show="isPreviewFile" :src='previewSrc' alt="" width="200px">
                       </span>
                       <div class="mailbox-attachment-info">
                         <!-- <a class="btn btn-default btn-xs pull-left deleteFile"><i class="fa fa-trash"></i>

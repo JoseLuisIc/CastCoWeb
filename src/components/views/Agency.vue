@@ -345,7 +345,7 @@ export default {
         ],
         columnDefs: [
           {
-            target: 4,
+            targets: [4],
             visible: false,
             searchable: false
           }

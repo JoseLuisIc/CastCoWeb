@@ -3,109 +3,118 @@
     <div class="row center-block">
       <h2></h2>
       <div class="col-md-12">
-        <div class="box">
-          <div class="box-header">
-            <h3 class="box-title"></h3>
-            <router-link to="/proyects/create" class="btn btn-primary"> <i class="fa fa-plus"> </i> Agregar
-              Nuevo</router-link>
-            <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalProyectDelete" />
+        <!-- Custom Tabs -->
+        <div class="nav-tabs-custom">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab"><i class="fa fa-user fa-lg"></i> Postulaciones</a>
+            </li>
+            <li><a href="#tab_2" data-toggle="tab"><i class="fa fa-star-o fa-lg"></i> Castings</a></li>
+            <!-- <li><a href="#tab_3" data-toggle="tab"><i class="fa fa-fa-users fa-lg"> Personajes</a></li> -->
+            <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab_1">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title"></h3>
+                  <router-link to="/proyects/create" class="btn btn-primary"> <i class="fa fa-plus"> </i> Agregar
+                    Nuevo</router-link>
+                  <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
+                    data-target="#modalProyectDelete" />
 
-            <div class="btn-group" style="float: right;">
-              <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false"> Columnas Visibles
-              </button>
-              <ul class="dropdown-menu" id="hiddenColumns">
-              </ul>
-            </div>
-          </div>
-          <!-- /.box-header -->
-          <div class="box-body">
-            <div class="dataTables_wrapper form-inline dt-bootstrap" id="example1_wrapper">
-              <div class="row">
-                <div class="col-sm-6">
-                  <div id="example1_length" class="dataTables_length">
-
+                  <div class="btn-group" style="float: right;">
+                    <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false"> Columnas Visibles
+                    </button>
+                    <ul class="dropdown-menu" id="hiddenColumns">
+                    </ul>
                   </div>
                 </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                </div>
+                <!-- /.box-body -->
               </div>
-            </div><!-- /.form-group -->
-            <div class="row">
-              <div class="col-sm-12 table-responsive">
-                <table aria-describedby="example1_info" role="grid" id="tableProyects"
-                  class="table table-bordered table-striped dataTable display responsive nowrap">
-                  <thead>
-                    <tr role="row">
-                      <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                        class="sorting_asc">Productora</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="1">Nombre</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="2">Nombre público
-                      </th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="3">Descripción</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="4">Tipo de material</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="5">Status</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Lugar de producción</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Competencia</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Caracteristicas</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Uso de imagen</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Temporalidad</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Agencia</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Presupuesto Agencia</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Fecha producción</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Fecha de montaje</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Fecha de llamada</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Productora" data-index="0"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Nombre" data-index="1"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Nombre público" data-index="2"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Descripción" data-index="3"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Tipo de material" data-index="4">
-                      </th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled">
-                        <select class="form-control" data-index="5" id="status">
-                          <option value="">Todos</option>
-                          <option value="true">Activo</option>
-                          <option value="false">Inactivo</option>
-                        </select>
-                      </th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Lugar de producción" data-index="6"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Competencia" data-index="7"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Caracteristicas" data-index="8"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Uso de imagen" data-index="9"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Temporalidad" data-index="10"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Agencia" data-index="11"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Presupuesto Agencia" data-index="12"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha producción" data-index="13"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha de montaje" data-index="14"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha de llamada" data-index="15"></th>
-                      <th rowspan="1" colspan="1"></th>
-                    </tr>
-                  </tfoot>
-                </table>
+              <div class="row">
+                <div class="col-sm-12 table-responsive">
+                  <table aria-describedby="example1_info" role="grid" id="tableProyects"
+                    class="table table-bordered table-striped dataTable display responsive nowrap">
+                    <thead>
+                      <tr role="row">
+                        <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          class="sorting_asc">Productora</th>
+                        <th colspan="1" rowspan="1" class="sorting" tabindex="1">Nombre</th>
+                        <th colspan="1" rowspan="1" class="sorting" tabindex="2">Nombre público
+                        </th>
+                        <th colspan="1" rowspan="1" class="sorting" tabindex="3">Descripción</th>
+                        <th colspan="1" rowspan="1" class="sorting" tabindex="4">Tipo de material</th>
+                        <th colspan="1" rowspan="1" class="sorting" tabindex="5">Status</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Lugar de producción</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Competencia</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Caracteristicas</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Uso de imagen</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Temporalidad</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Agencia</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Presupuesto Agencia</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Fecha producción</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Fecha de montaje</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Fecha de llamada</th>
+                        <th colspan="1" rowspan="1" class="no-sort">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Productora" data-index="0"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Nombre" data-index="1"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Nombre público" data-index="2"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Descripción" data-index="3"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Tipo de material" data-index="4">
+                        </th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled">
+                          <select class="form-control" data-index="5" id="status">
+                            <option value="">Todos</option>
+                            <option value="true">Activo</option>
+                            <option value="false">Inactivo</option>
+                          </select>
+                        </th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Lugar de producción" data-index="6"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Competencia" data-index="7"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Caracteristicas" data-index="8"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Uso de imagen" data-index="9"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Temporalidad" data-index="10"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Agencia" data-index="11"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Presupuesto Agencia" data-index="12"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Fecha producción" data-index="13"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Fecha de montaje" data-index="14"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                            placeholder="Fecha de llamada" data-index="15"></th>
+                        <th rowspan="1" colspan="1"></th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
               </div>
-            </div>
-          </div>
-          <!-- /.box-body -->
-        </div>
+            </div><!-- /.tab-pane -->
+            <div class="tab-pane" id="tab_2">
+            </div><!-- /.tab-pane -->
+            <!--<div class="tab-pane" id="tab_3">
+            </div> /.tab-pane -->
+          </div><!-- /.tab-content -->
+        </div><!-- nav-tabs-custom -->
       </div>
     </div>
     <div class="modal fade" id="modalProyectDelete" tabindex="-1" role="dialog"
@@ -143,7 +152,6 @@ import 'datatables.net-buttons/js/buttons.colVis.js'
 import 'datatables.net-buttons/js/buttons.flash.js'
 import 'datatables.net-buttons/js/buttons.html5.js'
 import 'datatables.net-buttons/js/buttons.print.js'
-
 import moment from 'moment'
 import settings from '../../config/settings'
 // Require needed datatables modules
@@ -230,9 +238,6 @@ export default {
             })
             $('.edit').on('click', function () {
               that.editProyect(this.id)
-            })
-            $('.view').on('click', function () {
-              that.detailProyect(this.id)
             })
           },
           error: function (jqXHR, ajaxOptions, thrownError) {
@@ -417,8 +422,13 @@ export default {
           }
         })
     },
-    detailProyect(idProject) {
-      this.$router.push({ path: `/proyects/detail/${idProject}`, params: { id: idProject } })
+    validateEmail(e) {
+      var email = e.target.value
+      if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        this.error.email = ''
+      } else {
+        this.error.email = 'Ingrese un correo valido'
+      }
     }
   }
 }
