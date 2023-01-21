@@ -115,25 +115,23 @@
                 <div class="col-md-6">
                   <div class="form-group" v-bind:class="error.photo !== '' ? 'has-error' : ''">
                     <label for="photo" class="col-form-label">Foto:</label>
-                    <ul class="mailbox-attachments clearfix">
-                      <li>
-                        <div>
-                          <span class="mailbox-attachment-icon has-img">
-                            <img>
-                          </span>
-                          <div class="mailbox-attachment-info">
-                            <span class="mailbox-attachment-size">
-                              &nbsp;
-                              <div class="btn btn-default btn-file">
-                                <i class="fa fa-file-o"></i> Cargar material
-                                <input type="file" name="materials" class="form-control" id="materials"
-                                  @change="onFileChange" accept="image/*,video/mp4">
-                              </div>
-                            </span>
+                    <div>
+                      <span class="mailbox-attachment-icon has-img">
+                        <img style="border-radius: 50%" v-show="isPreviewFile" :src='previewSrc' alt="" width="400px">
+                      </span>
+                      <div class="mailbox-attachment-info">
+                        <!-- <a class="btn btn-default btn-xs pull-left deleteFile"><i class="fa fa-trash"></i>
+                            Eliminar</a> -->
+                        <span class="mailbox-attachment-size">
+                          &nbsp;
+                          <div class="btn btn-default btn-file">
+                            <i class="fa fa-file-o"></i> Cambiar Foto
+                            <input type="file" name="materials" class="form-control btn btn-default btn-xs pull-right"
+                              id="materials" @change="onFileChange" accept="image/*">
                           </div>
-                        </div>
-                      </li>
-                    </ul>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                   <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                     <label for="email" class="col-form-label">Email:</label>
@@ -368,7 +366,9 @@ export default {
       error: modelUser.error,
       users: [],
       agencies: [],
-      states: []
+      states: [],
+      previewSrc: '',
+      isPreviewFile: false
     }
   },
   mounted() {
@@ -426,6 +426,7 @@ export default {
         })
     },
     editUser(idUser) {
+      var that = this
       this.isNew = false
       const params = new URLSearchParams()
       console.log(idUser)
@@ -446,6 +447,11 @@ export default {
           userData.extras.state = state
           Object.assign(this.user, userData)
           Object.assign(this.user, userData.extras)
+          if (that.user.photo !== null) {
+            that.isPreviewFile = true
+            that.previewSrc = that.user.photo
+            console.log(that.previewSrc)
+          }
           $('#btnModalEdit').trigger('click')
         })
         .catch(error => {
@@ -614,9 +620,15 @@ export default {
       }
     },
     createImage(file) {
-      console.log(file)
-      var vm = this
-      vm.user.photo = file
+      var that = this
+      var reader = new FileReader()
+      reader.onload = function (e) {
+        that.file = file
+        that.previewSrc = e.target.result
+        that.isPreviewFile = true
+      }
+      reader.readAsDataURL(file)
+      that.user.photo = file
     },
     removeImage: function (e) {
       this.photo = ''
