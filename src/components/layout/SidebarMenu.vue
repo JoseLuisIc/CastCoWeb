@@ -18,19 +18,28 @@
       </a>
       <ul class="treeview-menu">
         <li v-bind:class="{ active: slug === 'admins' }">
-          <a href="/admins">
-            <i class="fa fa-user"></i> Administradores
-          </a>
+          <router-link class="pageLink" to="/admins" v-if="user.roles === MANAGER">
+            <a>
+              <i class="fa fa-user"></i>
+              <span class="page">Administradores</span>
+            </a>
+          </router-link>
         </li>
         <li v-bind:class="{ active: slug === 'talents' }">
-          <a href="/talents">
-            <i class="fa fa-user"></i> Talentos
-          </a>
+          <router-link class="pageLink" to="/talents" v-if="user.roles === MANAGER">
+            <a>
+              <i class="fa fa-user"></i>
+              <span class="page">Talentos</span>
+            </a>
+          </router-link>
         </li>
         <li v-bind:class="{ active: slug === 'agencies' }">
-          <a href="/agencies">
-            <i class="fa fa-user"></i> Agencias
-          </a>
+          <router-link class="pageLink" to="/agencies" v-if="user.roles === MANAGER">
+            <a>
+              <i class="fa fa-user"></i>
+              <span class="page">Agencias</span>
+            </a>
+          </router-link>
         </li>
       </ul>
     </li>

@@ -138,8 +138,6 @@ import api from '../../api'
 import config from '../../config'
 import project from '../../models/project'
 // Datatable Modules
-import 'datatables.net-dt/js/dataTables.dataTables'
-import 'datatables.net-dt/css/jquery.dataTables.min.css'
 import 'datatables.net-buttons/js/dataTables.buttons.js'
 import 'datatables.net-buttons/js/buttons.colVis.js'
 import 'datatables.net-buttons/js/buttons.flash.js'
@@ -150,6 +148,7 @@ import moment from 'moment'
 import settings from '../../config/settings'
 // Require needed datatables modules
 require('datatables.net')
+require('datatables.net-bs')
 export default {
   name: 'Admins',
   data() {
@@ -183,6 +182,7 @@ export default {
       this.table = $('#tableProyects').DataTable({
         'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
         'dom': 'Blfrtip',
+        'autoWidth': false,
         'buttons': [
           {
             'extend': 'copy',

@@ -23,7 +23,7 @@ const routes = [
     component: DashView,
     children: [
       {
-        path: 'dashboard',
+        path: '/dashboard',
         alias: '',
         component: DashboardView,
         name: 'Dashboard',
@@ -34,7 +34,7 @@ const routes = [
         }
       },
       {
-        path: 'admins',
+        path: '/admins',
         component: AdminView,
         name: 'Administadores',
         meta: {
@@ -42,13 +42,13 @@ const routes = [
         }
       },
       {
-        path: 'talents',
+        path: '/talents',
         component: TalentView,
         name: 'Talentos',
         meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth, admin] }
       },
       {
-        path: 'agencies',
+        path: '/agencies',
         component: AgencyView,
         name: 'Agencias',
         meta: {
@@ -58,7 +58,7 @@ const routes = [
         }
       },
       {
-        path: 'proyects',
+        path: '/proyects',
         component: ProyectsView,
         name: 'Proyectos',
         meta: {
