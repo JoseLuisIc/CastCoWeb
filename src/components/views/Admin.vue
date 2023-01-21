@@ -83,13 +83,13 @@
               <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-                <span  v-if=error.email class="help-block">{{ error.email }}</span>
+                <span v-if=error.email class="help-block">{{ error.email }}</span>
               </div>
               <div class="form-group">
                 <label for="first_name" class="col-form-label">Nombres:</label>
                 <input class="form-control" id="first_name" v-model="user.first_name">
               </div>
-              <div class="form-group" >
+              <div class="form-group">
                 <label for="last_name" class="col-form-label">Apellidos:</label>
                 <input class="form-control" id="last_name" v-model="user.last_name" />
               </div>
@@ -125,7 +125,7 @@
               <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-                <span  v-if=error.email class="help-block">{{ error.email }}</span>
+                <span v-if=error.email class="help-block">{{ error.email }}</span>
               </div>
               <div class="form-group">
                 <label for="first_name" class="col-form-label">Nombres:</label>
@@ -302,7 +302,10 @@ export default {
         ],
         'language': {
           'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-        }
+        },
+        'columnDefs': [
+          { 'visible': false, 'targets': [3, 4] }
+        ]
       })
       // $('#tableProyects tfoot th').each(function (i) {
       //  var title = $('#tableProyects thead th').eq($(this).index()).text()

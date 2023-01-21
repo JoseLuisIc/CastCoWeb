@@ -217,7 +217,6 @@
                 </div>
               </form>
               <div class="modal-footer">
-                <router-link to="/talents" class="btn btn-default">Regresar</router-link>
                 <button type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
               </div>
             </div><!-- /.tab-pane -->

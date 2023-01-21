@@ -158,13 +158,16 @@ export default {
       error: project,
       projects: [],
       agencies: [],
-      states: []
+      states: [],
+      hiddenDefaultCol: [6, 7, 8, 9, 10, 11]
     }
   },
   mounted() {
     this.$nextTick(() => {
       this.callProyect()
-      console.log(this.$store.state.token)
+      if (localStorage.getItem('columnVisibleProyect') === null) {
+        localStorage.setItem('columnVisibleProyect', JSON.stringify(this.hiddenDefaultCol))
+      }
     })
   },
   methods: {
@@ -190,7 +193,8 @@ export default {
             'text': '<i class="fa  fa-copy"></i> Copiar',
             'titleAttr': 'Copiar',
             'exportOptions': {
-              'columns': ':visible'
+              'columns': ':visible',
+              'hiddenDefaultCol': 'visible'
             }
           },
           {
@@ -275,7 +279,7 @@ export default {
           }
         ],
         'columnDefs': [
-          { 'visible': false, 'targets': [6, 7, 8, 9, 10, 11] }
+          { 'visible': false, 'targets': JSON.parse(localStorage.getItem('columnVisibleProyect')) }
         ],
         'language': {
           'url': 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json'
@@ -323,7 +327,18 @@ export default {
       })
       $('input[type=checkbox]').on('click', function (e) {
         // Get the column API object
-        var column = that.table.column($(this).val())
+        var index = $(this).val()
+        var column = that.table.column(index)
+        var columns = JSON.parse(localStorage.getItem('columnVisibleProyect'))
+        console.log(index, $(this).prop('checked'))
+        if ($(this).prop('checked')) {
+          columns.push(parseInt(index))
+        } else {
+          columns = columns.filter(column => column !== parseInt(index))
+          console.log(columns)
+        }
+        localStorage.setItem('columnVisibleProyect', JSON.stringify(columns))
+
         // Toggle the visibility
         column.visible(!column.visible())
       })
