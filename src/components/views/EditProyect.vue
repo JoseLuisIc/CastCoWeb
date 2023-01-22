@@ -111,7 +111,7 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <router-link to="/proyects" class="btn btn-default">Regresar</router-link>
+                <router-link to="/admin/proyects" class="btn btn-default">Regresar</router-link>
                 <button v-if="project.id !== undefined" type="button" class="btn btn-primary"
                   v-on:click="updateProyect(project)">Actualizar</button>
                 <button v-if="project.id === undefined" type="button" class="btn btn-primary"

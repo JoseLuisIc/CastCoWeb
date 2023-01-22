@@ -6,7 +6,7 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <router-link to="/proyects/create" class="btn btn-primary"> <i class="fa fa-plus"> </i> Agregar
+            <router-link to="/admin/proyects/create" class="btn btn-primary"> <i class="fa fa-plus"> </i> Agregar
               Nuevo</router-link>
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalProyectDelete" />
@@ -188,7 +188,7 @@ export default {
     },
     editProyect(idProject) {
       this.isNew = false
-      this.$router.push({ path: `/proyects/${idProject}/edit`, params: { id: idProject } })
+      this.$router.push({ path: `/admin/proyects/${idProject}/edit`, params: { id: idProject } })
     },
     callProyect() {
       const params = new URLSearchParams()
@@ -436,7 +436,7 @@ export default {
         })
     },
     detailProyect(idProject) {
-      this.$router.push({ path: `/proyects/detail/${idProject}`, params: { id: idProject } })
+      this.$router.push({ path: `/admin/proyects/detail/${idProject}`, params: { id: idProject } })
     }
   }
 }

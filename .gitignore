@@ -9,3 +9,5 @@ selenium-debug.log
 .netlify
 .*.dockerfile
 .vs
+/package-lock.json
+/yarn.lock
