@@ -1,12 +1,12 @@
 <template>
   <ul class="sidebar-menu">
     <li class="header" v-if="user.roles === MANAGER">Administracion</li>
-    <!--<router-link tag="li" class="pageLink" to="/" v-if="user.roles === MANAGER">
+    <router-link tag="li" class="pageLink" to="/admin/dashboard" v-if="user.roles === MANAGER">
       <a>
         <i class="fa fa-desktop"></i>
         <span class="page">Dashboard</span>
       </a>
-    </router-link>-->
+    </router-link>
 
     <li class="treeview" v-if="user.roles === MANAGER" v-bind:class="{ active: isActive }">
       <a href="#">
@@ -18,7 +18,7 @@
       </a>
       <ul class="treeview-menu">
         <li v-bind:class="{ active: slug === 'admins' }">
-          <router-link class="pageLink" to="/admins" v-if="user.roles === MANAGER">
+          <router-link class="pageLink" to="/admin/admins" v-if="user.roles === MANAGER">
             <a>
               <i class="fa fa-user"></i>
               <span class="page">Administradores</span>
@@ -26,7 +26,7 @@
           </router-link>
         </li>
         <li v-bind:class="{ active: slug === 'talents' }">
-          <router-link class="pageLink" to="/talents" v-if="user.roles === MANAGER">
+          <router-link class="pageLink" to="/admin/talents" v-if="user.roles === MANAGER">
             <a>
               <i class="fa fa-user"></i>
               <span class="page">Talentos</span>
@@ -34,7 +34,7 @@
           </router-link>
         </li>
         <li v-bind:class="{ active: slug === 'agencies' }">
-          <router-link class="pageLink" to="/agencies" v-if="user.roles === MANAGER">
+          <router-link class="pageLink" to="/admin/agencies" v-if="user.roles === MANAGER">
             <a>
               <i class="fa fa-user"></i>
               <span class="page">Agencias</span>
@@ -43,13 +43,13 @@
         </li>
       </ul>
     </li>
-    <router-link tag="li" class="pageLink" to="/talents" v-if="user.roles === AGENCY">
+    <router-link tag="li" class="pageLink" to="/agency/talents" v-if="user.roles === AGENCY">
       <a>
         <i class="fa fa-user"></i>
         <span class="page">Talentos</span>
       </a>
     </router-link>
-    <router-link tag="li" class="pageLink" to="/proyects" v-if="user.roles === MANAGER">
+    <router-link tag="li" class="pageLink" to="/admin/proyects" v-if="user.roles === MANAGER">
       <a>
         <i class="fa fa-list-alt"></i>
         <span class="page">Proyectos</span>

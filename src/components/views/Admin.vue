@@ -29,35 +29,21 @@
                     class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
+                        <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
-                        <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Nombres</th>
-                        <th style="width: 142px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Apellidos
                         </th>
-                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Instagram</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Rol</th>
                         <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
                           class="sorting">Acciones</th>
                       </tr>
                     </thead>
-                    <!--<tbody>
-                      <tr class="even" role="row" v-for="(user, index) in users" :key="index">
-                        <td class="sorting_1">{{ user.email }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.instagram }}</td>
-                        <td>{{ user.role }}</td>
-                        <td>
-                          <button class="btn" v-on:click="confirmDelete(user)"><i class="fa fa-trash"></i></button>
-                          <button class="btn" v-on:click="editUser(user)"><i class="fa fa-edit"></i></button>
-                        </td>
-                      </tr>
-
-                    </tbody>-->
                   </table>
                 </div>
               </div>

@@ -230,7 +230,6 @@
 import moment from 'moment'
 import { timeline } from '../../demo'
 import api from '../../api'
-import session from '../../utils/session'
 import user from '../../models/user'
 import Alert from '../widgets/Alert.vue'
 
@@ -270,8 +269,9 @@ export default {
   },
   methods: {
     fetchProfile() {
-      var idUser = session.user.id
+      var idUser = this.$store.state.user.id
       var that = this
+      console.log(this.$store.state.token)
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {

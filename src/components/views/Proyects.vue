@@ -33,7 +33,8 @@
             <div class="row">
               <div class="col-sm-12 table-responsive">
                 <table aria-describedby="example1_info" role="grid" id="tableProyects"
-                  class="table table-bordered table-striped dataTable display responsive nowrap">
+                  class="table table-bordered table-striped dataTable display responsive display nowrap"
+                  cellspacing="0">
                   <thead>
                     <tr role="row">
                       <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
@@ -138,17 +139,28 @@ import api from '../../api'
 import config from '../../config'
 import project from '../../models/project'
 // Datatable Modules
+import 'datatables.net'
 import 'datatables.net-buttons/js/dataTables.buttons.js'
 import 'datatables.net-buttons/js/buttons.colVis.js'
 import 'datatables.net-buttons/js/buttons.flash.js'
 import 'datatables.net-buttons/js/buttons.html5.js'
 import 'datatables.net-buttons/js/buttons.print.js'
-
 import moment from 'moment'
 import settings from '../../config/settings'
+$.fn.dataTable.Api.register('sum()', function () {
+  return this.flatten().reduce(function (a, b) {
+    if (typeof a === 'string') {
+      a = a.replace(/[^\d.-]/g, '') * 1
+    }
+    if (typeof b === 'string') {
+      b = b.replace(/[^\d.-]/g, '') * 1
+    }
+
+    return a + b
+  }, 0)
+})
+
 // Require needed datatables modules
-require('datatables.net')
-require('datatables.net-bs')
 export default {
   name: 'Admins',
   data() {
@@ -221,6 +233,12 @@ export default {
         'responsive': true,
         'processing': true,
         'serverSide': true,
+        'drawCallback': function () {
+          // var api = this.api()
+          // $(api.column(5).footer()).html(
+          //   'Total: ' + api.column(5, { page: 'current' }).data().sum()
+          // )
+        },
         'ajax': {
           url: config.serverURI + 'projects/?' + params,
           type: 'GET',

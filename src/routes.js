@@ -21,11 +21,11 @@ const routes = [
     component: LoginView
   },
   {
-    path: '/',
+    path: '/admin',
     component: DashView,
     children: [
       {
-        path: '/dashboard',
+        path: '/admin/dashboard',
         alias: '',
         component: DashboardView,
         name: 'Dashboard',
@@ -36,7 +36,7 @@ const routes = [
         }
       },
       {
-        path: '/admins',
+        path: '/admin/admins',
         component: AdminView,
         name: 'Administadores',
         meta: {
@@ -44,13 +44,13 @@ const routes = [
         }
       },
       {
-        path: '/talents',
+        path: '/admin/talents',
         component: TalentView,
         name: 'Talentos',
         meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth, admin] }
       },
       {
-        path: '/agencies',
+        path: '/admin/agencies',
         component: AgencyView,
         name: 'Agencias',
         meta: {
@@ -60,7 +60,7 @@ const routes = [
         }
       },
       {
-        path: '/proyects',
+        path: '/admin/proyects',
         component: ProyectsView,
         name: 'Proyectos',
         meta: {
@@ -70,7 +70,7 @@ const routes = [
         }
       },
       {
-        path: '/proyects/:id/edit',
+        path: '/admin/proyects/:id/edit',
         component: EditProyectView,
         name: 'Editar',
         meta: {
@@ -80,7 +80,7 @@ const routes = [
         }
       },
       {
-        path: '/proyects/create',
+        path: '/admin/proyects/create',
         component: EditProyectView,
         name: 'Crear',
         meta: {
@@ -90,7 +90,7 @@ const routes = [
         }
       },
       {
-        path: '/proyects/detail/:id',
+        path: '/admin/proyects/detail/:id',
         component: ProyectsDetailView,
         name: 'Detalle',
         meta: {
@@ -100,13 +100,107 @@ const routes = [
         }
       },
       {
-        path: '/profile',
+        path: '/admin/profile',
         component: ProfileView,
         name: 'Perfil',
-        meta: { description: 'Editar de Perfil', requiresAuth: true }
+        meta: {
+          description: 'Editar de Perfil',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
       }
     ]
-  }, {
+  },
+  {
+    path: '/agency',
+    component: DashView,
+    children: [
+      {
+        path: '/agency/dashboard',
+        alias: '',
+        component: DashboardView,
+        name: 'Dashboard',
+        meta: {
+          requiresAuth: true,
+          description: 'Overview of environment',
+          middleware: [auth]
+        }
+      },
+      {
+        path: '/agency/talents',
+        component: TalentView,
+        name: 'Talentos',
+        meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth] }
+      },
+      {
+        path: '/agency/proyects',
+        component: ProyectsView,
+        name: 'Proyectos',
+        meta: {
+          description: 'Listado de Proyectos',
+          requiresAuth: true,
+          middleware: [auth]
+        }
+      },
+      {
+        path: '/agency/proyects/:id/edit',
+        component: EditProyectView,
+        name: 'Editar',
+        meta: {
+          description: 'Proyecto',
+          requiresAuth: true,
+          middleware: [auth]
+        }
+      },
+      {
+        path: '/agency/proyects/create',
+        component: EditProyectView,
+        name: 'Crear',
+        meta: {
+          description: 'Proyecto',
+          requiresAuth: true,
+          middleware: [auth]
+        }
+      },
+      {
+        path: '/agency/proyects/detail/:id',
+        component: ProyectsDetailView,
+        name: 'Detalle',
+        meta: {
+          description: 'Proyecto',
+          requiresAuth: true,
+          middleware: [auth]
+        }
+      },
+      {
+        path: '/agency/profile',
+        component: ProfileView,
+        name: 'Perfil',
+        meta: {
+          description: 'Editar de Perfil',
+          requiresAuth: true,
+          middleware: [auth]
+        }
+      },
+      {
+        path: '/',
+        component: ProfileView,
+        children: [
+          {
+            path: '/profile',
+            component: ProfileView,
+            name: 'Perfil',
+            meta: {
+              description: 'Editar de Perfil',
+              requiresAuth: true,
+              middleware: [auth]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     // not found handler
     path: '*',
     component: NotFoundView

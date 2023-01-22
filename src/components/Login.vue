@@ -6,17 +6,16 @@
     <div class="text-center col-md-12 col-lg-4 col-xl-5">
       <!-- login form -->
       <form @submit.prevent="checkCreds" class="signin-form">
-        <div class="input-group">
+        <div class="input-group" v-bind:class="emailError ? 'has-error' : ''">
           <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
           <input class="form-control" name="email" placeholder="Username" type="text" v-model="email">
         </div>
 
-        <div class="input-group">
+        <div class="input-group" v-bind:class="passwordError ? 'has-error' : ''">
           <span class="input-group-addon"><i class="fa fa-lock"></i></span>
           <input class="form-control" name="password" placeholder="Password" type="password" v-model="password">
         </div>
         <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Iniciar sesiòn</button>
-        <button v-bind:class="'btn btn-primary btn-lg '">Registrar</button>
       </form>
       <!-- errors -->
       <div v-if=response class="text-red">
@@ -40,7 +39,9 @@ export default {
       loading: '',
       email: '',
       password: '',
-      response: ''
+      response: '',
+      passwordError: false,
+      emailError: false
     }
   },
   methods: {
@@ -50,7 +51,9 @@ export default {
       this.toggleLoading()
       this.resetResponse()
       this.$store.commit('TOGGLE_LOADING')
-
+      if (!this.validateForm()) {
+        return
+      }
       /* Making API call to authenticate a user */
       api
         .request('post', 'token/', { email, password })
@@ -74,10 +77,10 @@ export default {
             }
             switch (decoded.user.role) {
               case util.MANAGER:
-                this.$router.push('admins')
+                this.$router.push({ path: 'admin/dashboard' })
                 break
               case util.AGENCY:
-                this.$router.push('talents')
+                this.$router.push({ path: 'agency/talents' })
                 break
               default:
                 this.$router.push('profile')
@@ -100,6 +103,22 @@ export default {
     },
     resetResponse() {
       this.response = ''
+    },
+    validateForm() {
+      this.response = ''
+      this.emailError = false
+      this.passwordError = false
+      if (this.email === '') {
+        this.emailError = true
+        this.response = 'El campo email no puede estar en blanco.'
+        return false
+      }
+      if (this.password === '') {
+        this.passwordError = true
+        this.response = 'El campo password no puede estar en blanco.'
+        return false
+      }
+      return true
     }
   }
 }

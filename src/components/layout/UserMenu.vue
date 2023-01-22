@@ -16,6 +16,13 @@
         </p>
       </li>
       <li class="user-footer">
+        <a href="javascript:;" v-on:click="profile" class="btn btn-default btn-flat btn-block">
+          <i class="fa fa-user"></i>
+          <span>Perfil</span>
+        </a>
+      </li>
+      
+      <li class="user-footer">
         <a href="javascript:;" v-on:click="logout" class="btn btn-default btn-flat btn-block">
           <i class="fa fa-sign-out"></i>
           <span>Logout</span>
@@ -63,6 +70,9 @@ export default {
           break
       }
       return rolString
+    },
+    profile() {
+      this.$router.push('profile')
     }
   }
 }
