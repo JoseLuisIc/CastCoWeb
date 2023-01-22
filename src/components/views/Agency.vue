@@ -277,7 +277,7 @@ export default {
     },
     editUser(idUser) {
       console.log(idUser)
-      Object(this.error).keys(key => {
+      Object.keys(this.error).forEach(key => {
         this.error[key] = ''
       })
       this.isNew = false
