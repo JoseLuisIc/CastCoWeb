@@ -46,11 +46,11 @@
                     </thead>
                     <tfoot>
                       <tr>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="0"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Nombres" data-index="1"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Apellidos" data-index="2"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Instagram" data-index="3"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Rol" data-index="4"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="0" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Nombres" data-index="1" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Apellidos" data-index="2" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Instagram" data-index="3" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Rol" data-index="4" autocomplete="off"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"></th>
                       </tr>
                     </tfoot>

@@ -50,13 +50,19 @@
                     </thead>
                     <tfoot>
                       <tr role="row">
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Email" data-index="0"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Nombre agencia" data-index="1"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Encargado" data-index="2"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Telefono" data-index="3"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad" data-index="5"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad" data-index="6"></th>
-                        <th rowspan="1" colspan="1"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Email"
+                            data-index="0" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Nombre agencia"
+                            data-index="1" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Encargado"
+                            data-index="2" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Telefono"
+                            data-index="3" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad"
+                            data-index="5" autocomplete="off"></th>
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad"
+                            data-index="6" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"></th>
+                        <th rowspan=" 1" colspan="1"></th>
                       </tr>
                     </tfoot>
                   </table>
@@ -81,14 +87,14 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group"  v-bind:class="error.email !== '' ? 'has-error' : ''">
+              <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                 <div v-if=error.email class="text-red">
                   <p>{{ error.email }}</p>
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label for="instagram" class="col-form-label">Instagram:</label>
                 <input class="form-control" id="instagram" v-model="user.instagram" />
@@ -118,14 +124,14 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group"  v-bind:class="error.email !== '' ? 'has-error' : ''">
+              <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
                 <div v-if=error.email class="text-red">
                   <p>{{ error.email }}</p>
                 </div>
               </div>
-             
+
               <div class="form-group">
                 <label for="instagram" class="col-form-label">Instagram:</label>
                 <input class="form-control" id="instagram" v-model="user.instagram" />

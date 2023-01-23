@@ -16,6 +16,17 @@
                 aria-haspopup="true" aria-expanded="false"> Columnas Visibles
               </button>
               <ul class="dropdown-menu" id="hiddenColumns">
+                <li>
+                  <!-- Task item -->
+                  <div class="form-group" style="margin-bottom: 0px !important;">
+                    <div class="form-check" style="padding-left: 5px;">
+                      <input id="checkAll" class="form-check-input" type="checkbox" value="-1">
+                      <label class="form-check-label">
+                        Ver Todos
+                      </label>
+                    </div>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
@@ -55,7 +66,7 @@
                       <th colspan="1" rowspan="1" class="no-sort">Fecha producción</th>
                       <th colspan="1" rowspan="1" class="no-sort">Fecha de montaje</th>
                       <th colspan="1" rowspan="1" class="no-sort">Fecha de llamada</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Acciones</th>
+                      <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;" >Acciones</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -305,21 +316,24 @@ export default {
         ],
         'language': esMX
       })
-      $('#tableProyects thead th').each(function (i) {
-        var title = $('#tableProyects thead th').eq($(this).index()).text()
-        var checked = !that.table.column(i).visible() ? 'checked' : ''
-        $('#hiddenColumns').append(`<li>
-                      <!-- Task item -->
-                      <div class="form-group" style="margin-bottom: 0px !important;">
-                        <div class="form-check" style="padding-left: 5px;">
-                          <input class="form-check-input" type="checkbox" value="${i}" ${checked}>
-                          <label class="class="form-check-label"">
-                            ${title}
-                          </label>
-                        </div>
-                      </div>
-                    </li>`)
-      })
+      var columns = that.table.columns().header()
+      for (let index = 0; index < columns.length; index++) {
+        const element = columns[index]
+        var title = $(element).text()
+        var checked = !that.table.column(index).visible() ? 'checked' : ''
+        $('#hiddenColumns').append(`
+        <li>
+          <!-- Task item -->
+          <div class="form-group" style="margin-bottom: 0px !important;">
+            <div class="form-check" style="padding-left: 5px;">
+              <input class="form-check-input" type="checkbox" value="${index}" ${checked}>
+              <label class="form-check-label">
+                ${title}
+              </label>
+            </div>
+          </div>
+        </li>`)
+      }
       // Filter event handler
       $('#tableProyects').on('keyup', 'tfoot input', function () {
         var col = $(this).data('index')
@@ -348,27 +362,32 @@ export default {
       $('input[type=checkbox]').on('click', function (e) {
         // Get the column API object
         var index = $(this).val()
-        var column = that.table.column(index)
-        var columns = JSON.parse(localStorage.getItem('columnVisibleProyect'))
-        console.log(index, $(this).prop('checked'))
-        if ($(this).prop('checked')) {
-          columns.push(parseInt(index))
-        } else {
-          columns = columns.filter(column => column !== parseInt(index))
-          console.log(columns)
-        }
-        localStorage.setItem('columnVisibleProyect', JSON.stringify(columns))
+        if (index !== '-1') {
+          var column = that.table.column(index)
+          var columns = JSON.parse(localStorage.getItem('columnVisibleProyect'))
+          if ($(this).prop('checked')) {
+            columns.push(parseInt(index))
+          } else {
+            columns = columns.filter(column => column !== parseInt(index))
+          }
+          localStorage.setItem('columnVisibleProyect', JSON.stringify(columns))
 
-        // Toggle the visibility
-        column.visible(!column.visible())
+          // Toggle the visibility
+          column.visible(!column.visible())
+        }
+      })
+      $('#checkAll').click(function () {
+        $('input:checkbox').not(this).trigger('click')
       })
     },
     renderView(id, row) {
       return `
         <td>
-          <button class="btn delete" id="${id}"><i class="fa fa-trash"></i></button>
-          <button class="btn edit" id="${id}"><i class="fa fa-edit"></i></button>
-          <button class="btn view" id="${id}"><i class="fa fa-eye"></i></button>
+          <div class="btn-group">
+            <button class="btn delete" id="${id}"><i class="fa fa-trash"></i></button>
+            <button class="btn edit" id="${id}"><i class="fa fa-edit"></i></button>
+            <button class="btn view" id="${id}"><i class="fa fa-eye"></i></button>
+          </div>
         </td>`
     },
     confirmDelete(idProject) {
