@@ -147,6 +147,7 @@ import 'datatables.net-buttons/js/buttons.html5.js'
 import 'datatables.net-buttons/js/buttons.print.js'
 import moment from 'moment'
 import settings from '../../config/settings'
+import esMX from '../../lang/es_mx'
 $.fn.dataTable.Api.register('sum()', function () {
   return this.flatten().reduce(function (a, b) {
     if (typeof a === 'string') {
@@ -302,10 +303,7 @@ export default {
         'columnDefs': [
           { 'visible': false, 'targets': JSON.parse(localStorage.getItem('columnVisibleProyect')) }
         ],
-        'language': {
-          'url': 'https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json',
-          'processing': '<i class="fa  fa-10x fa-refresh fa-spin"></i>'
-        }
+        'language': esMX
       })
       $('#tableProyects thead th').each(function (i) {
         var title = $('#tableProyects thead th').eq($(this).index()).text()

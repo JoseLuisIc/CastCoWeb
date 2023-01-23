@@ -28,8 +28,9 @@ const routes = [
         path: '/admin/dashboard',
         alias: '',
         component: DashboardView,
-        name: 'Dashboard',
+        name: 'admin/ashboard',
         meta: {
+          module: 'Dashboard',
           requiresAuth: true,
           description: 'Overview of environment',
           middleware: [auth, admin]
@@ -38,22 +39,31 @@ const routes = [
       {
         path: '/admin/admins',
         component: AdminView,
-        name: 'Administadores',
+        name: 'admin/admins',
         meta: {
-          description: 'Listado de Administradores', requiresAuth: true, middleware: [auth, admin]
+          module: 'Administadores',
+          description: 'Listado de Administradores',
+          requiresAuth: true,
+          middleware: [auth, admin]
         }
       },
       {
         path: '/admin/talents',
         component: TalentView,
-        name: 'Talentos',
-        meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth, admin] }
+        name: 'admin/talentos',
+        meta: {
+          module: 'Talentos',
+          description: 'Listado de Talentos',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
       },
       {
         path: '/admin/agencies',
         component: AgencyView,
-        name: 'Agencias',
+        name: 'admin/agencies',
         meta: {
+          module: 'Agencias',
           description: 'Listado de Agencias',
           requiresAuth: true,
           middleware: [auth, admin]
@@ -62,8 +72,9 @@ const routes = [
       {
         path: '/admin/proyects',
         component: ProyectsView,
-        name: 'Proyectos',
+        name: 'admin/proyects',
         meta: {
+          module: 'Proyectos',
           description: 'Listado de Proyectos',
           requiresAuth: true,
           middleware: [auth, admin]
@@ -72,8 +83,9 @@ const routes = [
       {
         path: '/admin/proyects/:id/edit',
         component: EditProyectView,
-        name: 'Editar',
+        name: 'admin/proyects/edit',
         meta: {
+          module: 'Editar',
           description: 'Proyecto',
           requiresAuth: true,
           middleware: [auth, admin]
@@ -82,8 +94,9 @@ const routes = [
       {
         path: '/admin/proyects/create',
         component: EditProyectView,
-        name: 'Crear',
+        name: 'admin/proyects/create',
         meta: {
+          module: 'Crear',
           description: 'Proyecto',
           requiresAuth: true,
           middleware: [auth, admin]
@@ -92,8 +105,9 @@ const routes = [
       {
         path: '/admin/proyects/detail/:id',
         component: ProyectsDetailView,
-        name: 'Detalle',
+        name: 'admin/proyects/detail',
         meta: {
+          module: 'Detalle',
           description: 'Proyecto',
           requiresAuth: true,
           middleware: [auth, admin]
@@ -102,8 +116,9 @@ const routes = [
       {
         path: '/admin/profile',
         component: ProfileView,
-        name: 'Perfil',
+        name: 'admin/profile',
         meta: {
+          module: 'Perfil',
           description: 'Editar de Perfil',
           requiresAuth: true,
           middleware: [auth, admin]
@@ -119,7 +134,8 @@ const routes = [
         path: '/agency/dashboard',
         alias: '',
         component: DashboardView,
-        name: 'Dashboard',
+        name: 'agency/dashboard',
+        module: 'Dashboard',
         meta: {
           requiresAuth: true,
           description: 'Overview of environment',
@@ -129,13 +145,15 @@ const routes = [
       {
         path: '/agency/talents',
         component: TalentView,
-        name: 'Talentos',
+        name: 'agency/talentos',
+        module: 'Talentos',
         meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth] }
       },
       {
         path: '/agency/proyects',
         component: ProyectsView,
-        name: 'Proyectos',
+        name: 'agency/proyectos',
+        module: 'Proyectos',
         meta: {
           description: 'Listado de Proyectos',
           requiresAuth: true,
@@ -145,7 +163,8 @@ const routes = [
       {
         path: '/agency/proyects/:id/edit',
         component: EditProyectView,
-        name: 'Editar',
+        name: 'agency/proyects/edit',
+        module: 'Proyectos',
         meta: {
           description: 'Proyecto',
           requiresAuth: true,
@@ -155,7 +174,8 @@ const routes = [
       {
         path: '/agency/proyects/create',
         component: EditProyectView,
-        name: 'Crear',
+        name: 'agency/proyects/create',
+        module: 'Crear',
         meta: {
           description: 'Proyecto',
           requiresAuth: true,
@@ -165,7 +185,8 @@ const routes = [
       {
         path: '/agency/proyects/detail/:id',
         component: ProyectsDetailView,
-        name: 'Detalle',
+        name: 'agency/proyects/detail',
+        module: 'Detalle',
         meta: {
           description: 'Proyecto',
           requiresAuth: true,
@@ -175,30 +196,23 @@ const routes = [
       {
         path: '/agency/profile',
         component: ProfileView,
-        name: 'Perfil',
+        name: 'agency/profile',
+        module: 'Perfil',
         meta: {
           description: 'Editar de Perfil',
           requiresAuth: true,
           middleware: [auth]
         }
-      },
-      {
-        path: '/',
-        component: ProfileView,
-        children: [
-          {
-            path: '/profile',
-            component: ProfileView,
-            name: 'Perfil',
-            meta: {
-              description: 'Editar de Perfil',
-              requiresAuth: true,
-              middleware: [auth]
-            }
-          }
-        ]
       }
     ]
+  },
+  {
+    path: '/',
+    redirect: to => {
+      // the function receives the target route as the argument
+      // we return a redirect path/location here.
+      return { path: '/login' }
+    }
   },
   {
     // not found handler

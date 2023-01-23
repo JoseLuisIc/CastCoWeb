@@ -12,7 +12,7 @@
       <!-- Content Header (Page header) -->
       <section class="content-header">
         <h1>
-          {{$route.name.toUpperCase() }}
+          {{$route.meta.module }}
           <small>{{ $route.meta.description }}</small>
         </h1>
         <ol class="breadcrumb">
@@ -20,7 +20,7 @@
             <a href="javascript:;">
               <i class="fa fa-home"></i>Home</a>
           </li>
-          <li class="active">{{$route.name.toUpperCase()}}</li>
+          <li class="active">{{$route.meta.module}}</li>
         </ol>
       </section>
 

@@ -213,6 +213,7 @@ import api from '../../api'
 import util from '../../utils/util'
 import config from '../../config'
 import agency from '../../models/agency'
+import esMX from '../../lang/es_mx'
 // Require needed datatables modules
 require('datatables.net')
 
@@ -350,9 +351,7 @@ export default {
             searchable: false
           }
         ],
-        'language': {
-          'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-        }
+        'language': esMX
       })
       // $('#tableUsers tfoot th').each(function (i) {
       //   var title = $('#tableUsers thead th').eq($(this).index()).text()

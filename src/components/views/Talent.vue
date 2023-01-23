@@ -35,23 +35,36 @@
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Nombre</th>
+                          tabindex="1" class="sorting_asc">Nombre</th>
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Apellidos</th>
+                          tabindex="2" class="sorting_asc">Apellidos</th>
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Usuario</th>
-                        <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                          tabindex="3" class="sorting_asc">Usuario</th>
+                        <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="4"
                           class="sorting">Ciudad</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="5"
                           class="sorting">Edad</th>
-                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="6"
                           class="sorting">Instagram</th>
-                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="7"
                           class="sorting">Rol</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="8"
                           class="sorting">Acciones</th>
                       </tr>
                     </thead>
+                    <tfoot>
+                      <tr>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="0"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="1"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="2"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Usuario" data-index="3"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Ciudad" data-index="4"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Edad" data-index="5"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Instagram" data-index="6"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Rol" data-index="7"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"></th>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -346,9 +359,9 @@
 import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
-import session from '../../utils/session'
 import config from '../../config'
 import modelUser from '../../models/user'
+import esMX from '../../lang/es_mx'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -464,9 +477,6 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('format', 'datatables')
-      if (session.user.role === util.AGENCY) {
-        // params.append('agency', session.user.id)
-      }
       var that = this
       that.table = $('#tableUsers').DataTable({
         'processing': true,
@@ -511,6 +521,7 @@ export default {
           },
           {
             'data': 'city',
+            'name': 'city',
             render: function (data, type, row) {
               if (Object.keys(row.extras).length === 0 || row.extras.state == null) {
                 return 'S/A'
@@ -543,18 +554,18 @@ export default {
             'searchable': false
           }
         ],
-        'language': {
-          'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-        }
+        'language': esMX
       })
-      // $('#tableProyects tfoot th').each(function (i) {
-      //  var title = $('#tableProyects thead th').eq($(this).index()).text()
-      //  if (title !== 'Acciones') {
-      //    $(this).html('<input type="text" placeholder="' + title + '" data-index="' + i + '" />')
-      //  }
-      // })
       // Filter event handler
-      $('#tableUsers').on('keyup', 'thead input', function () {
+      $('#tableUsers').on('keyup', 'tfoot input', function () {
+        var col = $(this).data('index')
+        console.log(col)
+        that.table
+          .column(col)
+          .search(this.value)
+          .draw()
+      })
+      $('#tableUsers').on('keyup', 'tfoot input', function () {
         that.table
           .column($(this).data('index'))
           .search(this.value)
@@ -752,5 +763,8 @@ table.dataTable thead .sorting_desc:after {
 .img-circle {
   width: 36px;
   height: 36px;
+}
+div#tableUsers_filter {
+  display: none;
 }
 </style>

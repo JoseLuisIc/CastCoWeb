@@ -31,19 +31,29 @@
                       <tr role="row">
                         <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
-                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="1"
                           class="sorting">Nombres</th>
-                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="2"
                           class="sorting">Apellidos
                         </th>
-                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="3"
                           class="sorting">Instagram</th>
-                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="4"
                           class="sorting">Rol</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
+                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="5"
                           class="sorting">Acciones</th>
                       </tr>
                     </thead>
+                    <tfoot>
+                      <tr>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="0"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Nombres" data-index="1"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Apellidos" data-index="2"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Instagram" data-index="3"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Rol" data-index="4"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"></th>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -168,6 +178,7 @@ import api from '../../api'
 import util from '../../utils/util'
 import config from '../../config'
 import admin from '../../models/admin'
+import esMX from '../../lang/es_mx'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -286,20 +297,18 @@ export default {
             }
           }
         ],
-        'language': {
-          'url': '//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json'
-        },
+        'language': esMX,
         'columnDefs': [
           { 'visible': false, 'targets': [3, 4] }
         ]
       })
-      // $('#tableProyects tfoot th').each(function (i) {
-      //  var title = $('#tableProyects thead th').eq($(this).index()).text()
-      //  if (title !== 'Acciones') {
-      //    $(this).html('<input type="text" placeholder="' + title + '" data-index="' + i + '" />')
-      //  }
-      // })
       // Filter event handler
+      $('#tableUsers').on('keyup', 'tfoot input', function () {
+        that.table
+          .column($(this).data('index'))
+          .search(this.value)
+          .draw()
+      })
       $('#tableUsers').on('keyup', 'thead input', function () {
         this.table
           .column($(this).data('index'))
