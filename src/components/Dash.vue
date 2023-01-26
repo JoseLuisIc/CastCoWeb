@@ -16,10 +16,18 @@
           <small>{{ $route.meta.description }}</small>
         </h1>
         <ol class="breadcrumb">
-          <li>
-            <a href="javascript:;">
-              <i class="fa fa-home"></i>Home</a>
-          </li>
+          <router-link tag="li" class="pageLink" to="/admin/dashboard" v-if="user.roles === MANAGER">
+            <a>
+              <i class="fa fa-home"></i>
+              <span class="page">Home</span>
+            </a>
+          </router-link>
+          <router-link tag="li" class="pageLink" to="/agency/talents" v-if="user.roles === AGENCY">
+            <a>
+              <i class="fa fa-home"></i>
+              <span class="page">Home</span>
+            </a>
+          </router-link>
           <li class="active">{{$route.meta.module}}</li>
         </ol>
       </section>
@@ -35,6 +43,7 @@
 
 <script>
 import config from '../config'
+import util from '../utils/util'
 import DashFooter from './layout/DashFooter'
 import DashHeader from './layout/DashHeader'
 import Sidebar from './layout/Sidebar'
@@ -50,6 +59,9 @@ export default {
   data: function () {
     return {
       // section: 'Dash',
+      MANAGER: util.MANAGER,
+      AGENCY: util.AGENCY,
+      TALENT: util.TALENT,
       classes: {
         fixed_layout: config.fixedLayout,
         hide_logo: config.hideLogoOnMobile
