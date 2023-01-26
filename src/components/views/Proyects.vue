@@ -173,6 +173,8 @@ $.fn.dataTable.Api.register('sum()', function () {
 })
 
 // Require needed datatables modules
+require('datatables.net')
+require('datatables.net-bs')
 export default {
   name: 'Admins',
   data() {

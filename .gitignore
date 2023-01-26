@@ -11,3 +11,4 @@ selenium-debug.log
 .vs
 /package-lock.json
 /yarn.lock
+/package-lock.json
