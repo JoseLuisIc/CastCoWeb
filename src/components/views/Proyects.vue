@@ -171,7 +171,7 @@ $.fn.dataTable.Api.register('sum()', function () {
     return a + b
   }, 0)
 })
-
+import toastr from 'toastr'
 // Require needed datatables modules
 require('datatables.net')
 require('datatables.net-bs')
@@ -414,6 +414,7 @@ export default {
       api
         .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
+          toastr.success('Estatus', 'Se ha cambiado el estatus')
         })
         .catch(error => {
           Object.keys(this.error).forEach(key => {
