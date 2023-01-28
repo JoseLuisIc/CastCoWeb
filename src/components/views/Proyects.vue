@@ -66,7 +66,7 @@
                       <th colspan="1" rowspan="1" class="no-sort">Fecha producción</th>
                       <th colspan="1" rowspan="1" class="no-sort">Fecha de montaje</th>
                       <th colspan="1" rowspan="1" class="no-sort">Fecha de llamada</th>
-                      <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;" >Acciones</th>
+                      <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;">Acciones</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -143,7 +143,9 @@
   </section>
 
 </template>
-
+<style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
+</style>
 <script>
 import $ from 'jquery'
 import api from '../../api'
@@ -202,7 +204,7 @@ export default {
     },
     editProyect(idProject) {
       this.isNew = false
-      this.$router.push({ path: `/admin/proyects/${idProject}/edit`, params: { id: idProject } })
+      this.$router.push({ path: `/admin/proyects/${idProject}/edit`, params: { id: idProject, project: this.project } })
     },
     callProyect() {
       const params = new URLSearchParams()
@@ -456,17 +458,17 @@ export default {
         })
     },
     detailProyect(idProject) {
-      this.$router.push({ path: `/admin/proyects/detail/${idProject}`, params: { id: idProject } })
+      this.$router.push({ path: `/admin/proyects/detail/${idProject}`, params: this.project })
     }
   }
 }
 </script>
 <style>
 /* Using the bootstrap style, but overriding the font to not draw in
-   the Glyphicons Halflings font as an additional requirement for sorting icons.
+  the Glyphicons Halflings font as an additional requirement for sorting icons.
 
-   An alternative to the solution active below is to use the jquery style
-   which uses images, but the color on the images does not match adminlte.
+  An alternative to the solution active below is to use the jquery style
+  which uses images, but the color on the images does not match adminlte.
 
 @import url('/static/js/plugins/datatables/jquery.dataTables.min.css');
 */

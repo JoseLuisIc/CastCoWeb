@@ -121,7 +121,7 @@
       </div>
     </div>
     <!-- Main row -->
-    <div class="row" v-show="isMaterial">
+    <div class="row">
       <!-- Left col -->
       <div class="col-md-6">
         <!-- MAP & BOX PANE -->
@@ -190,7 +190,9 @@
   </section>
 
 </template>
-
+<style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
+</style>
 <script>
 import moment from 'moment'
 import api from '../../api'
@@ -212,7 +214,6 @@ export default {
       file: null,
       previewSrc: { src: '', type: '' },
       isPreviewFile: false,
-      isMaterial: false,
       project: project,
       error: project,
       projects: [],
@@ -231,7 +232,6 @@ export default {
       if (this.$route.params.hasOwnProperty('id')) {
         this.project.id = this.$route.params.id
         this.fetchProyect(this.$route.params.id)
-        this.isMaterial = true
       }
     })
   },

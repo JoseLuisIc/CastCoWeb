@@ -72,6 +72,7 @@
 import api from '../../../api'
 import Swal from 'sweetalert2'
 import * as $ from 'jquery'
+import toastr from 'toastr'
 
 export default {
   name: 'ModulePersonaje',
@@ -99,6 +100,8 @@ export default {
         .request('patch', `projects/${this.idProject}/characters/${this.id}/`, { name: this.name }, { 'Authorization': this.$store.state.token })
         .then(response => {
           console.log(response.data)
+          this.alertShow('Actualizacion', 'Se ha actualizado correctamente', 'success', 'fa fa-check')
+          $('#tableCharacters').find('tr').removeClass('info')
           $('#closeModal').trigger('click')
           $('#character' + response.data.id).addClass('info')
           $('#character' + response.data.id).find('td:nth-child(2)').html(response.data.name)
@@ -113,8 +116,12 @@ export default {
       api
         .request('post', `projects/${this.idProject}/characters/`, { name: this.name }, { 'Authorization': this.$store.state.token })
         .then(response => {
-          console.log(response)
-          this.index()
+          this.alertShow('Guardado', 'Se ha guardado correctamente', 'success', 'fa fa-check')
+          var character = response.data
+          this.characters.unshift(character)
+          setTimeout(function () {
+            $('#character' + character.id).addClass('success')
+          }, 500)
           $('#closeModal').trigger('click')
         })
         .catch(error => {
@@ -150,6 +157,7 @@ export default {
                 'Se ha eliminado.',
                 'success'
               )
+              $('#character' + id).remove()
             })
             .catch(error => {
               console.log(error)
@@ -161,6 +169,13 @@ export default {
       this.id = character.id
       this.name = character.name
       $('#btnModalCharacter').trigger('click')
+    },
+    alertShow(title, message, type, iconClass) {
+      this.message = message
+      this.type = type
+      this.title = title
+      this.iconClass = iconClass
+      toastr[type](message, title)
     }
   }
 }

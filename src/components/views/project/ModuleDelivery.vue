@@ -21,7 +21,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="delivery in deliveries">
+              <tr v-for="delivery in deliveries" :id="'derivery' + delivery.id">
                 <td> {{ delivery.id }}</td>
                 <td> {{ delivery.name }}</td>
                 <td style="widget:100px">
@@ -73,6 +73,7 @@
 import api from '../../../api'
 import Swal from 'sweetalert2'
 import $ from 'jquery'
+import toastr from 'toastr'
 
 export default {
   name: 'ModuleDelivery',
@@ -100,8 +101,11 @@ export default {
         .request('patch', `projects/${this.idProject}/deliveries/${this.id}/`, { name: this.name }, { 'Authorization': this.$store.state.token })
         .then(response => {
           console.log(response)
-          this.index()
+          this.alertShow('Actualizacion', 'Se ha actualizado correctamente', 'success', 'fa fa-check')
+          $('#tableDeliveries').find('tr').removeClass('info')
           $('#closeModalDelivery').trigger('click')
+          $('#derivery' + response.data.id).addClass('info')
+          $('#derivery' + response.data.id).find('td:nth-child(2)').html(response.data.name)
           this.id = 0
           this.name = ''
         })
@@ -113,8 +117,12 @@ export default {
       api
         .request('post', `projects/${this.idProject}/deliveries/`, { name: this.name }, { 'Authorization': this.$store.state.token })
         .then(response => {
-          console.log(response)
-          this.index()
+          var delivery = response.data
+          this.deliveries.unshift(delivery)
+          setTimeout(function () {
+            $('#derivery' + delivery.id).addClass('success')
+          }, 500)
+          this.alertShow('Guardar', 'Se guardo correctamente', 'success', 'fa fa-check')
           $('#closeModalDelivery').trigger('click')
         })
         .catch(error => {
@@ -150,6 +158,7 @@ export default {
                 'Se ha eliminado.',
                 'success'
               )
+              $('#derivery' + id).remove()
             })
             .catch(error => {
               console.log(error)
@@ -161,6 +170,13 @@ export default {
       this.id = delivery.id
       this.name = delivery.name
       $('#btnModalDelivery').trigger('click')
+    },
+    alertShow(title, message, type, iconClass) {
+      this.message = message
+      this.type = type
+      this.title = title
+      this.iconClass = iconClass
+      toastr[type](message, title)
     }
   }
 }
