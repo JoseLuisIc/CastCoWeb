@@ -54,14 +54,22 @@
                     </thead>
                     <tfoot>
                       <tr>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="0"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="1"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="2"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Usuario" data-index="3"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Ciudad" data-index="4"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Edad" data-index="5"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Instagram" data-index="6"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Rol" data-index="7"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="0"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="1"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="2"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Usuario" data-index="3"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Ciudad" data-index="4"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Edad" data-index="5"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Instagram" data-index="6"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Rol" data-index="7"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"></th>
                       </tr>
                     </tfoot>
@@ -434,7 +442,6 @@ export default {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
-            this.error.age = errors.age[0]
           }
         })
     },
@@ -658,7 +665,6 @@ export default {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
-            this.error.age = errors.age[0]
           }
         })
     },
@@ -764,6 +770,7 @@ table.dataTable thead .sorting_desc:after {
   width: 36px;
   height: 36px;
 }
+
 div#tableUsers_filter {
   display: none;
 }
