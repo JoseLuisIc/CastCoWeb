@@ -54,14 +54,22 @@
                     </thead>
                     <tfoot>
                       <tr>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="0"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="1"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="2"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Usuario" data-index="3"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Ciudad" data-index="4"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Edad" data-index="5"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Instagram" data-index="6"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Rol" data-index="7"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="0"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="1"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="2"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Usuario" data-index="3"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Ciudad" data-index="4"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Edad" data-index="5"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Instagram" data-index="6"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Rol" data-index="7"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"></th>
                       </tr>
                     </tfoot>
@@ -381,7 +389,8 @@ export default {
       agencies: [],
       states: [],
       previewSrc: '',
-      isPreviewFile: false
+      isPreviewFile: false,
+      file: null
     }
   },
   mounted() {
@@ -395,12 +404,16 @@ export default {
     },
     updateUser(dUser) {
       var userFormData = new FormData()
+      console.log(dUser)
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
           if (key === 'state') {
             var state = this.user[key]
-            console.log(this.user)
             userFormData.append(key, state.id)
+          } else if (key === 'photo') {
+            if (this.file !== null) {
+              userFormData.append(key, this.file)
+            }
           } else {
             userFormData.append(key, this.user[key])
           }
@@ -764,6 +777,7 @@ table.dataTable thead .sorting_desc:after {
   width: 36px;
   height: 36px;
 }
+
 div#tableUsers_filter {
   display: none;
 }
