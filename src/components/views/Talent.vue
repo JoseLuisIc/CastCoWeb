@@ -447,7 +447,6 @@ export default {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
-            this.error.age = errors.age[0]
           }
         })
     },
@@ -671,7 +670,6 @@ export default {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
-            this.error.age = errors.age[0]
           }
         })
     },
