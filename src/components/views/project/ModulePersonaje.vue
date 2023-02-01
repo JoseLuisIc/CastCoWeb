@@ -51,9 +51,12 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-group">
+              <div class="form-group" v-bind:class="errorName !== '' ? 'has-error' : ''">
                 <label for="name" class="col-form-label">Nombre:</label>
                 <input type="text" class="form-control" id="name" v-model="name">
+                <div v-if=errorName class="text-red">
+                  <p>{{ errorName }}</p>
+                </div>
               </div>
             </form>
           </div>
@@ -80,7 +83,8 @@ export default {
     return {
       characters: [],
       name: '',
-      id: 0
+      id: 0,
+      errorName: ''
     }
   },
   props: {
@@ -113,6 +117,10 @@ export default {
         })
     },
     save() {
+      console.log(this.checkForm())
+      if (this.checkForm()) {
+        return
+      }
       api
         .request('post', `projects/${this.idProject}/characters/`, { name: this.name }, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -127,6 +135,14 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    checkForm: function () {
+      this.errorName = ''
+
+      if (this.name === '') {
+        this.errorName = 'El nombre es obligatorio.'
+      }
+      return this.errorName.length > 0
     },
     index() {
       api
@@ -176,6 +192,13 @@ export default {
       this.title = title
       this.iconClass = iconClass
       toastr[type](message, title)
+    }
+  },
+  validateName() {
+    if (/^[A-Za-z]+$/.test(this.name)) {
+      this.errorName = ''
+    } else {
+      this.errorName = 'ingrese nombre valido'
     }
   }
 }
