@@ -58,7 +58,7 @@
                             data-index="2" autocomplete="off"></th>
                         <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Telefono"
                             data-index="3" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad"
+                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Rol"
                             data-index="5" autocomplete="off"></th>
                         <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad"
                             data-index="6" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"></th>

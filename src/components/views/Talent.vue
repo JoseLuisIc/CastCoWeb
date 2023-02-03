@@ -69,7 +69,7 @@
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
                             placeholder="Instagram" data-index="6"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Rol" data-index="7"></th>
+                            placeholder="Rol" data-index="7" onfocus="this.removeAttribute('readonly');"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"></th>
                       </tr>
                     </tfoot>
