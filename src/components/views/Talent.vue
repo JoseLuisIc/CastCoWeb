@@ -69,7 +69,7 @@
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
                             placeholder="Instagram" data-index="6"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Rol" data-index="7"></th>
+                            placeholder="Rol" data-index="7" onfocus="this.removeAttribute('readonly');"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"></th>
                       </tr>
                     </tfoot>
@@ -389,7 +389,8 @@ export default {
       agencies: [],
       states: [],
       previewSrc: '',
-      isPreviewFile: false
+      isPreviewFile: false,
+      file: null
     }
   },
   mounted() {
@@ -403,12 +404,16 @@ export default {
     },
     updateUser(dUser) {
       var userFormData = new FormData()
+      console.log(dUser)
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
           if (key === 'state') {
             var state = this.user[key]
-            console.log(this.user)
             userFormData.append(key, state.id)
+          } else if (key === 'photo') {
+            if (this.file !== null) {
+              userFormData.append(key, this.file)
+            }
           } else {
             userFormData.append(key, this.user[key])
           }
