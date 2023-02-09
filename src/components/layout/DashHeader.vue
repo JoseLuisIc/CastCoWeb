@@ -1,8 +1,12 @@
 <template>
   <header class="main-header">
-    <span class="logo-mini">
-      <a href="/"><img src="/static/img/copilot-logo-white.svg" alt="Logo" class="img-responsive center-block logo"></a>
-    </span>
+    <!-- mini logo for sidebar mini 50x50 pixels -->
+    <a href="" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>C</b>Co</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Cast</b>Co</span>
+    </a>
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
       <!-- Sidebar toggle button-->

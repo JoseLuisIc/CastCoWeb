@@ -491,6 +491,7 @@ export default {
       params.append('format', 'datatables')
       var that = this
       that.table = $('#tableUsers').DataTable({
+        'bFilter': false,
         'processing': true,
         'serverSide': true,
         'ajax': {
@@ -574,12 +575,6 @@ export default {
         console.log(col)
         that.table
           .column(col)
-          .search(this.value)
-          .draw()
-      })
-      $('#tableUsers').on('keyup', 'tfoot input', function () {
-        that.table
-          .column($(this).data('index'))
           .search(this.value)
           .draw()
       })
@@ -776,7 +771,5 @@ table.dataTable thead .sorting_desc:after {
   height: 36px;
 }
 
-div#tableUsers_filter {
-  display: none;
-}
+
 </style>
