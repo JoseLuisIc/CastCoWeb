@@ -37,21 +37,13 @@
         </div><!-- /.table-responsive -->
       </div><!-- /.box-body -->
       <div class="box-footer clearfix">
-        <button id="btnModalDelivery" class="btn btn-sm btn-info btn-flat pull-left" data-toggle="modal"
-          data-target="#modalDelivery"> <i class="fa fa-plus"></i> Agregar</button>
+        <button id="btnModalDelivery" class="btn btn-sm btn-info btn-flat pull-left" @click="showModalDelivery = true"> <i class="fa fa-plus"></i> Agregar</button>
       </div><!-- /.box-footer -->
     </div><!-- /.box -->
-    <div class="modal fade" id="modalDelivery" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Nuevo Entrega</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModalDelivery">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
+    <modal v-if="showModalDelivery" @close="showModalDelivery = false">
+      <h3 slot="header">Nuevo Entrega</h3>
+      <div slot="body">
+        <form>
               <div class="form-group" v-bind:class="errorName !== '' ? 'has-error' : ''">
                 <label for="name" class="col-form-label">Nombre:</label>
                 <input type="text" class="form-control" id="name" v-model="name">
@@ -60,15 +52,11 @@
                 </div>
               </div>
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="button" v-show="id != 0" class="btn btn-primary" v-on:click="update">Actualizar</button>
-            <button type="button" v-show="id == 0" class="btn btn-primary" v-on:click="save">Guardar</button>
-          </div>
-        </div>
       </div>
-    </div>
+
+      <button slot="footer" type="button" v-show="id != 0" class="btn btn-primary" v-on:click="update">Actualizar</button>
+      <button slot="footer" type="button" v-show="id == 0" class="btn btn-primary" v-on:click="save">Guardar</button>
+    </modal>
   </div><!-- /.col -->
 </template>
 
@@ -77,11 +65,16 @@ import api from '../../../api'
 import Swal from 'sweetalert2'
 import $ from 'jquery'
 import toastr from 'toastr'
+import Modal from '../../widgets/Modal.vue'
 
 export default {
   name: 'ModuleDelivery',
+  components: {
+    Modal
+  },
   data() {
     return {
+      showModalDelivery: false,
       deliveries: [],
       name: '',
       id: 0,
@@ -112,6 +105,7 @@ export default {
           $('#derivery' + response.data.id).find('td:nth-child(2)').html(response.data.name)
           this.id = 0
           this.name = ''
+          this.showModalDelivery = false
         })
         .catch(error => {
           console.log(error)
@@ -127,6 +121,8 @@ export default {
         .then(response => {
           var delivery = response.data
           this.deliveries.unshift(delivery)
+
+          this.showModalDelivery = false
           setTimeout(function () {
             $('#derivery' + delivery.id).addClass('success')
           }, 500)
@@ -184,7 +180,7 @@ export default {
     showEdit(delivery) {
       this.id = delivery.id
       this.name = delivery.name
-      $('#btnModalDelivery').trigger('click')
+      this.showModalDelivery = true
     },
     alertShow(title, message, type, iconClass) {
       this.message = message

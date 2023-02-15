@@ -72,7 +72,8 @@
 
     </modal>
     <modal v-if="showModal" @close="showModal = false">
-      <h3 slot="header">Nuevo Usuario</h3>
+      <h3 v-if="isNew" slot="header">Nuevo Usuario</h3>
+      <h3 v-if="!isNew" slot="header">Actualizar Usuario</h3>
       <div slot="body">
         <form>
             <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
@@ -101,7 +102,7 @@
         <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
         <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
     </modal>
-    <modal v-if="showModalReset" @close="showModalReset = false">
+    <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="modal-lg">
       <h3 slot="header">¿Cuál es mi contraseña?</h3>
       <div slot="body">
         <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
@@ -265,10 +266,10 @@ export default {
         })
     },
     deleteUser() {
-      this.showModalDelete = false
       api
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
+          this.showModalDelete = false
           this.callUser()
         })
         .catch(error => {

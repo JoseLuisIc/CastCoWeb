@@ -31,7 +31,6 @@
 
 </template>
 <script>
-import 'bootstrap3'
 export default {
   name: 'pagination',
   template: 'pagination',
