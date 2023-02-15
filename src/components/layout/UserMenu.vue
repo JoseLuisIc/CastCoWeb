@@ -21,7 +21,7 @@
           <span>Perfil</span>
         </a>
       </li>
-      
+
       <li class="user-footer">
         <a href="javascript:;" v-on:click="logout" class="btn btn-default btn-flat btn-block">
           <i class="fa fa-sign-out"></i>

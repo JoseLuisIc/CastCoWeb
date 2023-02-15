@@ -25,7 +25,7 @@ export default {
       required: true
     },
     number: {
-      type: String,
+      type: Number,
       default: ''
     },
     iconClasses: {

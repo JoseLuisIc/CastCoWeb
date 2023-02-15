@@ -1,11 +1,11 @@
 <template>
   <div class="pull-right">
     <ul class="pagination">
-      <li class="pagination-item" :disabled="isInFirstPage">
+      <!-- <li class="pagination-item" :disabled="isInFirstPage">
         <a type="button" @click="onClickFirstPage">
           Primero
         </a>
-      </li>
+      </li> -->
       <li class="pagination-item" :disabled="isInFirstPage">
         <a type="button" @click="onClickPreviousPage">
           Anterior
@@ -21,11 +21,11 @@
           Siguiente
         </a>
       </li>
-      <li class="pagination-item" :disabled="isInLastPage">
+      <!-- <li class="pagination-item" :disabled="isInLastPage">
         <a type="button" @click="onClickLastPage">
           Ultimo
         </a>
-      </li>
+      </li> -->
     </ul>
   </div>
 

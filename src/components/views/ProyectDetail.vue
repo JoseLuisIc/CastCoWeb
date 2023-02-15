@@ -42,7 +42,7 @@
                     </thead>
                     <tbody>
                       <tr v-for="application in applications">
-                        <td>{{ application.user.first_name }} </td>
+                        <td><div class="widget-user-image"><img :src="application.user.photo"  alt="Avatar" class="img-circle"></div>{{ application.user.first_name }}</td>
                         <td>{{ application.project.name }} </td>
                         <td>{{ application.project.public_name }} </td>
                         <td>{{ application.project.description }} </td>

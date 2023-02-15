@@ -39,27 +39,23 @@
                     <tbody>
                       <tr v-for="application in applications">
                         <td>{{ application.project.name }} </td>
-                        <td>{{ application.project.description }} </td>
+                        <td>{{ application.project.desciption }} </td>
                         <td>{{ application.character.name }}</td>
                         <td>{{ application.delivery != null ? application.delivery.name : "Sin Asignar" }}</td>
                         <td>
                           <div class="btn-group">
-                            <button class="btn delete" id={{ application.id }}><i class="fa fa-trash"></i></button>
-                            <button class="btn edit" id={{ application.id }}><i class="fa fa-edit"></i></button>
-                            <button class="btn view" id={{ application.id }}><i class="fa fa-eye"></i></button>
+                            <button class="btn delete" :id="application.id"><i class="fa fa-trash"></i></button>
+                            <button class="btn edit" :id="application.id"><i class="fa fa-edit"></i></button>
+                            <button class="btn view" :id="application.id"><i class="fa fa-eye"></i></button>
                           </div>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                  <ul class="pagination">
-                    <li :class="1 === currentPage ? 'disable' : ''" @click="changePage(page)"><a href="javascript::"><i
-                          class="fa  fa-chevron-left"></i></a></li>
-                    <li :class="page === currentPage ? 'active' : ''" @click="changePage(page)"><a href="javascript::"
-                        v-for="page in totalPage">{{ page }}</a></li>
-                    <li :class="page === totalPage ? 'disable' : ''" @click="changePage(totalPage)"><a
-                        href="javascript::"><i class="fa  fa-chevron-right"></i></a></li>
-                  </ul>
+                  <div>
+                    <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                      @pagechanged="onPageChange" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -75,25 +71,29 @@
 </template>
 
 <script>
-import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
-
+import Pagination from '../widgets/Pagination.vue'
+import Modal from '../widgets/Modal.vue'
 // Require needed datatables modules
 require('datatables.net')
 
 export default {
   name: 'Admins',
+  components: {
+    Pagination,
+    Modal
+  },
   data() {
     return {
-      totalPage: 1,
       idProject: 0,
+      totalPage: 1,
       start: 0,
       length: 10,
       page: 1,
       count: 0,
-      applications: [],
       currentPage: 1,
+      applications: [],
       project: [],
       characters: [],
       deliveries: []
@@ -105,6 +105,9 @@ export default {
     })
   },
   methods: {
+    onPageChange(page) {
+      this.currentPage = page
+    },
     openModal() {
       this.user = {
         id: 0,
@@ -119,8 +122,6 @@ export default {
       api
         .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.table.ajax.reload()
-          $('#closeEdit').trigger('click')
         })
         .catch(error => {
           if (error.response) {
@@ -133,8 +134,6 @@ export default {
       api
         .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.table.ajax.reload()
-          $('#closeCreate').trigger('click')
         })
         .catch(error => {
           if (error.response) {
@@ -150,8 +149,7 @@ export default {
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.user = response.data
-          $('#btnModalEdit').trigger('click')
+          // this.user = response.data
         })
         .catch(error => {
           if (error.response) {
@@ -185,15 +183,11 @@ export default {
           }
         })
     },
-    renderView(data, row) {
-      return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
-    },
     confirmDelete(idUser) {
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.user = response.data
-          $('#btnModalDelete').trigger('click')
+          // this.user = response.data
         })
         .catch(error => {
           if (error.response) {
@@ -203,7 +197,6 @@ export default {
         })
     },
     deleteUser() {
-      $('#closeDelete').trigger('click')
       console.log(this.user)
       api
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })

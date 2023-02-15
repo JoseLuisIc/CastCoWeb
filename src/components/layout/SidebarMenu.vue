@@ -61,6 +61,19 @@
         <span class="page">Postulaciones</span>
       </a>
     </router-link>
+    <li>
+      <a href="javascript:;" v-on:click="profile">
+        <i class="fa fa-user"></i>
+        <span>Perfil</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="javascript:;" v-on:click="logout">
+        <i class="fa fa-sign-out"></i>
+        <span>Cerrar Sesión</span>
+      </a>
+    </li>
   </ul>
 </template>
 <script>
@@ -84,6 +97,34 @@ export default {
       this.isActive = true
     } else {
       this.isActive = false
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.commit('SET_USER', null)
+      this.$store.commit('SET_TOKEN', null)
+
+      if (window.localStorage) {
+        window.localStorage.setItem('user', null)
+        window.localStorage.setItem('token', null)
+      }
+
+      this.$router.push('/login')
+    },
+    getRol(rolId) {
+      var rolString = ''
+      switch (rolId) {
+        case util.AGENCY: rolString = 'Agencia'
+          break
+        case util.TALENT: rolString = 'Talento'
+          break
+        case util.MANAGER: rolString = 'Administrador'
+          break
+      }
+      return rolString
+    },
+    profile() {
+      this.$router.push('profile')
     }
   }
 }
