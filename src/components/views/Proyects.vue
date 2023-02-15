@@ -256,6 +256,9 @@ export default {
           // )
         },
         'ajax': {
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', that.$store.state.token)
+          },
           url: config.serverURI + 'projects/?' + params,
           type: 'GET',
           complete: function () {
