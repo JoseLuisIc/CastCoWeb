@@ -6,13 +6,8 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserCreate"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
-            <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserEdit" />
-            <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserDelete" />
-            <input id="btnModalPwd" type="hidden" data-target="#pwdModal" data-toggle="modal" />
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success"><i
+                class="fa fa-user-plus"> </i> Agregar Nuevo</button>
 
           </div>
           <!-- /.box-header -->
@@ -35,10 +30,6 @@
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="1" class="sorting_asc">Nombre</th>
-                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="2" class="sorting_asc">Apellidos</th>
-                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="3" class="sorting_asc">Usuario</th>
                         <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="4"
                           class="sorting">Ciudad</th>
@@ -46,13 +37,32 @@
                           class="sorting">Edad</th>
                         <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="6"
                           class="sorting">Instagram</th>
-                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="7"
-                          class="sorting">Rol</th>
                         <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="8"
                           class="sorting">Acciones</th>
                       </tr>
                     </thead>
-                    <tfoot>
+                    <tbody>
+                      <tr v-for="user in users">
+                        <td>{{ user.email }} </td>
+                        <td>
+                          <div class="widget-user-image">
+                            <img class="img-circle" :src="user.extras.photo" alt="Avatar">
+                          </div>{{ user.first_name + user.last_name }}
+                        </td>
+                        <td>{{ user.extras.city }} </td>
+                        <td>{{ user.extras.age }} </td>
+                        <td>{{ user.instagram }} </td>
+                        <td>
+                          <div class="btn-group">
+                            <button class="btn delete" v-on:click=confirmDelete(user.id)><i
+                                class="fa fa-trash"></i></button>
+                            <button class="btn edit" v-on:click=editUser(user.id)><i class="fa fa-edit"></i></button>
+                            <button class="btn reset" v-on:click=modalResetPwd(user.id)><i class="fa fa-refresh"></i></button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <!-- <tfoot>
                       <tr>
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
                             placeholder="Email" data-index="0"></th>
@@ -72,8 +82,17 @@
                             placeholder="Rol" data-index="7" onfocus="this.removeAttribute('readonly');"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"></th>
                       </tr>
-                    </tfoot>
+                    </tfoot> -->
                   </table>
+                  <!-- <ul class="pagination">
+                    <li :class="1 === currentPage ? 'disable' : ''" @click="changePage(page)"><a href="javascript::"><i class="fa  fa-chevron-left"></i></a></li>
+                    <li :class="page === currentPage ? 'active' : ''" @click="changePage(page)"><a href="javascript::" v-for="page in totalPage">{{ page }}</a></li>
+                    <li :class="page === totalPage ? 'disable' : ''" @click="changePage(totalPage)"><a href="javascript::"><i class="fa  fa-chevron-right" ></i></a></li>
+                  </ul> -->
+                  <div>
+                    <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                      @pagechanged="onPageChange" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -82,19 +101,60 @@
         </div>
       </div>
     </div>
+    <modal v-if="showModalDelete" @close="showModalDelete = false">
+      <h3 slot="header">Eliminar Usuario</h3>
+      <div slot="body">
+        <p>Esta seguro que quiere eliminar al usuario?</p>
+      </div>
 
-    <div class="modal fade" id="modalUserCreate" tabindex="-1" role="dialog" aria-labelledby="modalUserCreateLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalUserCreateLabel">Nuevo Usuario</h5>
-            <button type="button" class="close" id="closeCreate" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+      <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
+
+    </modal>
+    <modal v-if="showModal" @close="showModal = false">
+      <h3 slot="header">Nuevo Usuario</h3>
+      <div slot="body">
+        <form>
+          <div class="row" v-if="isNew">
+            <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
+              <label for="email" class="col-form-label">Email:</label>
+              <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
+              <div v-if=error.email class="text-red">
+                <p>{{ error.email }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="instagram" class="col-form-label">Instagram:</label>
+              <input class="form-control" id="instagram" v-model="user.instagram" />
+            </div>
+            <div class="form-group">
+              <input class="form-control" id="id" type="hidden" v-model="user.id" />
+              <input class="form-control" id="role" type="hidden" v-model="user.role" />
+            </div>
           </div>
-          <div class="modal-body">
-            <form>
+
+          <div class="row" v-if="!isNew">
+
+            <div class="col-md-6">
+              <div class="form-group" v-bind:class="error.photo !== '' ? 'has-error' : ''">
+                <label for="photo" class="col-form-label">Foto:</label>
+                <div>
+                  <span class="mailbox-attachment-icon has-img">
+                    <img style="border-radius: 50%" v-show="isPreviewFile" :src='previewSrc' alt="" width="200px">
+                  </span>
+                  <div class="mailbox-attachment-info">
+                    <!-- <a class="btn btn-default btn-xs pull-left deleteFile"><i class="fa fa-trash"></i>
+            Eliminar</a> -->
+                    <span class="mailbox-attachment-size">
+                      &nbsp;
+                      <div class="btn btn-default btn-file">
+                        <i class="fa fa-file-o"></i> Cambiar Foto
+                        <input type="file" name="materials" class="form-control btn btn-default btn-xs pull-right"
+                          id="materials" @change="onFileChange" accept="image/*">
+                      </div>
+                    </span>
+                  </div>
+                </div>
+              </div>
               <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                 <label for="email" class="col-form-label">Email:</label>
                 <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
@@ -103,239 +163,156 @@
                 </div>
               </div>
               <div class="form-group">
+                <label for="first_name" class="col-form-label">Nombres:</label>
+                <input class="form-control" id="first_name" v-model="user.first_name" />
+                <div v-if=error.first_name class="text-red"></div>
+                <p>{{ error.first_name }}</p>
+              </div>
+              <div class="form-group">
+                <label for="last_name" class="col-form-label">Apellidos:</label>
+                <input class="form-control" id="last_name" v-model="user.last_name" />
+              </div>
+              <div class="form-group" v-bind:class="error.age !== '' ? 'has-error' : ''">
+                <label for="age" class="col-form-label">Edad:</label>
+                <input type="number" class="form-control" id="age" v-model="user.age" max="100" min="18" />
+                <div v-if=error.age class="text-red">
+                  <p>{{ error.age }}</p>
+                </div>
+              </div>
+
+              <div class="form-group" v-bind:class="error.state !== '' ? 'has-error' : ''">
+                <label for="state" class="col-form-label">Estado:</label>
+                <select name="state" class="form-control" id="state" v-model="user.state.id">
+                  <option value="0" selected>Elegir Estado</option>
+                  <option v-for="(state, index) in states" :key="index" :value="state.id">{{ state.name }}</option>
+                </select>
+                <div v-if=error.state class="text-red">
+                  <p>{{ error.state }}</p>
+                </div>
+              </div>
+              <div class="form-group" v-bind:class="error.agency !== '' ? 'has-error' : ''">
+                <label for="agency" class="col-form-label">Agencia:</label>
+                <select name="agency" class="form-control" id="agency" v-model="user.agency">
+                  <option value="0" selected>Elegir Agencia</option>
+                  <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.name }}
+                  </option>
+                </select>
+                <div v-if=error.agency class="text-red">
+                  <p>{{ error.agency }}</p>
+                </div>
+              </div>
+              <div class="form-group" v-bind:class="error.gender !== '' ? 'has-error' : ''">
+                <label for="gender" class="col-form-label">Genero:</label>
+                <select name="gender" class="form-control" id="gender" v-model="user.gender">
+                  <option value="0" selected>Elegir Genero</option>
+                  <option value="1">Hombre</option>
+                  <option value="2">Mujer</option>
+                  <option value="3">No binario</option>
+                </select>
+                <div v-if=error.gender class="text-red">
+                  <p>{{ error.gender }}</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="lgtbq" class="col-form-label">LGTBQ:</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" v-model="user.lgtbq">
+                <label class="form-check-label" for="flexCheckChecked">
+                  Pertenesco a la comunidad
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
                 <label for="instagram" class="col-form-label">Instagram:</label>
                 <input class="form-control" id="instagram" v-model="user.instagram" />
               </div>
               <div class="form-group">
-                <input class="form-control" id="id" type="hidden" v-model="user.id" />
-                <input class="form-control" id="role" type="hidden" v-model="user.role" />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal fade" id="modalUserEdit" tabindex="-1" role="dialog" aria-labelledby="modalUserEditLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalUserEditLabel">Actualizar Usuario</h5>
-            <button type="button" class="close" id="closeEdit" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="row">
-
-                <div class="col-md-6">
-                  <div class="form-group" v-bind:class="error.photo !== '' ? 'has-error' : ''">
-                    <label for="photo" class="col-form-label">Foto:</label>
-                    <div>
-                      <span class="mailbox-attachment-icon has-img">
-                        <img style="border-radius: 50%" v-show="isPreviewFile" :src='previewSrc' alt="" width="200px">
-                      </span>
-                      <div class="mailbox-attachment-info">
-                        <!-- <a class="btn btn-default btn-xs pull-left deleteFile"><i class="fa fa-trash"></i>
-                            Eliminar</a> -->
-                        <span class="mailbox-attachment-size">
-                          &nbsp;
-                          <div class="btn btn-default btn-file">
-                            <i class="fa fa-file-o"></i> Cambiar Foto
-                            <input type="file" name="materials" class="form-control btn btn-default btn-xs pull-right"
-                              id="materials" @change="onFileChange" accept="image/*">
-                          </div>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
-                    <label for="email" class="col-form-label">Email:</label>
-                    <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-                    <div v-if=error.email class="text-red">
-                      <p>{{ error.email }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="first_name" class="col-form-label">Nombres:</label>
-                    <input class="form-control" id="first_name" v-model="user.first_name" />
-                    <div v-if=error.first_name class="text-red"></div>
-                    <p>{{ error.first_name }}</p>
-                  </div>
-                  <div class="form-group">
-                    <label for="last_name" class="col-form-label">Apellidos:</label>
-                    <input class="form-control" id="last_name" v-model="user.last_name" />
-                  </div>
-                  <div class="form-group" v-bind:class="error.age !== '' ? 'has-error' : ''">
-                    <label for="age" class="col-form-label">Edad:</label>
-                    <input type="number" class="form-control" id="age" v-model="user.age" max="100" min="18" />
-                    <div v-if=error.age class="text-red">
-                      <p>{{ error.age }}</p>
-                    </div>
-                  </div>
-
-                  <div class="form-group" v-bind:class="error.state !== '' ? 'has-error' : ''">
-                    <label for="state" class="col-form-label">Estado:</label>
-                    <select name="state" class="form-control" id="state" v-model="user.state.id">
-                      <option value="0" selected>Elegir Estado</option>
-                      <option v-for="(state, index) in states" :key="index" :value="state.id">{{ state.name }}</option>
-                    </select>
-                    <div v-if=error.state class="text-red">
-                      <p>{{ error.state }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group" v-bind:class="error.agency !== '' ? 'has-error' : ''">
-                    <label for="agency" class="col-form-label">Agencia:</label>
-                    <select name="agency" class="form-control" id="agency" v-model="user.agency">
-                      <option value="0" selected>Elegir Agencia</option>
-                      <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.name }}
-                      </option>
-                    </select>
-                    <div v-if=error.agency class="text-red">
-                      <p>{{ error.agency }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group" v-bind:class="error.gender !== '' ? 'has-error' : ''">
-                    <label for="gender" class="col-form-label">Genero:</label>
-                    <select name="gender" class="form-control" id="gender" v-model="user.gender">
-                      <option value="0" selected>Elegir Genero</option>
-                      <option value="1">Hombre</option>
-                      <option value="2">Mujer</option>
-                      <option value="3">No binario</option>
-                    </select>
-                    <div v-if=error.gender class="text-red">
-                      <p>{{ error.gender }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="lgtbq" class="col-form-label">LGTBQ:</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" v-model="user.lgtbq">
-                    <label class="form-check-label" for="flexCheckChecked">
-                      Pertenesco a la comunidad
-                    </label>
-                  </div>
+                <label for="phone" class="col-form-label">Telefono:</label>
+                <input class="form-control" id="phone" v-model="user.phone" />
+                <div v-if=error.phone class="text-red">
+                  <p>{{ error.phone }}</p>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="instagram" class="col-form-label">Instagram:</label>
-                    <input class="form-control" id="instagram" v-model="user.instagram" />
-                  </div>
-                  <div class="form-group">
-                    <label for="phone" class="col-form-label">Telefono:</label>
-                    <input class="form-control" id="phone" v-model="user.phone" />
-                    <div v-if=error.phone class="text-red">
-                      <p>{{ error.phone }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group" v-bind:class="error.height !== '' ? 'has-error' : ''">
-                    <label for="height" class="col-form-label">Altura:</label>
-                    <input class="form-control" id="height" v-model="user.height" />
-                    <div v-if=error.height class="text-red">
-                      <p>{{ error.height }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group" v-bind:class="error.shoe_size !== '' ? 'has-error' : ''">
-                    <label for="shoe_size" class="col-form-label"># Calzado:</label>
-                    <input class="form-control" id="shoe_size" v-model="user.shoe_size" />
-                    <div v-if=error.shoe_size class="text-red">
-                      <p>{{ error.shoe_size }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group" v-bind:class="error.pant_size !== '' ? 'has-error' : ''">
-                    <label for="pant_size" class="col-form-label"># Pantalon:</label>
-                    <select name="pant_size" class="form-control" id="pant_size" v-model="user.pant_size">
-                      <option value="0" selected>Elegir Talla</option>
-                      <option value="1">XCH</option>
-                      <option value="2">CH</option>
-                      <option value="3">MD</option>
-                      <option value="4">GD</option>
-                      <option value="5">XGD</option>
-                    </select>
-                    <div v-if=error.pant_size class="text-red">
-                      <p>{{ error.pant_size }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group" v-bind:class="error.shirt_size !== '' ? 'has-error' : ''">
-                    <label for="shirt_size" class="col-form-label"># Camisa:</label>
-                    <select name="shirt_size" class="form-control" id="shirt_size" v-model="user.shirt_size">
-                      <option value="0" selected>Elegir Talla</option>
-                      <option value="1">XCH</option>
-                      <option value="2">CH</option>
-                      <option value="3">MD</option>
-                      <option value="4">GD</option>
-                      <option value="5">XGD</option>
-                    </select>
-                    <div v-if=error.shirt_size class="text-red">
-                      <p>{{ error.shirt_size }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="job_occupation" class="col-form-label">Ocupacion:</label>
-                    <input class="form-control" id="job_occupation" v-model="user.job_occupation" />
-                    <div v-if=error.job_occupation class="text-red">
-                      <p>{{ error.job_occupation }}</p>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="skills" class="col-form-label">Skills:</label>
-                    <textarea class="form-control" id="skills" v-model="user.skills"></textarea>
-                    <div v-if=error.skills class="text-red">
-                      <p>{{ error.skills }}</p>
-                    </div>
-                  </div>
+              </div>
+              <div class="form-group" v-bind:class="error.height !== '' ? 'has-error' : ''">
+                <label for="height" class="col-form-label">Altura:</label>
+                <input class="form-control" id="height" v-model="user.height" />
+                <div v-if=error.height class="text-red">
+                  <p>{{ error.height }}</p>
+                </div>
+              </div>
+              <div class="form-group" v-bind:class="error.shoe_size !== '' ? 'has-error' : ''">
+                <label for="shoe_size" class="col-form-label"># Calzado:</label>
+                <input class="form-control" id="shoe_size" v-model="user.shoe_size" />
+                <div v-if=error.shoe_size class="text-red">
+                  <p>{{ error.shoe_size }}</p>
+                </div>
+              </div>
+              <div class="form-group" v-bind:class="error.pant_size !== '' ? 'has-error' : ''">
+                <label for="pant_size" class="col-form-label"># Pantalon:</label>
+                <select name="pant_size" class="form-control" id="pant_size" v-model="user.pant_size">
+                  <option value="0" selected>Elegir Talla</option>
+                  <option value="1">XCH</option>
+                  <option value="2">CH</option>
+                  <option value="3">MD</option>
+                  <option value="4">GD</option>
+                  <option value="5">XGD</option>
+                </select>
+                <div v-if=error.pant_size class="text-red">
+                  <p>{{ error.pant_size }}</p>
+                </div>
+              </div>
+              <div class="form-group" v-bind:class="error.shirt_size !== '' ? 'has-error' : ''">
+                <label for="shirt_size" class="col-form-label"># Camisa:</label>
+                <select name="shirt_size" class="form-control" id="shirt_size" v-model="user.shirt_size">
+                  <option value="0" selected>Elegir Talla</option>
+                  <option value="1">XCH</option>
+                  <option value="2">CH</option>
+                  <option value="3">MD</option>
+                  <option value="4">GD</option>
+                  <option value="5">XGD</option>
+                </select>
+                <div v-if=error.shirt_size class="text-red">
+                  <p>{{ error.shirt_size }}</p>
                 </div>
               </div>
               <div class="form-group">
-                <input class="form-control" id="id" type="hidden" v-model="user.id" />
-                <input class="form-control" id="role" type="hidden" v-model="user.role" />
+                <label for="job_occupation" class="col-form-label">Ocupacion:</label>
+                <input class="form-control" id="job_occupation" v-model="user.job_occupation" />
+                <div v-if=error.job_occupation class="text-red">
+                  <p>{{ error.job_occupation }}</p>
+                </div>
               </div>
-            </form>
+              <div class="form-group">
+                <label for="skills" class="col-form-label">Skills:</label>
+                <textarea class="form-control" id="skills" v-model="user.skills"></textarea>
+                <div v-if=error.skills class="text-red">
+                  <p>{{ error.skills }}</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
-          </div>
-        </div>
+        </form>
       </div>
-    </div>
-    <div class="modal fade" id="modalUserDelete" tabindex="-1" role="dialog" aria-labelledby="modalUserDeleteLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalUserDeleteLabel">Eliminar Usuario</h5>
-            <button type="button" class="close" id="closeDelete" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Esta seguro que quiere eliminar al usuario?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
-          </div>
-        </div>
+      <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
+      <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary"
+        v-on:click="updateUser(user)">Actualizar</button>
+    </modal>
+    <modal v-if="showModalDelete" @close="showModalDelete = false">
+      <h3 slot="header">Eliminar Usuario</h3>
+      <div slot="body">
+        <p>Esta seguro que quiere eliminar al usuario?</p>
       </div>
-    </div>
-    <div id="pwdModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" id="closePwd" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h1 class="text-center">¿Cuál es mi contraseña?</h1>
-          </div>
-          <div class="modal-body">
 
-            <div class="text-center">
-              <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
+      <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
+
+    </modal>
+
+    <modal v-if="showModalReset" @close="showModalReset = false">
+      <h3 slot="header">¿Cuál es mi contraseña?</h3>
+      <div slot="body">
+        <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
               <fieldset>
                 <div class="form-group">
                   <label for="password" class="col-form-label">Contraseña:</label>
@@ -347,41 +324,51 @@
                   <input class="form-control input-lg" name="confirm_password" type="password"
                     v-model="reset.confirm_password">
                 </div>
+                <div v-if=reset.error class="text-red">
+                  <p>{{ reset.error }}</p>
+                </div>
               </fieldset>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div class="col-md-12">
-              <button class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
-              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+
+      <button slot="footer" class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
+
+    </modal>
   </section>
 
 </template>
 
 <script>
-import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
-import config from '../../config'
 import modelUser from '../../models/user'
-import esMX from '../../lang/es_mx'
-
+import Pagination from '../widgets/Pagination.vue'
+import Modal from '../widgets/Modal.vue'
 // Require needed datatables modules
 require('datatables.net')
 
 export default {
   name: 'Admins',
+  components: {
+    Pagination,
+    Modal
+  },
   data() {
     return {
+      showModal: false,
+      showModalDelete: false,
+      showModalReset: false,
+      isNew: true,
       reset: {
         password: '',
         confirm_password: ''
       },
+      idProject: 0,
+      totalPage: 1,
+      start: 0,
+      length: 10,
+      page: 1,
+      count: 0,
+      currentPage: 1,
       table: null,
       user: modelUser.user,
       error: modelUser.error,
@@ -400,7 +387,11 @@ export default {
     })
   },
   methods: {
+    onPageChange(page) {
+      this.currentPage = page
+    },
     openModal() {
+      this.showModal = true
     },
     updateUser(dUser) {
       var userFormData = new FormData()
@@ -422,8 +413,7 @@ export default {
       api
         .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.table.ajax.reload()
-          $('#closeEdit').trigger('click')
+          this.showModal = false
         })
         .catch(error => {
           this.resetErrors()
@@ -440,7 +430,6 @@ export default {
         .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
           var user = response.data
-          $('#closeCreate').trigger('click')
           this.editUser(user.id)
         })
         .catch(error => {
@@ -477,7 +466,7 @@ export default {
             that.previewSrc = that.user.photo
             console.log(that.previewSrc)
           }
-          $('#btnModalEdit').trigger('click')
+          this.showModal = true
         })
         .catch(error => {
           if (error.response) {
@@ -488,126 +477,28 @@ export default {
     },
     callUser() {
       const params = new URLSearchParams()
-      params.append('format', 'datatables')
-      var that = this
-      that.table = $('#tableUsers').DataTable({
-        'bFilter': false,
-        'processing': true,
-        'serverSide': true,
-        'ajax': {
-          url: config.serverURI + 'users/?' + params,
-          type: 'GET',
-          complete: function () {
-            $('.delete').on('click', function () {
-              that.confirmDelete(this.id)
-            })
-            $('.edit').on('click', function () {
-              that.editUser(this.id)
-            })
-            $('.reset').on('click', function () {
-              that.modalResetPwd(this.id)
-            })
-          }
-        },
-        'searchCols': [
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          { 'search': util.TALENT },
-          null
-        ],
-        'columns': [
-          { 'data': 'email' },
-          { 'data': 'first_name', 'name': 'first_name' },
-          { 'data': 'last_name', 'name': 'last_name' },
-          {
-            'data': 'extras',
-            render: function (data, type, row) {
-              return ` <div class="widget-user-image">
-                <img class="img-circle" src="${row.extras.photo}" alt="Avatar">
-              </div> ${row.first_name + ' ' + row.last_name}`
-            }
-          },
-          {
-            'data': 'city',
-            'name': 'city',
-            render: function (data, type, row) {
-              if (Object.keys(row.extras).length === 0 || row.extras.state == null) {
-                return 'S/A'
-              }
-              return row.extras.state.name
-            }
-          },
-          {
-            'data': 'age',
-            render: function (data, type, row) {
-              return row.extras.age
-            }
-          },
-          { 'data': 'instagram' },
-          { 'data': 'role' },
-          {
-            'data': 'id',
-            className: 'dt-center editor-edit',
-            defaultContent: '',
-            orderable: false,
-            'render': (data, type, row, meta) => {
-              return this.renderView(data, row)
-            }
-          }
-        ],
-        'columnDefs': [
-          {
-            'targets': [1, 2, 7],
-            'visible': false,
-            'searchable': false
-          }
-        ],
-        'language': esMX
-      })
-      // Filter event handler
-      $('#tableUsers').on('keyup', 'tfoot input', function () {
-        var col = $(this).data('index')
-        console.log(col)
-        that.table
-          .column(col)
-          .search(this.value)
-          .draw()
-      })
-      $('#btnModalCreate').on('click', function (e) {
-        e.preventDefault()
-
-        console.log(that.user, that.error)
-        Object.keys(that.user).forEach(key => { that.user[key] = '' })
-        Object.keys(that.error).forEach(key => {
-          that.error[key] = ''
+      params.append('role', util.TALENT)
+      api
+        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          var json = response.data
+          this.users = json.results
+          this.count = json.count
+          this.totalPage = Math.ceil(this.count / this.length)
         })
-      })
-    },
-    renderView(data, row) {
-      return `
-      <td>
-        <button class="btn delete" id="${data}">
-          <i class="fa fa-trash"></i>
-        </button>
-        <button class="btn edit" id="${data}">
-          <i class="fa fa-edit"></i>
-        </button>
-        <button class="btn reset" id="${data}">
-          <i class="fa fa-key"></i>
-        </button>
-      </td>`
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     confirmDelete(idUser) {
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
-          $('#btnModalDelete').trigger('click')
+          this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
@@ -617,11 +508,11 @@ export default {
         })
     },
     deleteUser() {
-      $('#closeDelete').trigger('click')
       console.log(this.user)
       api
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
+          this.showModalDelete = false
           this.callUser()
         })
         .catch(error => {
@@ -697,7 +588,7 @@ export default {
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
-          $('#btnModalPwd').trigger('click')
+          this.showModalReset = true
         })
         .catch(error => {
           if (error.response) {
@@ -718,7 +609,7 @@ export default {
           this.reset.password = ''
           this.reset.confirm_password = ''
           this.reset.error = ''
-          $('#closePwd').trigger('click')
+          this.showModalDelete = false
         })
         .catch(error => {
           if (error.response) {
@@ -770,6 +661,4 @@ table.dataTable thead .sorting_desc:after {
   width: 36px;
   height: 36px;
 }
-
-
 </style>

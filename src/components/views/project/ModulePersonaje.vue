@@ -58,6 +58,10 @@
                   <p>{{ errorName }}</p>
                 </div>
               </div>
+              <div class="form-group">
+                <label for="name" class="col-form-label">Descripción:</label>
+                <input type="text" class="form-control" id="name" v-model="description">
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -83,6 +87,7 @@ export default {
     return {
       characters: [],
       name: '',
+      description: '',
       id: 0,
       errorName: ''
     }
@@ -101,7 +106,7 @@ export default {
   methods: {
     update() {
       api
-        .request('patch', `projects/${this.idProject}/characters/${this.id}/`, { name: this.name }, { 'Authorization': this.$store.state.token })
+        .request('patch', `projects/${this.idProject}/characters/${this.id}/`, { name: this.name, description: this.description }, { 'Authorization': this.$store.state.token })
         .then(response => {
           console.log(response.data)
           this.alertShow('Actualizacion', 'Se ha actualizado correctamente', 'success', 'fa fa-check')
@@ -111,6 +116,7 @@ export default {
           $('#character' + response.data.id).find('td:nth-child(2)').html(response.data.name)
           this.id = 0
           this.name = ''
+          this.description = ''
         })
         .catch(error => {
           console.log(error)
@@ -122,7 +128,7 @@ export default {
         return
       }
       api
-        .request('post', `projects/${this.idProject}/characters/`, { name: this.name }, { 'Authorization': this.$store.state.token })
+        .request('post', `projects/${this.idProject}/characters/`, { name: this.name, description: this.description }, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.alertShow('Guardado', 'Se ha guardado correctamente', 'success', 'fa fa-check')
           var character = response.data
@@ -131,6 +137,9 @@ export default {
             $('#character' + character.id).addClass('success')
           }, 500)
           $('#closeModal').trigger('click')
+          this.id = 0
+          this.name = ''
+          this.description = ''
         })
         .catch(error => {
           console.log(error)
@@ -184,6 +193,7 @@ export default {
     showEdit(character) {
       this.id = character.id
       this.name = character.name
+      this.description = character.description
       $('#btnModalCharacter').trigger('click')
     },
     alertShow(title, message, type, iconClass) {

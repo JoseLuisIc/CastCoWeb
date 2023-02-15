@@ -324,6 +324,11 @@ export default {
       toastr[type](message, title)
     },
     uploadFile() {
+      console.log(this.materials)
+      if (this.materials.length > 5) {
+        this.alertShow('Limite', 'Se alcanzo el limite permitido', 'error', 'fa fa-check')
+        return false
+      }
       var formData = new FormData()
       formData.append('file', this.file)
       api

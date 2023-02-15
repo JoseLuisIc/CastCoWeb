@@ -72,11 +72,12 @@
                       </tr>
                     </tfoot> -->
                   </table>
-                  <ul class="pagination">
-                    <li :class="1 === currentPage ? 'disable' : ''" @click="changePage(page)"><a href="javascript::"><i class="fa  fa-chevron-left"></i></a></li>
-                    <li :class="page === currentPage ? 'active' : ''" @click="changePage(page)"><a href="javascript::" v-for="page in totalPage">{{ page }}</a></li>
-                    <li :class="page === totalPage ? 'disable' : ''" @click="changePage(totalPage)"><a href="javascript::"><i class="fa  fa-chevron-right" ></i></a></li>
-                  </ul>
+                  <pagination
+                    :totalPages="totalPage"
+                    :perPage="length"
+                    :currentPage="currentPage"
+                    @pagechanged="onPageChange"
+                  />
                 </div>
               </div>
             </div><!-- /.tab-pane -->
@@ -95,15 +96,20 @@
 <script>
 import $ from 'jquery'
 import api from '../../api'
+
+import Pagination from '../widgets/Pagination.vue'
 // Datatable Modules
 export default {
   name: 'Admins',
+  components: {
+    Pagination
+  },
   data() {
     return {
       totalPage: 1,
       idProject: 0,
       start: 0,
-      length: 10,
+      length: 1,
       page: 1,
       count: 0,
       applications: [],
@@ -117,23 +123,27 @@ export default {
     this.$nextTick(() => {
       if (this.$route.params.hasOwnProperty('id')) {
         this.fetchProject(this.$route.params.id)
-        this.fetchApplications()
+        this.fetchApplications(this.$route.params.id)
       }
     })
   },
   methods: {
-    changePage(page) {
+    onPageChange(page) {
       this.currentPage = page
       this.fetchApplications()
     },
-    fetchApplications() {
+    fetchApplications(id) {
       var params = new FormData()
-      params.append('format', 'json')
-      params.append('length', this.length)
-      params.append('start', this.start)
+      // ?search=&project=7829&character&delivery&user&page_size=10&page=1
+      params.append('search', '')
+      params.append('project', id)
+      params.append('character', '')
+      params.append('delivery', '')
+      params.append('user', '')
+      params.append('page_size', this.length)
       params.append('page', this.currentPage)
       api
-        .request('get', 'applications/?' + new URLSearchParams(params).toString(), {}, { 'Authorization': this.$store.state.token })
+        .request('get', `applications/?` + new URLSearchParams(params).toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           console.log(response)
           var json = response.data
@@ -181,10 +191,10 @@ export default {
 </script>
 <style>
 /* Using the bootstrap style, but overriding the font to not draw in
-   the Glyphicons Halflings font as an additional requirement for sorting icons.
+  the Glyphicons Halflings font as an additional requirement for sorting icons.
 
-   An alternative to the solution active below is to use the jquery style
-   which uses images, but the color on the images does not match adminlte.
+  An alternative to the solution active below is to use the jquery style
+  which uses images, but the color on the images does not match adminlte.
 
 @import url('/static/js/plugins/datatables/jquery.dataTables.min.css');
 */

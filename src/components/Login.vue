@@ -83,7 +83,7 @@ export default {
                 this.$router.push({ path: 'agency/talents' })
                 break
               default:
-                this.$router.push('profile')
+                this.$router.push('talent/profile')
                 break
             }
           }

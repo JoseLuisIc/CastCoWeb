@@ -6,12 +6,7 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserCreate"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
-            <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserEdit" />
-            <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserDelete" />
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -36,25 +31,29 @@
                         <th colspan="1" rowspan="1" aria-controls="example1" tabindex="2"
                           class="sorting">Apellidos
                         </th>
-                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="3"
-                          class="sorting">Instagram</th>
-                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="4"
-                          class="sorting">Rol</th>
                         <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="5"
                           class="sorting">Acciones</th>
                       </tr>
                     </thead>
-                    <tfoot>
-                      <tr>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Email" data-index="0" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Nombres" data-index="1" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Apellidos" data-index="2" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Instagram" data-index="3" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text" placeholder="Rol" data-index="4" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"></th>
+                    <tbody>
+                      <tr v-for="user in users">
+                        <td>{{ user.email }} </td>
+                        <td>{{ user.first_name }} </td>
+                        <td>{{ user.last_name }} </td>
+                        <td>
+                          <div class="btn-group">
+                            <button class="btn delete" v-on:click=confirmDelete(user.id)><i class="fa fa-trash"></i></button>
+                            <button class="btn edit" v-on:click=editUser(user.id)><i class="fa fa-edit"></i></button>
+                            <button class="btn reset" v-on:click=modalResetPwd(user.id)><i class="fa fa-refresh"></i></button>
+                          </div>
+                        </td>
                       </tr>
-                    </tfoot>
+                    </tbody>
                   </table>
+                  <div>
+                    <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                      @pagechanged="onPageChange" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -63,134 +62,110 @@
         </div>
       </div>
     </div>
+    <modal v-if="showModalDelete" @close="showModalDelete = false">
+      <h3 slot="header">Eliminar Usuario</h3>
+      <div slot="body">
+        <p>Esta seguro que quiere eliminar al usuario?</p>
+      </div>
 
-    <div class="modal fade" id="modalUserCreate" tabindex="-1" role="dialog" aria-labelledby="modalUserCreateLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalUserCreateLabel">Nuevo Usuario</h5>
-            <button type="button" class="close" id="closeCreate" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
-                <label for="email" class="col-form-label">Email:</label>
-                <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-                <span v-if=error.email class="help-block">{{ error.email }}</span>
-              </div>
-              <div class="form-group">
-                <label for="first_name" class="col-form-label">Nombres:</label>
-                <input class="form-control" id="first_name" v-model="user.first_name">
-              </div>
-              <div class="form-group">
-                <label for="last_name" class="col-form-label">Apellidos:</label>
-                <input class="form-control" id="last_name" v-model="user.last_name" />
-              </div>
-              <div class="form-group">
-                <label for="instagram" class="col-form-label">Instagram:</label>
-                <input class="form-control" id="instagram" v-model="user.instagram" />
-              </div>
-              <div class="form-group">
-                <input class="form-control" id="id" type="hidden" v-model="user.id" />
-                <input class="form-control" id="role" type="hidden" v-model="user.role" />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
-          </div>
-        </div>
+      <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
+
+    </modal>
+    <modal v-if="showModal" @close="showModal = false">
+      <h3 slot="header">Nuevo Usuario</h3>
+      <div slot="body">
+        <form>
+            <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
+              <label for="email" class="col-form-label">Email:</label>
+              <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
+              <span v-if=error.email class="help-block">{{ error.email }}</span>
+            </div>
+            <div class="form-group">
+              <label for="first_name" class="col-form-label">Nombres:</label>
+              <input class="form-control" id="first_name" v-model="user.first_name">
+            </div>
+            <div class="form-group">
+              <label for="last_name" class="col-form-label">Apellidos:</label>
+              <input class="form-control" id="last_name" v-model="user.last_name" />
+            </div>
+            <div class="form-group">
+              <label for="instagram" class="col-form-label">Instagram:</label>
+              <input class="form-control" id="instagram" v-model="user.instagram" />
+            </div>
+            <div class="form-group">
+              <input class="form-control" id="id" type="hidden" v-model="user.id" />
+              <input class="form-control" id="role" type="hidden" v-model="user.role" />
+            </div>
+          </form>
       </div>
-    </div>
-    <div class="modal fade" id="modalUserEdit" tabindex="-1" role="dialog" aria-labelledby="modalUserEditLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalUserEditLabel">Actualizar Usuario</h5>
-            <button type="button" class="close" id="closeEdit" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
-                <label for="email" class="col-form-label">Email:</label>
-                <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-                <span v-if=error.email class="help-block">{{ error.email }}</span>
-              </div>
-              <div class="form-group">
-                <label for="first_name" class="col-form-label">Nombres:</label>
-                <input class="form-control" id="first_name" v-model="user.first_name" />
-              </div>
-              <div class="form-group">
-                <label for="last_name" class="col-form-label">Apellidos:</label>
-                <input class="form-control" id="last_name" v-model="user.last_name" />
-              </div>
-              <div class="form-group">
-                <label for="instagram" class="col-form-label">Instagram:</label>
-                <input class="form-control" id="instagram" v-model="user.instagram" />
-              </div>
-              <div class="form-group">
-                <input class="form-control" id="id" type="hidden" v-model="user.id" />
-                <input class="form-control" id="role" type="hidden" v-model="user.role" />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
-          </div>
-        </div>
+        <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
+        <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
+    </modal>
+    <modal v-if="showModalReset" @close="showModalReset = false">
+      <h3 slot="header">¿Cuál es mi contraseña?</h3>
+      <div slot="body">
+        <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
+              <fieldset>
+                <div class="form-group">
+                  <label for="password" class="col-form-label">Contraseña:</label>
+                  <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
+                </div>
+                <div class="form-group">
+
+                  <label for="confirm_password" class="col-form-label">Contraseña:</label>
+                  <input class="form-control input-lg" name="confirm_password" type="password"
+                    v-model="reset.confirm_password">
+                </div>
+                <div v-if=reset.error class="text-red">
+                  <p>{{ reset.error }}</p>
+                </div>
+              </fieldset>
       </div>
-    </div>
-    <div class="modal fade" id="modalUserDelete" tabindex="-1" role="dialog" aria-labelledby="modalUserDeleteLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalUserDeleteLabel">Eliminar Usuario</h5>
-            <button type="button" class="close" id="closeDelete" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Esta seguro que quiere eliminar al usuario?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
-          </div>
-        </div>
-      </div>
-    </div>
+
+      <button slot="footer" class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
+
+    </modal>
+
   </section>
 
 </template>
 
 <script>
-import $ from 'jquery'
 import api from '../../api'
 import util from '../../utils/util'
-import config from '../../config'
 import admin from '../../models/admin'
-import esMX from '../../lang/es_mx'
+import Pagination from '../widgets/Pagination.vue'
+import Modal from '../widgets/Modal.vue'
 
 // Require needed datatables modules
 require('datatables.net')
 
 export default {
   name: 'Admins',
+  components: {
+    Pagination,
+    Modal
+  },
   data() {
     return {
+      totalPage: 1,
+      start: 0,
+      length: 10,
+      page: 1,
+      count: 0,
+      currentPage: 1,
       user: admin,
       error: admin,
       table: null,
-      users: []
+      users: [],
+      showModal: false,
+      showModalDelete: false,
+      showModalReset: false,
+      isNew: true,
+      reset: {
+        password: '',
+        confirm_password: ''
+      }
     }
   },
   mounted() {
@@ -199,22 +174,27 @@ export default {
     })
   },
   methods: {
+    onPageChange(page) {
+      this.currentPage = page
+    },
     openModal() {
+      this.showModal = true
       this.user = {
         id: 0,
         email: '',
         first_name: '',
         last_name: '',
         instagram: '',
-        role: util.MANAGER
+        role: util.MANAGER,
+        users: []
       }
     },
     updateUser(dUser) {
       api
         .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.table.ajax.reload()
-          $('#closeEdit').trigger('click')
+          this.showModal = false
+          this.callUser()
         })
         .catch(error => {
           if (error.response) {
@@ -227,8 +207,8 @@ export default {
       api
         .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.table.ajax.reload()
-          $('#closeCreate').trigger('click')
+          this.showModal = false
+          this.callUser()
         })
         .catch(error => {
           if (error.response) {
@@ -245,7 +225,8 @@ export default {
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
-          $('#btnModalEdit').trigger('click')
+          this.showModal = true
+          this.callUser()
         })
         .catch(error => {
           if (error.response) {
@@ -256,75 +237,25 @@ export default {
     },
     callUser() {
       const params = new URLSearchParams()
-      params.append('format', 'datatables')
-      var that = this
-      this.table = $('#tableUsers').DataTable({
-        'processing': true,
-        'serverSide': true,
-        'ajax': {
-          url: config.serverURI + 'users/?' + params,
-          type: 'GET',
-          complete: function () {
-            $('.delete').on('click', function () {
-              that.confirmDelete(this.id)
-            })
-            $('.edit').on('click', function () {
-              that.editUser(this.id)
-            })
+      params.append('role', util.MANAGER)
+      api
+        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.users = response.data.results
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
           }
-        },
-        'searchCols': [
-          null,
-          null,
-          null,
-          null,
-          { 'search': util.MANAGER },
-          null
-        ],
-        'columns': [
-          { 'data': 'email' },
-          { 'data': 'first_name' },
-          { 'data': 'last_name' },
-          { 'data': 'instagram' },
-          { 'data': 'role' },
-          {
-            'data': 'id',
-            className: 'dt-center editor-edit',
-            defaultContent: '',
-            orderable: false,
-            'render': (data, type, row, meta) => {
-              return this.renderView(data, row)
-            }
-          }
-        ],
-        'language': esMX,
-        'columnDefs': [
-          { 'visible': false, 'targets': [3, 4] }
-        ]
-      })
-      // Filter event handler
-      $('#tableUsers').on('keyup', 'tfoot input', function () {
-        that.table
-          .column($(this).data('index'))
-          .search(this.value)
-          .draw()
-      })
-      $('#tableUsers').on('keyup', 'thead input', function () {
-        this.table
-          .column($(this).data('index'))
-          .search(this.value)
-          .draw()
-      })
-    },
-    renderView(data, row) {
-      return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
+        })
     },
     confirmDelete(idUser) {
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
-          $('#btnModalDelete').trigger('click')
+          this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
@@ -334,8 +265,7 @@ export default {
         })
     },
     deleteUser() {
-      $('#closeDelete').trigger('click')
-      console.log(this.user)
+      this.showModalDelete = false
       api
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -355,6 +285,41 @@ export default {
       } else {
         this.error.email = 'Ingrese un correo valido'
       }
+    },
+    modalResetPwd(idUser) {
+      api
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.user = response.data
+          this.showModalReset = true
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    resetPassword() {
+      var json = {
+        id: this.user.id,
+        password: this.reset.password,
+        confirm_password: this.reset.confirm_password
+      }
+      api
+        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.reset.password = ''
+          this.reset.confirm_password = ''
+          this.reset.error = ''
+          this.showModalDelete = false
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            this.reset.error = errors.password[0]
+          }
+        })
     }
   }
 }
@@ -362,10 +327,10 @@ export default {
 
 <style>
 /* Using the bootstrap style, but overriding the font to not draw in
-   the Glyphicons Halflings font as an additional requirement for sorting icons.
+  the Glyphicons Halflings font as an additional requirement for sorting icons.
 
-   An alternative to the solution active below is to use the jquery style
-   which uses images, but the color on the images does not match adminlte.
+  An alternative to the solution active below is to use the jquery style
+  which uses images, but the color on the images does not match adminlte.
 
 @import url('/static/js/plugins/datatables/jquery.dataTables.min.css');
 */

@@ -13,7 +13,7 @@ import ProfileView from './components/views/Profile.vue'
 import auth from './components/middleware/auth'
 import admin from './components/middleware/admin'
 import ProyectsDetailView from './components/views/ProyectDetail.vue'
-
+import PostulateView from './components/views/Postulate.vue'
 // Routes
 const routes = [
   {
@@ -200,6 +200,34 @@ const routes = [
         module: 'Perfil',
         meta: {
           description: 'Editar de Perfil',
+          requiresAuth: true,
+          middleware: [auth]
+        }
+      }
+    ]
+  },
+  {
+    path: '/talent',
+    component: DashView,
+    children: [
+      {
+        path: '/talent/profile',
+        component: ProfileView,
+        name: 'talent/profile',
+        module: 'Perfil',
+        meta: {
+          description: 'Editar de Perfil',
+          requiresAuth: true,
+          middleware: [auth]
+        }
+      },
+      {
+        path: '/talent/postulates',
+        component: PostulateView,
+        name: 'talent/postulates',
+        module: 'Perfil',
+        meta: {
+          description: 'Postulaciones',
           requiresAuth: true,
           middleware: [auth]
         }
