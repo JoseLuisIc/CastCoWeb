@@ -389,6 +389,8 @@ export default {
   methods: {
     onPageChange(page) {
       this.currentPage = page
+      console.log(page)
+      this.callUser()
     },
     openModal() {
       this.showModal = true
@@ -478,6 +480,8 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('role', util.TALENT)
+      params.append('page', this.currentPage)
+      params.append('page_size', this.length)
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {

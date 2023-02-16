@@ -177,6 +177,7 @@ export default {
   methods: {
     onPageChange(page) {
       this.currentPage = page
+      this.callUser()
     },
     openModal() {
       this.showModal = true
@@ -239,10 +240,15 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('role', util.MANAGER)
+      params.append('page', this.currentPage)
+      params.append('page_size', this.length)
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.users = response.data.results
+          var json = response.data
+          this.users = json.results
+          this.count = json.count
+          this.totalPage = Math.ceil(this.count / this.length)
         })
         .catch(error => {
           if (error.response) {
