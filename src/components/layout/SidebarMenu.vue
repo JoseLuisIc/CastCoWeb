@@ -61,13 +61,24 @@
         <span class="page">Postulaciones</span>
       </a>
     </router-link>
-    <li>
-      <a href="javascript:;" v-on:click="profile">
-        <i class="fa fa-user"></i>
-        <span>Perfil</span>
+    <router-link tag="li" class="pageLink" to="/admin/profile" v-if="user.roles === MANAGER">
+      <a>
+        <i class="fa fa fa-user"></i>
+        <span class="page">Perfil</span>
       </a>
-    </li>
-
+    </router-link>
+    <router-link tag="li" class="pageLink" to="/agency/profile" v-if="user.roles === AGENCY">
+      <a>
+        <i class="fa fa fa-user"></i>
+        <span class="page">Perfil</span>
+      </a>
+    </router-link>
+    <router-link tag="li" class="pageLink" to="/talent/profile" v-if="user.roles === TALENT">
+      <a>
+        <i class="fa fa fa-user"></i>
+        <span class="page">Perfil</span>
+      </a>
+    </router-link>
     <li>
       <a href="javascript:;" v-on:click="logout">
         <i class="fa fa-sign-out"></i>
