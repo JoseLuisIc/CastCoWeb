@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-    <modal v-if="showModalDelete" @close="showModalDelete = false">
+    <modal v-if="showModalDelete" @close="showModalDelete = false" :iconClasses="['modal-md']">
       <h3 slot="header">Eliminar Usuario</h3>
       <div slot="body">
         <p>Esta seguro que quiere eliminar al usuario?</p>
@@ -99,7 +99,7 @@
 
     </modal>
 
-    <modal v-if="showModal" @close="showModal = false">
+    <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-md']">
       <h3 slot="header">Nuevo Usuario</h3>
       <div slot="body">
         <form>
@@ -126,7 +126,7 @@
         v-on:click="updateUser(user)">Actualizar</button>
     </modal>
 
-    <modal v-if="showModalReset" @close="showModalReset = false">
+    <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="['modal-md']">
       <h3 slot="header">¿Cuál es mi contraseña?</h3>
       <div slot="body">
         <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>

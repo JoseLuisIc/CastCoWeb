@@ -120,26 +120,15 @@
         </div>
       </div>
     </div>
-    <div class="modal fade" id="modalProyectDelete" tabindex="-1" role="dialog"
-      aria-labelledby="modalProyectDeleteLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalProyectDeleteLabel">Eliminar Usuario</h5>
-            <button type="button" class="close" id="closeDelete" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Esta seguro que quiere eliminar al usuario?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-danger" v-on:click="deleteProyect">Eliminar</button>
-          </div>
-        </div>
+    <modal v-if="showModalDelete" @close="showModalDelete = false" :iconClasses="['modal-md']">
+      <h3 slot="header">Eliminar Usuario</h3>
+      <div slot="body">
+        <p>Esta seguro que quiere eliminar al usuario?</p>
       </div>
-    </div>
+
+      <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteProyect">Eliminar</button>
+
+    </modal>
   </section>
 
 </template>
@@ -151,13 +140,13 @@ import $ from 'jquery'
 import api from '../../api'
 import config from '../../config'
 import project from '../../models/project'
+import Modal from '../widgets/Modal.vue'
 // Datatable Modules
-import 'datatables.net'
-import 'datatables.net-buttons/js/dataTables.buttons.js'
-import 'datatables.net-buttons/js/buttons.colVis.js'
-import 'datatables.net-buttons/js/buttons.flash.js'
-import 'datatables.net-buttons/js/buttons.html5.js'
-import 'datatables.net-buttons/js/buttons.print.js'
+// require('datatables.net-buttons/js/dataTables.buttons.js')
+// require('datatables.net-buttons/js/buttons.colVis.js')
+// require('datatables.net-buttons/js/buttons.flash.js')
+// require('datatables.net-buttons/js/buttons.html5.js')
+// require('datatables.net-buttons/js/buttons.print.js')
 import moment from 'moment'
 import settings from '../../config/settings'
 import esMX from '../../lang/es_mx'
@@ -179,8 +168,12 @@ require('datatables.net')
 require('datatables.net-bs')
 export default {
   name: 'Admins',
+  components: {
+    Modal
+  },
   data() {
     return {
+      showModalDelete: false,
       table: null,
       project: project,
       error: project,
@@ -402,7 +395,7 @@ export default {
         .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.project = response.data
-          $('#btnModalDelete').trigger('click')
+          this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
@@ -438,7 +431,7 @@ export default {
         .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.table.ajax.reload()
-          $('#closeDelete').trigger('click')
+          this.showModalDelete = false
         })
         .catch(error => {
           if (error.response) {

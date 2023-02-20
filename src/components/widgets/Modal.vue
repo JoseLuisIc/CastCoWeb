@@ -45,8 +45,7 @@ export default {
       default: []
     },
     title: {
-      type: String,
-      required: true
+      type: String
     }
   }
 }
