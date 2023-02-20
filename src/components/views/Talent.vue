@@ -41,6 +41,21 @@
                           class="sorting">Acciones</th>
                       </tr>
                     </thead>
+                    <thead>
+                      <tr>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="0" v-model="filters.email" v-on:keyup="search"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Usuario" data-index="1" v-model="filters.first_name" v-on:keyup="search"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Ciudad" data-index="2" v-model="filters.city" v-on:keyup="search"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Edad" data-index="3" v-model="filters.age" v-on:keyup="search"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Instagram" data-index="4" v-model="filters.instagram" v-on:keyup="search"></th>
+                          <th></th>
+                      </tr>
+                    </thead>
                     <tbody>
                       <tr v-for="user in users">
                         <td>{{ user.email }} </td>
@@ -62,33 +77,7 @@
                         </td>
                       </tr>
                     </tbody>
-                    <!-- <tfoot>
-                      <tr>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Email" data-index="0"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Email" data-index="1"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Email" data-index="2"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Usuario" data-index="3"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Ciudad" data-index="4"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Edad" data-index="5"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Instagram" data-index="6"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Rol" data-index="7" onfocus="this.removeAttribute('readonly');"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"></th>
-                      </tr>
-                    </tfoot> -->
                   </table>
-                  <!-- <ul class="pagination">
-                    <li :class="1 === currentPage ? 'disable' : ''" @click="changePage(page)"><a href="javascript::"><i class="fa  fa-chevron-left"></i></a></li>
-                    <li :class="page === currentPage ? 'active' : ''" @click="changePage(page)"><a href="javascript::" v-for="page in totalPage">{{ page }}</a></li>
-                    <li :class="page === totalPage ? 'disable' : ''" @click="changePage(totalPage)"><a href="javascript::"><i class="fa  fa-chevron-right" ></i></a></li>
-                  </ul> -->
                   <div>
                     <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
                       @pagechanged="onPageChange" />
@@ -110,7 +99,7 @@
       <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
 
     </modal>
-    <modal v-if="showModal" @close="showModal = false">
+    <modal v-if="showModal" @close="showModal = false" iconClasses="[modal-lg]" >
       <h3 slot="header">Nuevo Usuario</h3>
       <div slot="body">
         <form>
@@ -377,7 +366,16 @@ export default {
       states: [],
       previewSrc: '',
       isPreviewFile: false,
-      file: null
+      file: null,
+      filters: {
+        search: '',
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: '',
+        age: '',
+        city: ''
+      }
     }
   },
   mounted() {
@@ -480,6 +478,7 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('role', util.TALENT)
+      params.append('search', this.filters.search)
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       api
@@ -626,6 +625,10 @@ export default {
       Object.keys(this.error).forEach(key => {
         this.error[key] = ''
       })
+    },
+    search(e) {
+      this.filters.search = e.target.value
+      this.callUser()
     }
   }
 }

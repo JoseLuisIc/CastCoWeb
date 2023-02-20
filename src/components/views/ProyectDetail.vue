@@ -113,7 +113,7 @@
         </div><!-- nav-tabs-custom -->
       </div>
     </div>
-    <modal v-if="showModalMaterial" @close="showModalMaterial = false" iconClasses="modal-lg">
+    <modal v-if="showModalMaterial" @close="showModalMaterial = false" iconClasses="[modal-lg]">
       <h3 slot="header">Material</h3>
       <div slot="body">
         <div class="box-footer">
@@ -137,6 +137,8 @@
               </div>
             </li>
           </ul>
+
+          <div v-if="materials.length == 0"> <center><h3>El usuario aun no carga su material</h3></center> </div>
         </div>
       </div>
     </modal>
@@ -388,6 +390,7 @@ div.desc {
 
 .box-footer {
   background-color: transparent !important;
+  border: none;
 }
 
 video {

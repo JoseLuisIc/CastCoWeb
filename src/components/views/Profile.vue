@@ -1,7 +1,7 @@
 <template>
   <section class="content">
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-3" v-if="role === TALENT">
         <!-- Profile Image -->
         <div class="box box-primary">
           <div class="box-body box-profile">
@@ -65,7 +65,7 @@
                 <div class="row">
 
                   <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group" v-if="role === TALENT">
                       <label for="photo" class="col-form-label">Foto:</label>
                       <div>
                         <span class="mailbox-attachment-icon has-img">
@@ -100,10 +100,10 @@
                       <label for="last_name" class="col-form-label">Apellidos:</label>
                       <input class="form-control" id="last_name" v-model="user.last_name" />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-if="role === TALENT">
                       <label for="lgtbq" class="col-form-label">LGTBQ:</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check" v-if="role === TALENT">
                       <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked"
                         v-model="user.lgtbq">
                       <label class="form-check-label" for="flexCheckChecked">
@@ -111,7 +111,7 @@
                       </label>
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-6" v-if="role === TALENT">
                     <div class="form-group">
                       <label for="age" class="col-form-label">Edad:</label>
                       <input type="number" class="form-control" id="age" v-model="user.age" max="100" min="18" />
@@ -232,6 +232,7 @@ import { timeline } from '../../demo'
 import api from '../../api'
 import user from '../../models/user'
 import Alert from '../widgets/Alert.vue'
+import util from '../../utils/util'
 
 export default {
   name: 'Tasks',
@@ -246,6 +247,9 @@ export default {
   },
   data() {
     return {
+      MANAGER: util.MANAGER,
+      AGENCY: util.AGENCY,
+      TALENT: util.TALENT,
       isAlert: false,
       type: '',
       message: '',
@@ -256,7 +260,8 @@ export default {
       agencies: [],
       states: [],
       previewSrc: '',
-      isPreviewFile: false
+      isPreviewFile: false,
+      role: 3
     }
   },
   computed: {
@@ -271,7 +276,7 @@ export default {
     fetchProfile() {
       var idUser = this.$store.state.user.id
       var that = this
-      console.log(this.$store.state.token)
+      this.role = this.$store.state.user.role
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
