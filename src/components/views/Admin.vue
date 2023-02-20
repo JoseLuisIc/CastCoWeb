@@ -20,19 +20,22 @@
 
               <div class="row">
                 <div class="col-sm-12 table-responsive">
+                  Mostrar <select name="pant_size" class="form-control" id="pant_size" v-model="length" @change="search">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select> entradas
                   <table aria-describedby="example1_info" role="grid" id="tableUsers"
                     class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1"
+                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
-                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="1"
-                          class="sorting">Nombres</th>
-                        <th colspan="1" rowspan="1" aria-controls="example1" tabindex="2"
-                          class="sorting">Apellidos
+                        <th>Nombres</th>
+                        <th>Apellidos
                         </th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="5"
-                          class="sorting">Acciones</th>
+                        <th style="width: 101px;">Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -51,7 +54,7 @@
                     </tbody>
                   </table>
                   <div>
-                    <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                    <pagination :totalPages="totalPage" :perPage="parseInt(length)" :currentPage="currentPage"
                       @pagechanged="onPageChange" />
                   </div>
                 </div>
@@ -108,12 +111,12 @@
         <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
               <fieldset>
                 <div class="form-group">
-                  <label for="password" class="col-form-label">Contraseña:</label>
+                  <label for="password">Contraseña:</label>
                   <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
                 </div>
                 <div class="form-group">
 
-                  <label for="confirm_password" class="col-form-label">Contraseña:</label>
+                  <label for="confirm_password">Contraseña:</label>
                   <input class="form-control input-lg" name="confirm_password" type="password"
                     v-model="reset.confirm_password">
                 </div>
@@ -240,6 +243,7 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('role', util.MANAGER)
+      params.append('ordering', 'email')
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       api
