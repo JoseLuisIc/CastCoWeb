@@ -21,6 +21,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
+
                 </div>
                 <!-- /.box-body -->
               </div>
@@ -30,100 +31,166 @@
                     class="table table-bordered table-striped dataTable display responsive nowrap">
                     <thead>
                       <tr role="row">
-                        <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting_asc">Usuario</th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="1">Nombre</th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="2">Nombre público
+                        <th>Personaje</th>
+                        <th>Postulante</th>
+                        <!-- <th>Nombre</th>
+                        <th>Nombre público
                         </th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="3">Descripción</th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="4">Personaje</th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="4"># Entrega</th>
+                        <th>Descripción</th> -->
+                        <th>Material
+                        </th>
+                        <th># Entrega</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <thead>
+                      <tr role="row">
+                        <td>
+                          <select2 :id="selectedCharacter" :options="filterCharacters" v-model="filters.character" @onChangeSelected="search">
+                          </select2>
+                        </td>
+                        <td><input type="search" name="" id="" class="form-control" placeholder="Nombre del postulante" v-model="filters.name" v-on:keyup="search"></td>
+                        <td></td>
+                        <!-- <td></td>
+                        <td></td>
+                        <td></td> -->
+                        <td>
+                          <select2 :id="selectedDelivery" :options="filterDeliveries" v-model="filters.delivery" @onChangeSelected="search" >
+                          </select2>
+                        </td>
+                        <td></td>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="application in applications">
-                        <td><div class="widget-user-image"><img :src="application.user.photo"  alt="Avatar" class="img-circle"></div>{{ application.user.first_name }}</td>
-                        <td>{{ application.project.name }} </td>
+                        <td>
+                          <select2 :id="application.id" :options="characters" v-model="application.character.id" @onChangeSelected="onChangeCharacter">
+                          </select2>
+                        </td>
+                        <td>
+                          <div class="widget-user-image"><img :src="application.user.photo" alt="Avatar"
+                              class="img-circle"></div>{{ application.user.first_name }}
+                        </td>
+                        <!-- <td>{{ application.project.name }} </td>
                         <td>{{ application.project.public_name }} </td>
-                        <td>{{ application.project.description }} </td>
-                        <td><select name="" id="" :value="application.character.id" class="form-control">
-                          <option :value="character.id" v-for="character in characters">{{character.name}}</option>
-                        </select></td>
-                        <td><select name="" id="" class="form-control">
-                          <option :value="delivery.id" v-for="delivery in deliveries">{{delivery.name}}</option>
-                        </select></td>
+                        <td>{{ application.project.description }} </td> -->
+                        <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
+                              aria-hidden="true"></i></span><br>Archivos</td>
+                        <td>
+                          <select2 :id="application.id" :options="deliveries" v-model="application.delivery" @onChangeSelected="onChangeDelivery">
+                          </select2>
+                        </td>
                       </tr>
                     </tbody>
 
                     <!-- <tfoot>
-                      <tr>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                            placeholder="Productora" data-index="0"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                            placeholder="Nombre" data-index="1"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                            placeholder="Nombre público" data-index="2"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                            placeholder="Descripción" data-index="3"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                            placeholder="Tipo de material" data-index="4">
-                        </th>
+                              <tr>
+                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                                    placeholder="Productora" data-index="0"></th>
+                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                                    placeholder="Nombre" data-index="1"></th>
+                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                                    placeholder="Nombre público" data-index="2"></th>
+                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                                    placeholder="Descripción" data-index="3"></th>
+                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                                    placeholder="Tipo de material" data-index="4">
+                                </th>
 
-                      </tr>
-                    </tfoot> -->
+                              </tr>
+                            </tfoot> -->
                   </table>
-                  <pagination
-                    :totalPages="totalPage"
-                    :perPage="length"
-                    :currentPage="currentPage"
-                    @pagechanged="onPageChange"
-                  />
+                  <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                    @pagechanged="onPageChange" />
                 </div>
               </div>
             </div><!-- /.tab-pane -->
             <div class="tab-pane" id="tab_2">
             </div><!-- /.tab-pane -->
             <!--<div class="tab-pane" id="tab_3">
-            </div> /.tab-pane -->
+                    </div> /.tab-pane -->
           </div><!-- /.tab-content -->
         </div><!-- nav-tabs-custom -->
       </div>
     </div>
-  </section>
+    <modal v-if="showModalMaterial" @close="showModalMaterial = false" iconClasses="modal-lg">
+      <h3 slot="header">Material</h3>
+      <div slot="body">
+        <div class="box-footer">
+          <ul class="mailbox-attachments clearfix">
+            <li v-for="(material, index) in materials">
+              <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'avi', 'PNG'].includes(material.type)" class="gallery center">
 
+                <img v-show="['jpg', 'png', 'jpeg', 'PNG'].includes(material.type)" :src='material.file' alt="">
+                <video v-show="['mp4', 'avi'].includes(material.type)" :src='material.file' controls
+                  width="200px"></video>
+
+                <!-- <div class="mailbox-attachment-info">
+                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
+                          class="fa fa-trash"></i> Eliminar</a>
+                      <span class="mailbox-attachment-size">
+                        &nbsp;
+                        <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile" @click="downloadFile"
+                          :id="material.id"><i class="fa fa-cloud-download"></i> Descargar</a>
+                      </span>
+                    </div> -->
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </modal>
+  </section>
 </template>
 
 <script>
-import $ from 'jquery'
 import api from '../../api'
-
+import toastr from 'toastr'
 import Pagination from '../widgets/Pagination.vue'
+import Modal from '../widgets/Modal.vue'
+
+import Select2 from '../widgets/Selet2.vue'
 // Datatable Modules
 export default {
   name: 'Admins',
   components: {
-    Pagination
+    Pagination,
+    Modal,
+    Select2
   },
   data() {
     return {
+      showModalMaterial: false,
       totalPage: 1,
       idProject: 0,
       start: 0,
-      length: 1,
+      length: 10,
       page: 1,
       count: 0,
       applications: [],
       currentPage: 1,
       project: [],
+      filterCharacters: [],
+      filterDeliveries: [],
       characters: [],
-      deliveries: []
+      deliveries: [],
+      materials: [],
+      selectedCharacter: '0',
+      selectedDelivery: '0',
+      optionDefault: { id: 0, text: 'Todos' },
+      filters: {
+        name: '',
+        character: '',
+        delivery: ''
+      }
     }
   },
   mounted() {
     this.$nextTick(() => {
       if (this.$route.params.hasOwnProperty('id')) {
-        this.fetchProject(this.$route.params.id)
-        this.fetchApplications(this.$route.params.id)
+        this.idProject = this.$route.params.id
+        this.fetchProject()
+        this.fetchApplications()
       }
     })
   },
@@ -132,13 +199,13 @@ export default {
       this.currentPage = page
       this.fetchApplications()
     },
-    fetchApplications(id) {
+    fetchApplications() {
       var params = new FormData()
       // ?search=&project=7829&character&delivery&user&page_size=10&page=1
-      params.append('search', '')
-      params.append('project', id)
-      params.append('character', '')
-      params.append('delivery', '')
+      params.append('search', this.filters.name)
+      params.append('project', this.idProject)
+      params.append('character', this.filters.character)
+      params.append('delivery', this.filters.delivery)
       params.append('user', '')
       params.append('page_size', this.length)
       params.append('page', this.currentPage)
@@ -157,13 +224,26 @@ export default {
           }
         })
     },
-    fetchProject(idProject) {
+    fetchProject() {
       api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'projects/' + this.idProject + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.project = response.data
-          this.characters = response.data.characters
-          this.deliveries = response.data.deliveries
+          var json = response.data
+          this.project = json
+          var tmpCharacters = json.characters.map(e => {
+            return { id: e.id, text: e.name }
+          })
+          var tmpDeliveries = json.deliveries.map(e => {
+            return { id: e.id, text: e.name }
+          })
+
+          this.filterCharacters = Object.assign([], tmpCharacters)
+          this.filterCharacters.unshift({id: '', text: 'Todos'})
+          this.filterDeliveries = Object.assign([], tmpDeliveries)
+          this.filterDeliveries.unshift({id: '', text: 'Todos'})
+          this.characters = Object.assign([], tmpCharacters)
+          this.deliveries = Object.assign([], tmpDeliveries)
+          this.deliveries.unshift({id: 0, text: 'Sin asingancion'})
         })
         .catch(error => {
           if (error.response) {
@@ -174,10 +254,9 @@ export default {
     },
     confirmDelete(idProject) {
       api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'applications/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.project = response.data
-          $('#btnModalDelete').trigger('click')
         })
         .catch(error => {
           if (error.response) {
@@ -185,6 +264,50 @@ export default {
             console.log(errors)
           }
         })
+    },
+    viewMaterial(application) {
+      this.materials = application.material
+      this.showModalMaterial = true
+    },
+    onChangeDelivery({value, id}) {
+      var deliveryId = value
+      var applicationId = id
+      api
+        .request('patch', 'applications/' + applicationId + '/', { delivery: deliveryId }, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.alertShow('Entrega', 'Se modifico la entrega', 'success', 'fa fa-check')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    onChangeCharacter({value, id}) {
+      var characterId = value
+      var applicationId = id
+      api
+        .request('patch', 'applications/' + applicationId + '/', { character: characterId }, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.alertShow('Personaje', 'Se modifico el personaje', 'success', 'fa fa-check')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    alertShow(title, message, type, iconClass) {
+      this.message = message
+      this.type = type
+      this.title = title
+      this.iconClass = iconClass
+      toastr[type](message, title)
+    },
+    search(e) {
+      this.fetchApplications()
     }
   }
 }
@@ -236,7 +359,47 @@ div.dt-buttons {
 li {
   list-style: none;
 }
-a.disable       {
+
+a.disable {
   pointer-events: none;
+}
+
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: auto;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  object-fit: contain;
+  height: 200px !important;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+.box-footer {
+  background-color: transparent !important;
+}
+
+video {
+  width: 100%;
+  height: 200px;
+}
+
+.center {
+  display: contents;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #dbe4ed;
+  /* Border color is optional */
 }
 </style>
