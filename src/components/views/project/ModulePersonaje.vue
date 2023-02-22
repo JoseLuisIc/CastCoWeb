@@ -36,55 +36,45 @@
         </div><!-- /.table-responsive -->
       </div><!-- /.box-body -->
       <div class="box-footer clearfix">
-        <button id="btnModalCharacter" class="btn btn-sm btn-info btn-flat pull-left" data-toggle="modal"
-          data-target="#modalCharacter"><i class="fa fa-plus"></i> Agregar</button>
+        <button id="btnModalCharacter" class="btn btn-sm btn-info btn-flat pull-left" @click="showModalCharacter"></i>
+          Agregar</button>
       </div><!-- /.box-footer -->
     </div><!-- /.box -->
-    <div class="modal fade" id="modalCharacter" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Nuevo Personaje</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModal">
-              <span aria-hidden="true">&times;</span>
-            </button>
+    <modal v-if="showModalCharacter" @close="showModalCharacter = false">
+      <h3 slot="header">Nuevo Personaje</h3>
+      <div slot="body">
+        <form>
+          <div class="form-group" v-bind:class="errorName !== '' ? 'has-error' : ''">
+            <label for="name" class="col-form-label">Nombre:</label>
+            <input type="text" class="form-control" id="name" v-model="name">
+            <div v-if=errorName class="text-red">
+              <p>{{ errorName }}</p>
+            </div>
           </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group" v-bind:class="errorName !== '' ? 'has-error' : ''">
-                <label for="name" class="col-form-label">Nombre:</label>
-                <input type="text" class="form-control" id="name" v-model="name">
-                <div v-if=errorName class="text-red">
-                  <p>{{ errorName }}</p>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="name" class="col-form-label">Descripción:</label>
-                <input type="text" class="form-control" id="name" v-model="description">
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            <button type="button" v-show="id != 0" class="btn btn-primary" v-on:click="update">Actualizar</button>
-            <button type="button" v-show="id == 0" class="btn btn-primary" v-on:click="save">Guardar</button>
-          </div>
-        </div>
+        </form>
       </div>
-    </div>
-  </div><!-- /.col -->
-</template>
+
+      <button slot="footer" type="button" v-show="id != 0" class="btn btn-primary" v-on:click="update">Actualizar</button>
+      <button slot="footer" type="button" v-show="id == 0" class="btn btn-primary" v-on:click="save">Guardar</button>
+    </modal>
+  </div>
+<!-- /.col --></template>
 
 <script>
 import api from '../../../api'
 import Swal from 'sweetalert2'
 import * as $ from 'jquery'
 import toastr from 'toastr'
+import Modal from '../../widgets/Modal.vue'
 
 export default {
   name: 'ModulePersonaje',
+  components: {
+    Modal
+  },
   data() {
     return {
+      showModalCharacter: false,
       characters: [],
       name: '',
       description: '',
@@ -111,12 +101,13 @@ export default {
           console.log(response.data)
           this.alertShow('Actualizacion', 'Se ha actualizado correctamente', 'success', 'fa fa-check')
           $('#tableCharacters').find('tr').removeClass('info')
-          $('#closeModal').trigger('click')
+          $('#closeModalCharacter').trigger('click')
           $('#character' + response.data.id).addClass('info')
           $('#character' + response.data.id).find('td:nth-child(2)').html(response.data.name)
           this.id = 0
           this.name = ''
           this.description = ''
+          this.showModalCharacter = false
         })
         .catch(error => {
           console.log(error)
@@ -133,10 +124,12 @@ export default {
           this.alertShow('Guardado', 'Se ha guardado correctamente', 'success', 'fa fa-check')
           var character = response.data
           this.characters.unshift(character)
+
+          this.showModalCharacter = false
           setTimeout(function () {
             $('#character' + character.id).addClass('success')
           }, 500)
-          $('#closeModal').trigger('click')
+          $('#closeModalCharacter').trigger('click')
           this.id = 0
           this.name = ''
           this.description = ''
@@ -193,8 +186,8 @@ export default {
     showEdit(character) {
       this.id = character.id
       this.name = character.name
+      this.showModalCharacter = true
       this.description = character.description
-      $('#btnModalCharacter').trigger('click')
     },
     alertShow(title, message, type, iconClass) {
       this.message = message
