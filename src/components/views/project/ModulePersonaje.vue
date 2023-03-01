@@ -36,11 +36,11 @@
         </div><!-- /.table-responsive -->
       </div><!-- /.box-body -->
       <div class="box-footer clearfix">
-        <button id="btnModalCharacter" class="btn btn-sm btn-info btn-flat pull-left" @click="showModalCharacter"></i>
+        <button id="btnModalCharacter" class="btn btn-sm btn-info btn-flat pull-left" @click="showModalCharacter = true"> <i class="fa fa-plus"></i>
           Agregar</button>
       </div><!-- /.box-footer -->
     </div><!-- /.box -->
-    <modal v-if="showModalCharacter" @close="showModalCharacter = false">
+    <modal v-if="showModalCharacter" @close="showModalCharacter = false" :iconClasses="['modal-md']">
       <h3 slot="header">Nuevo Personaje</h3>
       <div slot="body">
         <form>

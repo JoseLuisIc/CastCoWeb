@@ -40,7 +40,7 @@
         <button id="btnModalDelivery" class="btn btn-sm btn-info btn-flat pull-left" @click="showModalDelivery = true"> <i class="fa fa-plus"></i> Agregar</button>
       </div><!-- /.box-footer -->
     </div><!-- /.box -->
-    <modal v-if="showModalDelivery" @close="showModalDelivery = false">
+    <modal v-if="showModalDelivery" @close="showModalDelivery = false" :iconClasses="['modal-md']">
       <h3 slot="header">Nuevo Entrega</h3>
       <div slot="body">
         <form>

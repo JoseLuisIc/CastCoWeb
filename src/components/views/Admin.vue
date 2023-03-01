@@ -105,7 +105,7 @@
         <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
         <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
     </modal>
-    <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="modal-lg">
+    <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="['modal-lg']">
       <h3 slot="header">¿Cuál es mi contraseña?</h3>
       <div slot="body">
         <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
