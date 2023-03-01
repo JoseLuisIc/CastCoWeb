@@ -6,7 +6,8 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success"><i class="fa fa-user-plus"> </i> Agregar
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success"><i
+                class="fa fa-user-plus"> </i> Agregar
               Nuevo</button>
           </div>
           <!-- /.box-header -->
@@ -22,24 +23,25 @@
 
               <div class="row">
                 <div class="col-sm-12 table-responsive">
+                  Mostrar <select name="pant_size" class="form-control" id="pant_size" v-model="length" @change="search">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select> entradas
                   <table aria-describedby="example1_info" role="grid" id="tableUsers"
                     class="table table-bordered table-striped dataTable display responsive nowrap">
                     <thead>
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
-                        <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Nombre agencia</th>
-                        <th style="width: 142px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Encargado
+                        <th style="width: 207px;">Nombre agencia</th>
+                        <th style="width: 142px;">Encargado
                         </th>
-                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Telefono</th>
+                        <th style="width: 182px;">Telefono</th>
 
-                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Ciudad</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                          class="sorting">Acciones</th>
+                        <th style="width: 182px;">Ciudad</th>
+                        <th style="width: 101px;">Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -54,31 +56,32 @@
                             <button class="btn delete" v-on:click=confirmDelete(user.id)><i
                                 class="fa fa-trash"></i></button>
                             <button class="btn edit" v-on:click=editUser(user.id)><i class="fa fa-edit"></i></button>
-                            <button class="btn reset" v-on:click=modalResetPwd(user.id)><i class="fa fa-refresh"></i></button>
+                            <button class="btn reset" v-on:click=modalResetPwd(user.id)><i
+                                class="fa fa-refresh"></i></button>
                           </div>
                         </td>
                       </tr>
                     </tbody>
                     <!-- <tfoot>
-                      <tr role="row">
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Email"
-                            data-index="0" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Nombre agencia"
-                            data-index="1" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Encargado"
-                            data-index="2" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Telefono"
-                            data-index="3" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Rol"
-                            data-index="5" autocomplete="off"></th>
-                        <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad"
-                            data-index="6" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"></th>
-                        <th rowspan=" 1" colspan="1"></th>
-                      </tr>
-                    </tfoot> -->
+                        <tr role="row">
+                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Email"
+                              data-index="0" autocomplete="off"></th>
+                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Nombre agencia"
+                              data-index="1" autocomplete="off"></th>
+                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Encargado"
+                              data-index="2" autocomplete="off"></th>
+                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Telefono"
+                              data-index="3" autocomplete="off"></th>
+                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Rol"
+                              data-index="5" autocomplete="off"></th>
+                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad"
+                              data-index="6" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"></th>
+                          <th rowspan=" 1" colspan="1"></th>
+                        </tr>
+                      </tfoot> -->
                   </table>
                   <div>
-                    <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                    <pagination :totalPages="totalPage" :perPage="parseInt(length)" :currentPage="currentPage"
                       @pagechanged="onPageChange" />
                   </div>
                 </div>
@@ -89,7 +92,7 @@
         </div>
       </div>
     </div>
-    <modal v-if="showModalDelete" @close="showModalDelete = false">
+    <modal v-if="showModalDelete" @close="showModalDelete = false" :iconClasses="['modal-md']">
       <h3 slot="header">Eliminar Usuario</h3>
       <div slot="body">
         <p>Esta seguro que quiere eliminar al usuario?</p>
@@ -99,7 +102,7 @@
 
     </modal>
 
-    <modal v-if="showModal" @close="showModal = false">
+    <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-md']">
       <h3 slot="header">Nuevo Usuario</h3>
       <div slot="body">
         <form>
@@ -115,6 +118,22 @@
             <label for="instagram" class="col-form-label">Instagram:</label>
             <input class="form-control" id="instagram" v-model="user.instagram" />
           </div>
+          <div class="form-group" v-if="!isNew">
+            <label for="instagram" class="col-form-label">Nombre agencia:</label>
+            <input class="form-control" id="Nombre Agencia" type="text" v-model="user.name" />
+          </div>
+          <div class="form-group" v-if="!isNew">
+            <label for="instagram" class="col-form-label">Nombre encargado:</label>
+            <input class="form-control" id="Nombre Encargado" type="text" v-model="user.booker_name" />
+          </div>
+          <div class="form-group" v-if="!isNew">
+            <label for="instagram" class="col-form-label">Telefono:</label>
+            <input class="form-control" id="Nombre Encargado" type="text" v-model="user.phone" />
+          </div>
+          <div class="form-group" v-if="!isNew">
+            <label for="instagram" class="col-form-label">Ciudad:</label>
+            <input class="form-control" id="Nombre Encargado" type="text" v-model="user.city" />
+          </div>
           <div class="form-group">
             <input class="form-control" id="id" type="hidden" v-model="user.id" />
             <input class="form-control" id="role" type="hidden" v-model="user.role" />
@@ -126,32 +145,30 @@
         v-on:click="updateUser(user)">Actualizar</button>
     </modal>
 
-    <modal v-if="showModalReset" @close="showModalReset = false">
+    <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="['modal-md']">
       <h3 slot="header">¿Cuál es mi contraseña?</h3>
       <div slot="body">
         <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
-              <fieldset>
-                <div class="form-group">
-                  <label for="password" class="col-form-label">Contraseña:</label>
-                  <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
-                </div>
-                <div class="form-group">
+        <fieldset>
+          <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input class="form-control" name="password" type="password" v-model="reset.password">
+          </div>
+          <div class="form-group">
 
-                  <label for="confirm_password" class="col-form-label">Contraseña:</label>
-                  <input class="form-control input-lg" name="confirm_password" type="password"
-                    v-model="reset.confirm_password">
-                </div>
-                <div v-if=reset.error class="text-red">
-                  <p>{{ reset.error }}</p>
-                </div>
-              </fieldset>
+            <label for="confirm_password">Contraseña:</label>
+            <input class="form-control" name="confirm_password" type="password" v-model="reset.confirm_password">
+          </div>
+          <div v-if=reset.error class="text-red">
+            <p>{{ reset.error }}</p>
+          </div>
+        </fieldset>
       </div>
 
       <button slot="footer" class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
 
     </modal>
   </section>
-
 </template>
 
 <script>
@@ -204,6 +221,7 @@ export default {
   methods: {
     onPageChange(page) {
       this.currentPage = page
+      this.callUser()
     },
     openModal() {
       this.showModal = true
@@ -228,9 +246,8 @@ export default {
       api
         .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
-          // var user = response.data
-          this.showModal = false
-          this.callUser()
+          var user = response.data
+          this.editUser(user.id)
         })
         .catch(error => {
           if (error.response) {
@@ -264,10 +281,17 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('role', util.AGENCY)
+      params.append('search', '')
+      params.append('ordering', 'email')
+      params.append('page', this.currentPage)
+      params.append('page_size', this.length)
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.users = response.data.results
+          var json = response.data
+          this.users = json.results
+          this.count = json.count
+          this.totalPage = Math.ceil(this.count / this.length)
         })
         .catch(error => {
           if (error.response) {
@@ -336,6 +360,9 @@ export default {
             this.reset.error = errors.password[0]
           }
         })
+    },
+    search() {
+      this.callUser()
     }
   }
 }

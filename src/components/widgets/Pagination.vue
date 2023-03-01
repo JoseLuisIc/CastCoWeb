@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     startPage() {
-      if (this.currentPage === 1) {
+      if (this.currentPage <= 2) {
         return 1
       }
       if (this.currentPage === this.totalPages) {
@@ -77,6 +77,7 @@ export default {
           isDisabled: i === this.currentPage
         })
       }
+      console.log(range)
       return range
     },
     isInFirstPage() {
@@ -91,7 +92,7 @@ export default {
       this.$emit('pagechanged', 1)
     },
     onClickPreviousPage() {
-      if (this.currentPage > 1) {
+      if (this.currentPage >= 1) {
         this.$emit('pagechanged', this.currentPage - 1)
       }
     },

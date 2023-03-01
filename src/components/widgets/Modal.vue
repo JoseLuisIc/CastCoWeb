@@ -1,19 +1,17 @@
 <template>
   <transition name="modal">
         <div class="modal-mask modal">
-          <div class="modal-wrapper modal-dialog">
+          <div class="modal-wrapper modal-dialog" :class="iconClasses">
             <div class="modal-content">
 
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" @click="$emit('close')">&times;</button>
                 <slot name="header">
-                  default header
                 </slot>
               </div>
 
               <div class="modal-body">
                 <slot name="body">
-                  default body
                 </slot>
               </div>
 
@@ -22,7 +20,6 @@
                     Cerrar
                 </button>
                 <slot name="footer">
-                  default footer
                 </slot>
               </div>
             </div>
@@ -48,8 +45,7 @@ export default {
       default: []
     },
     title: {
-      type: String,
-      required: true
+      type: String
     }
   }
 }

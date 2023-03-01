@@ -23,22 +23,40 @@
 
               <div class="row">
                 <div class="col-sm-12 table-responsive">
+                  Mostrar <select name="pant_size" class="form-control" id="pant_size" v-model="length" @change="search">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select> entradas
                   <table aria-describedby="example1_info" role="grid" id="tableUsers"
                     class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
-                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="3" class="sorting_asc">Usuario</th>
-                        <th style="width: 207px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="4"
-                          class="sorting">Ciudad</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="5"
-                          class="sorting">Edad</th>
-                        <th style="width: 182px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="6"
-                          class="sorting">Instagram</th>
-                        <th style="width: 101px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="8"
-                          class="sorting">Acciones</th>
+                        <th style="width: 167px;">Usuario</th>
+                        <th style="width: 207px;">Ciudad</th>
+                        <th style="width: 101px;">Edad</th>
+                        <th style="width: 182px;">Instagram</th>
+                        <th style="width: 101px;">Acciones</th>
+                      </tr>
+                    </thead>
+                    <thead>
+                      <tr>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="0" v-model="filters.email" v-on:keyup="searchInput"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Usuario" data-index="1" v-model="filters.first_name" v-on:keyup="searchInput">
+                        </th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Ciudad" data-index="2" v-model="filters.city" v-on:keyup="searchInput"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Edad" data-index="3" v-model="filters.age" v-on:keyup="searchInput"></th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Instagram" data-index="4" v-model="filters.instagram" v-on:keyup="searchInput">
+                        </th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -57,40 +75,15 @@
                             <button class="btn delete" v-on:click=confirmDelete(user.id)><i
                                 class="fa fa-trash"></i></button>
                             <button class="btn edit" v-on:click=editUser(user.id)><i class="fa fa-edit"></i></button>
-                            <button class="btn reset" v-on:click=modalResetPwd(user.id)><i class="fa fa-refresh"></i></button>
+                            <button class="btn reset" v-on:click=modalResetPwd(user.id)><i
+                                class="fa fa-refresh"></i></button>
                           </div>
                         </td>
                       </tr>
                     </tbody>
-                    <!-- <tfoot>
-                      <tr>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Email" data-index="0"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Email" data-index="1"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Email" data-index="2"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Usuario" data-index="3"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Ciudad" data-index="4"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Edad" data-index="5"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Instagram" data-index="6"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Rol" data-index="7" onfocus="this.removeAttribute('readonly');"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"></th>
-                      </tr>
-                    </tfoot> -->
                   </table>
-                  <!-- <ul class="pagination">
-                    <li :class="1 === currentPage ? 'disable' : ''" @click="changePage(page)"><a href="javascript::"><i class="fa  fa-chevron-left"></i></a></li>
-                    <li :class="page === currentPage ? 'active' : ''" @click="changePage(page)"><a href="javascript::" v-for="page in totalPage">{{ page }}</a></li>
-                    <li :class="page === totalPage ? 'disable' : ''" @click="changePage(totalPage)"><a href="javascript::"><i class="fa  fa-chevron-right" ></i></a></li>
-                  </ul> -->
                   <div>
-                    <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                    <pagination :totalPages="totalPage" :perPage="parseInt(length)" :currentPage="currentPage"
                       @pagechanged="onPageChange" />
                   </div>
                 </div>
@@ -101,20 +94,11 @@
         </div>
       </div>
     </div>
-    <modal v-if="showModalDelete" @close="showModalDelete = false">
-      <h3 slot="header">Eliminar Usuario</h3>
-      <div slot="body">
-        <p>Esta seguro que quiere eliminar al usuario?</p>
-      </div>
-
-      <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
-
-    </modal>
-    <modal v-if="showModal" @close="showModal = false">
+    <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-lg']">
       <h3 slot="header">Nuevo Usuario</h3>
       <div slot="body">
         <form>
-          <div class="row" v-if="isNew">
+          <div v-if="isNew">
             <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
               <label for="email" class="col-form-label">Email:</label>
               <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
@@ -143,7 +127,7 @@
                   </span>
                   <div class="mailbox-attachment-info">
                     <!-- <a class="btn btn-default btn-xs pull-left deleteFile"><i class="fa fa-trash"></i>
-            Eliminar</a> -->
+                Eliminar</a> -->
                     <span class="mailbox-attachment-size">
                       &nbsp;
                       <div class="btn btn-default btn-file">
@@ -299,7 +283,7 @@
       <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary"
         v-on:click="updateUser(user)">Actualizar</button>
     </modal>
-    <modal v-if="showModalDelete" @close="showModalDelete = false">
+    <modal v-if="showModalDelete" @close="showModalDelete = false" :iconClasses="['modal-md']">
       <h3 slot="header">Eliminar Usuario</h3>
       <div slot="body">
         <p>Esta seguro que quiere eliminar al usuario?</p>
@@ -309,32 +293,30 @@
 
     </modal>
 
-    <modal v-if="showModalReset" @close="showModalReset = false">
+    <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="['modal-md']">
       <h3 slot="header">¿Cuál es mi contraseña?</h3>
       <div slot="body">
         <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
-              <fieldset>
-                <div class="form-group">
-                  <label for="password" class="col-form-label">Contraseña:</label>
-                  <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
-                </div>
-                <div class="form-group">
+        <fieldset>
+          <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input class="form-control" name="password" type="password" v-model="reset.password">
+          </div>
+          <div class="form-group">
 
-                  <label for="confirm_password" class="col-form-label">Contraseña:</label>
-                  <input class="form-control input-lg" name="confirm_password" type="password"
-                    v-model="reset.confirm_password">
-                </div>
-                <div v-if=reset.error class="text-red">
-                  <p>{{ reset.error }}</p>
-                </div>
-              </fieldset>
+            <label for="confirm_password">Contraseña:</label>
+            <input class="form-control" name="confirm_password" type="password" v-model="reset.confirm_password">
+          </div>
+          <div v-if=reset.error class="text-red">
+            <p>{{ reset.error }}</p>
+          </div>
+        </fieldset>
       </div>
 
       <button slot="footer" class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
 
     </modal>
   </section>
-
 </template>
 
 <script>
@@ -377,7 +359,16 @@ export default {
       states: [],
       previewSrc: '',
       isPreviewFile: false,
-      file: null
+      file: null,
+      filters: {
+        search: '',
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: '',
+        age: '',
+        city: ''
+      }
     }
   },
   mounted() {
@@ -389,6 +380,8 @@ export default {
   methods: {
     onPageChange(page) {
       this.currentPage = page
+      console.log(page)
+      this.callUser()
     },
     openModal() {
       this.showModal = true
@@ -478,6 +471,10 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('role', util.TALENT)
+      params.append('search', this.filters.search)
+      params.append('ordering', 'email')
+      params.append('page', this.currentPage)
+      params.append('page_size', this.length)
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -622,6 +619,13 @@ export default {
       Object.keys(this.error).forEach(key => {
         this.error[key] = ''
       })
+    },
+    search(e) {
+      this.callUser()
+    },
+    searchInput(e) {
+      this.filters.search = e.target.value
+      this.callUser()
     }
   }
 }

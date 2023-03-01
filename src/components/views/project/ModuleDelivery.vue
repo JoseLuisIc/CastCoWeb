@@ -62,7 +62,6 @@
 
 <script>
 import api from '../../../api'
-import Swal from 'sweetalert2'
 import $ from 'jquery'
 import toastr from 'toastr'
 import Modal from '../../widgets/Modal.vue'
@@ -151,31 +150,14 @@ export default {
         })
     },
     deleteDeliveries(id) {
-      Swal.fire({
-        title: 'Estas seguro de eliminar?',
-        text: '¡No podrás revertir esto!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, Eliminar!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          api
+      api
             .request('delete', `projects/${this.idProject}/deliveries/${id}/`, {}, { 'Authorization': this.$store.state.token })
             .then(response => {
-              Swal.fire(
-                'Eliminacion!',
-                'Se ha eliminado.',
-                'success'
-              )
               $('#derivery' + id).remove()
             })
             .catch(error => {
               console.log(error)
             })
-        }
-      })
     },
     showEdit(delivery) {
       this.id = delivery.id
