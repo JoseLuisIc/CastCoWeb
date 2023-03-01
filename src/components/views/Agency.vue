@@ -225,7 +225,13 @@ export default {
     },
     openModal() {
       this.showModal = true
-      this.user = agency
+      this.user = {
+        id: 0,
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: ''
+      }
     },
     updateUser(dUser) {
       api

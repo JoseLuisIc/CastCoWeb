@@ -36,7 +36,7 @@
         </div><!-- /.table-responsive -->
       </div><!-- /.box-body -->
       <div class="box-footer clearfix">
-        <button id="btnModalCharacter" class="btn btn-sm btn-info btn-flat pull-left" @click="showModalCharacter = true"> <i class="fa fa-plus"></i>
+        <button id="btnModalCharacter" class="btn btn-sm btn-info btn-flat pull-left" @click="showModal"> <i class="fa fa-plus"></i>
           Agregar</button>
       </div><!-- /.box-footer -->
     </div><!-- /.box -->
@@ -93,6 +93,11 @@ export default {
     })
   },
   methods: {
+    showModal() {
+      this.showModalCharacter = true
+      this.name = ''
+      this.id = 0
+    },
     update() {
       api
         .request('patch', `projects/${this.idProject}/characters/${this.id}/`, { name: this.name, description: this.description }, { 'Authorization': this.$store.state.token })
