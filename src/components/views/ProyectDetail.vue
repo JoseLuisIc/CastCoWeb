@@ -113,7 +113,7 @@
         </div><!-- nav-tabs-custom -->
       </div>
     </div>
-    <modal v-if="showModalMaterial" @close="showModalMaterial = false" iconClasses="[modal-lg]">
+    <modal v-if="showModalMaterial" @close="showModalMaterial = false" :iconClasses="['modal-lg']">
       <h3 slot="header">Material</h3>
       <div slot="body">
         <div class="box-footer">
