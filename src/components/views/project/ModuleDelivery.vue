@@ -37,7 +37,7 @@
         </div><!-- /.table-responsive -->
       </div><!-- /.box-body -->
       <div class="box-footer clearfix">
-        <button id="btnModalDelivery" class="btn btn-sm btn-info btn-flat pull-left" @click="showModalDelivery = true"> <i class="fa fa-plus"></i> Agregar</button>
+        <button id="btnModalDelivery" class="btn btn-sm btn-info btn-flat pull-left" @click="showModal"> <i class="fa fa-plus"></i> Agregar</button>
       </div><!-- /.box-footer -->
     </div><!-- /.box -->
     <modal v-if="showModalDelivery" @close="showModalDelivery = false" :iconClasses="['modal-md']">
@@ -92,6 +92,11 @@ export default {
     })
   },
   methods: {
+    showModal() {
+      this.showModalDelivery = true
+      this.name = ''
+      this.id = 0
+    },
     update() {
       api
         .request('patch', `projects/${this.idProject}/deliveries/${this.id}/`, { name: this.name }, { 'Authorization': this.$store.state.token })

@@ -378,13 +378,18 @@ export default {
     })
   },
   methods: {
+    clearParams() {
+      Object.keys(this.user).forEach(key => { this.user[key] = '' })
+    },
     onPageChange(page) {
       this.currentPage = page
       console.log(page)
       this.callUser()
     },
     openModal() {
+      this.clearParams()
       this.showModal = true
+      this.isNew = true
     },
     updateUser(dUser) {
       var userFormData = new FormData()

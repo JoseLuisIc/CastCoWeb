@@ -184,6 +184,7 @@ export default {
     },
     openModal() {
       this.showModal = true
+      this.isNew = true
       this.user = {
         id: 0,
         email: '',
