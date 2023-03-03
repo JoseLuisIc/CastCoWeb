@@ -36,7 +36,6 @@
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0" class="sorting_asc">Email</th>
                         <th style="width: 167px;">Usuario</th>
-                        <th style="width: 207px;">Ciudad</th>
                         <th style="width: 101px;">Edad</th>
                         <th style="width: 182px;">Instagram</th>
                         <th style="width: 101px;">Acciones</th>
@@ -49,8 +48,6 @@
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
                             placeholder="Usuario" data-index="1" v-model="filters.first_name" v-on:keyup="searchInput">
                         </th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Ciudad" data-index="2" v-model="filters.city" v-on:keyup="searchInput"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
                             placeholder="Edad" data-index="3" v-model="filters.age" v-on:keyup="searchInput"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
@@ -67,7 +64,6 @@
                             <img class="img-circle" :src="user.extras.photo" alt="Avatar">
                           </div>{{ user.first_name + user.last_name }}
                         </td>
-                        <td>{{ user.extras.city }} </td>
                         <td>{{ user.extras.age }} </td>
                         <td>{{ user.instagram }} </td>
                         <td>
@@ -451,7 +447,7 @@ export default {
       api
         .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.agencies = response.data.results
+          this.agencies = response.data
         })
         .catch(console.log)
       api
@@ -555,6 +551,7 @@ export default {
       api
         .request('get', 'states/?' + params, {}, { 'Authorization': this.$store.state.token })
         .then(response => {
+          console.log(response.data)
           this.states = response.data.results
         })
         .catch(error => {
