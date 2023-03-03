@@ -227,17 +227,16 @@
   </section>
 </template>
 <script>
+import toastr from 'toastr'
 import moment from 'moment'
 import { timeline } from '../../demo'
 import api from '../../api'
 import user from '../../models/user'
-import Alert from '../widgets/Alert.vue'
 import util from '../../utils/util'
 
 export default {
   name: 'Tasks',
   components: {
-    Alert
   },
   mounted() {
     this.$nextTick(() => {
@@ -344,10 +343,10 @@ export default {
       api
         .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.alertShow('Exito', 'Se guardo correctamente los datos', 'success', ['fa fa-check'])
+          this.alertShow('Exito', 'Se guardo correctamente los datos', 'success')
         })
         .catch(error => {
-          this.alertShow('Error', 'No se pudo guardar intente nuevamente', 'error', ['fa fa-ban'])
+          this.alertShow('Error', 'No se pudo guardar intente nuevamente', 'error')
           Object.keys(this.error).forEach(key => {
             this.error[key] = ''
           })
@@ -376,18 +375,18 @@ export default {
       reader.readAsDataURL(file)
       that.user.photo = file
     },
-    alertShow(title, message, type, iconClass) {
+    alertShow(title, message, type) {
       this.message = message
       this.type = type
       this.title = title
-      this.iconClass = iconClass
-      this.isAlert = true
+      toastr[type](title, message)
     }
   }
 }
 </script>
 
 <style>
+@import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
 .timeline-footer a.btn {
   margin-right: 10px;
 }
