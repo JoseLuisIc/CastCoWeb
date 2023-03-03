@@ -219,19 +219,22 @@ export default {
     })
   },
   methods: {
+    clearParams() {
+      Object.keys(this.user).forEach(key => {
+        if (key !== 'role') {
+          this.user[key] = ''
+        }
+      })
+    },
     onPageChange(page) {
       this.currentPage = page
       this.callUser()
     },
     openModal() {
       this.showModal = true
-      this.user = {
-        id: 0,
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: ''
-      }
+      this.isNew = true
+      this.user = agency
+      this.clearParams()
     },
     updateUser(dUser) {
       api

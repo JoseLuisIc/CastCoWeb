@@ -379,7 +379,11 @@ export default {
   },
   methods: {
     clearParams() {
-      Object.keys(this.user).forEach(key => { this.user[key] = '' })
+      Object.keys(this.user).forEach(key => {
+        if (key !== 'role') {
+          this.user[key] = ''
+        }
+      })
     },
     onPageChange(page) {
       this.currentPage = page
@@ -442,8 +446,7 @@ export default {
       this.isNew = false
       const params = new URLSearchParams()
       console.log(idUser)
-      params.append('format', 'json')
-      params.append('length', 100)
+      params.append('pagination', false)
       this.resetErrors()
       api
         .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })

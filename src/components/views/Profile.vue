@@ -274,11 +274,10 @@ export default {
   },
   methods: {
     fetchProfile() {
-      var idUser = this.$store.state.user.id
       var that = this
       this.role = this.$store.state.user.role
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'me/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           var userData = response.data
           Object.assign(that.user, userData)
