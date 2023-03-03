@@ -93,12 +93,12 @@ export default {
   },
   methods: {
     getTotal() {
-      api.request('get', `users/?format=datatables&length=-1`, {}, { 'Authorization': this.$store.state.token })
+      api.request('get', `users/?pagination=false`, {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           var json = response.data
-          this.admins = json.data.filter(user => user.role === util.MANAGER).length
-          this.talents = json.data.filter(user => user.role === util.TALENT).length
-          this.agencies = json.data.filter(user => user.role === util.AGENCY).length
+          this.admins = json.filter(user => user.role === util.MANAGER).length
+          this.talents = json.filter(user => user.role === util.TALENT).length
+          this.agencies = json.filter(user => user.role === util.AGENCY).length
         })
         .catch(console.log())
       api.request('get', `projects/?format=datatables&length=-1`, {}, { 'Authorization': this.$store.state.token })

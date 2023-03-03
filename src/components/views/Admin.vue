@@ -133,8 +133,8 @@
   </section>
 
 </template>
-
 <script>
+import toastr from 'toastr'
 import api from '../../api'
 import util from '../../utils/util'
 import admin from '../../models/admin'
@@ -201,6 +201,7 @@ export default {
         .then(response => {
           this.showModal = false
           this.callUser()
+          toastr.success('Actualización', 'Se ha actualizado el usuario')
         })
         .catch(error => {
           if (error.response) {
@@ -215,6 +216,7 @@ export default {
         .then(response => {
           this.showModal = false
           this.callUser()
+          toastr.success('Creación', 'Se ha creado el usuario')
         })
         .catch(error => {
           if (error.response) {
@@ -232,7 +234,6 @@ export default {
         .then(response => {
           this.user = response.data
           this.showModal = true
-          this.callUser()
         })
         .catch(error => {
           if (error.response) {
@@ -281,6 +282,7 @@ export default {
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.showModalDelete = false
+          toastr.error('Eliminación', 'Se ha eliminado el usuario')
           this.callUser()
         })
         .catch(error => {
@@ -348,6 +350,7 @@ export default {
 */
 
 @import url('/static/js/plugins/datatables/dataTables.bootstrap.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
 
 table.dataTable thead .sorting:after,
 table.dataTable thead .sorting_asc:after,
