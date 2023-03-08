@@ -316,6 +316,7 @@
 </template>
 
 <script>
+import toastr from 'toastr'
 import api from '../../api'
 import util from '../../utils/util'
 import modelUser from '../../models/user'
@@ -412,6 +413,8 @@ export default {
         .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.showModal = false
+          this.callUser()
+          toastr.success('Actualización', 'Se ha actualizado el usuario')
         })
         .catch(error => {
           this.resetErrors()
@@ -429,6 +432,8 @@ export default {
         .then(response => {
           var user = response.data
           this.editUser(user.id)
+          this.showModal = false
+          toastr.success('Guardado', 'Se ha guardado el usuario')
         })
         .catch(error => {
           if (error.response) {
