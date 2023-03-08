@@ -62,7 +62,7 @@
                         <td>
                           <div class="widget-user-image">
                             <img class="img-circle" :src="user.extras.photo" alt="Avatar">
-                          </div>{{ user.first_name + user.last_name }}
+                          </div>{{ user.first_name }}  {{  user.last_name }}
                         </td>
                         <td>{{ user.extras.age }} </td>
                         <td>{{ user.instagram }} </td>
@@ -475,7 +475,11 @@ export default {
     callUser() {
       const params = new URLSearchParams()
       params.append('role', util.TALENT)
-      params.append('search', this.filters.search)
+      // params.append('search', this.filters.search)
+      params.append('email', this.filters.email)
+      params.append('first_name', this.filters.first_name)
+      params.append('age', this.filters.age)
+      params.append('instagram', this.filters.instagram)
       params.append('ordering', 'email')
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
