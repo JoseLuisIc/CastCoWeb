@@ -172,6 +172,7 @@
 </template>
 
 <script>
+import toastr from 'toastr'
 import api from '../../api'
 import util from '../../utils/util'
 import agency from '../../models/agency'
@@ -243,6 +244,7 @@ export default {
           console.log(response.data)
           this.showModal = false
           this.callUser()
+          toastr.success('Actualización', 'Se ha actualizado el usuario')
         })
         .catch(error => {
           if (error.response) {
@@ -257,6 +259,8 @@ export default {
         .then(response => {
           var user = response.data
           this.editUser(user.id)
+          this.callUser()
+          toastr.success('Guardado', 'Se ha guardado con exito')
         })
         .catch(error => {
           if (error.response) {
