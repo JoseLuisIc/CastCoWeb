@@ -327,6 +327,8 @@ export default {
           this.reset.confirm_password = ''
           this.reset.error = ''
           this.showModalDelete = false
+          toastr.success('Guardado', 'Se ha guardado correctamente la contrseña')
+          this.showModalReset = false
         })
         .catch(error => {
           if (error.response) {

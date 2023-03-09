@@ -102,7 +102,7 @@
 
     </modal>
 
-    <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-md']">
+    <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-lg']">
       <h3 slot="header">Nuevo Usuario</h3>
       <div slot="body">
         <form>
@@ -366,6 +366,8 @@ export default {
           this.reset.password = ''
           this.reset.confirm_password = ''
           this.reset.error = ''
+          toastr.success('Guardado', 'Se ha guardado correctamente la contrseña')
+          this.showModalReset = false
         })
         .catch(error => {
           if (error.response) {
