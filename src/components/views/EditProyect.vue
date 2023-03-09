@@ -90,9 +90,10 @@
                     <label for="characteristics" class="col-form-label">Caracteristicas:</label>
                     <input class="form-control" id="characteristics" v-model="project.characteristics" />
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
                     <label for="callback_date" class="col-form-label">Fecha de callback:</label>
                     <input class="form-control" type="date" id="callback_date" v-model="project.callback_date" />
+                    <span v-if=error.callback_date class="help-block">{{ error.callback_date }}</span>
                   </div>
                   <div class="form-group">
                     <label for="start_date" class="col-form-label">Fecha de inicio:</label>
@@ -110,9 +111,9 @@
             </form>
             <div class="modal-footer">
               <router-link to="/admin/proyects" class="btn btn-default">Regresar</router-link>
-              <button v-if="project.id !== undefined" type="button" class="btn btn-primary"
+              <button v-if="project.id !== 0" type="button" class="btn btn-primary"
                 v-on:click="updateProyect(project)">Actualizar</button>
-              <button v-if="project.id === undefined" type="button" class="btn btn-primary"
+              <button v-if="project.id === 0" type="button" class="btn btn-primary"
                 v-on:click="saveProyect">Guardar</button>
             </div>
           </div>
@@ -121,7 +122,7 @@
       </div>
     </div>
     <!-- Main row -->
-    <div class="row">
+    <div class="row" v-if="project.id !== 0">
       <!-- Left col -->
       <div class="col-md-6">
         <!-- MAP & BOX PANE -->
@@ -285,7 +286,9 @@ export default {
           this.alertShow('Guardar', 'No se pudo actualizar intente nuevamente', 'error', 'fa fa-ban')
           if (error.response) {
             var errors = error.response.data
-            console.log(errors)
+            Object.keys(errors).forEach(key => {
+              this.error[key] = errors[key][0]
+            })
           }
         })
     },
