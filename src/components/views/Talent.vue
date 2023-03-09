@@ -600,6 +600,9 @@ export default {
         .then(response => {
           this.user = response.data
           this.showModalReset = true
+          this.showModal = false
+          this.reset.password = ''
+          this.reset.confirm_password = ''
         })
         .catch(error => {
           if (error.response) {

@@ -351,8 +351,21 @@ export default {
       }
     },
     modalResetPwd(idUser) {
-      this.user.id = idUser
-      this.showModalReset = true
+      api
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.user = response.data
+          this.showModalReset = true
+          this.showModal = false
+          this.reset.password = ''
+          this.reset.confirm_password = ''
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
     },
     resetPassword() {
       var json = {
