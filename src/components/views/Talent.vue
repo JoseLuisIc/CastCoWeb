@@ -339,7 +339,8 @@ export default {
       isNew: true,
       reset: {
         password: '',
-        confirm_password: ''
+        confirm_password: '',
+        error: ''
       },
       idProject: 0,
       totalPage: 1,
@@ -612,6 +613,7 @@ export default {
         })
     },
     resetPassword() {
+      var that = this
       var json = {
         id: this.user.id,
         password: this.reset.password,
@@ -630,7 +632,7 @@ export default {
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
-            this.reset.error = errors.password[0]
+            that.reset.error = errors.password[0]
           }
         })
     },

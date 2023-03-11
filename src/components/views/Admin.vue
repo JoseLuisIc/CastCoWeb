@@ -105,25 +105,24 @@
         <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
         <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
     </modal>
-    <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="['modal-lg']">
+    <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="['modal-md']">
       <h3 slot="header">¿Cuál es mi contraseña?</h3>
       <div slot="body">
         <p>Si ha olvidado su contraseña, puede restablecerla aquí.</p>
-              <fieldset>
-                <div class="form-group">
-                  <label for="password">Contraseña:</label>
-                  <input class="form-control input-lg" name="password" type="password" v-model="reset.password">
-                </div>
-                <div class="form-group">
+        <fieldset>
+          <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input class="form-control" name="password" type="password" v-model="reset.password">
+          </div>
+          <div class="form-group">
 
-                  <label for="confirm_password">Contraseña:</label>
-                  <input class="form-control input-lg" name="confirm_password" type="password"
-                    v-model="reset.confirm_password">
-                </div>
-                <div v-if=reset.error class="text-red">
-                  <p>{{ reset.error }}</p>
-                </div>
-              </fieldset>
+            <label for="confirm_password">Contraseña:</label>
+            <input class="form-control" name="confirm_password" type="password" v-model="reset.confirm_password">
+          </div>
+          <div v-if=reset.error class="text-red">
+            <p>{{ reset.error }}</p>
+          </div>
+        </fieldset>
       </div>
 
       <button slot="footer" class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
@@ -168,7 +167,8 @@ export default {
       isNew: true,
       reset: {
         password: '',
-        confirm_password: ''
+        confirm_password: '',
+        error: ''
       }
     }
   },
@@ -318,6 +318,7 @@ export default {
         })
     },
     resetPassword() {
+      var that = this
       var json = {
         id: this.user.id,
         password: this.reset.password,
@@ -336,9 +337,13 @@ export default {
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
-            this.reset.error = errors.password[0]
+            console.log(errors)
+            that.reset.error = errors.password[0]
           }
         })
+    },
+    search() {
+      this.callUser()
     }
   }
 }
