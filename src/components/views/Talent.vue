@@ -33,9 +33,8 @@
                     class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Email</th>
                         <th style="width: 167px;">Usuario</th>
+                        <th aria-sort="ascending" style="width: 167px;">Email</th>
                         <th style="width: 101px;">Edad</th>
                         <th style="width: 182px;">Instagram</th>
                         <th style="width: 101px;">Acciones</th>
@@ -44,10 +43,10 @@
                     <thead>
                       <tr>
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
-                            placeholder="Email" data-index="0" v-model="filters.email" v-on:keyup="searchInput"></th>
-                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
                             placeholder="Usuario" data-index="1" v-model="filters.first_name" v-on:keyup="searchInput">
                         </th>
+                        <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
+                            placeholder="Email" data-index="0" v-model="filters.email" v-on:keyup="searchInput"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
                             placeholder="Edad" data-index="3" v-model="filters.age" v-on:keyup="searchInput"></th>
                         <th rowspan="1" colspan="1" class="sorting_disabled"><input class="form-control" type="text"
@@ -58,12 +57,12 @@
                     </thead>
                     <tbody>
                       <tr v-for="user in users">
-                        <td>{{ user.email }} </td>
                         <td>
                           <div class="widget-user-image">
                             <img class="img-circle" :src="user.extras.photo" alt="Avatar">
                           </div>{{ user.first_name }}  {{  user.last_name }}
                         </td>
+                        <td>{{ user.email }} </td>
                         <td>{{ user.extras.age }} </td>
                         <td>{{ user.instagram }} </td>
                         <td>
@@ -489,6 +488,7 @@ export default {
       params.append('ordering', 'email')
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
+      params.append('ordering', 'first_name')
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {

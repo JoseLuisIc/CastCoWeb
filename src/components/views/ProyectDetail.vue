@@ -8,7 +8,7 @@
           <ul class="nav nav-tabs">
             <li class="active"><a href="#tab_1" data-toggle="tab"><i class="fa fa-user fa-lg"></i> Postulaciones</a>
             </li>
-            <li><a href="#tab_2" data-toggle="tab"><i class="fa fa-star-o fa-lg"></i> Castings</a></li>
+            <!-- <li><a href="#tab_2" data-toggle="tab"><i class="fa fa-star-o fa-lg"></i> Castings</a></li> -->
             <!-- <li><a href="#tab_3" data-toggle="tab"><i class="fa fa-fa-users fa-lg"> Personajes</a></li> -->
             <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
           </ul>
@@ -21,11 +21,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-
-                </div>
-                <!-- /.box-body -->
-              </div>
-              <div class="row">
+                  <div class="row">
                 <div class="col-sm-12 table-responsive">
                   <table aria-describedby="example1_info" role="grid" id="tableProyects"
                     class="table table-bordered table-striped dataTable display responsive nowrap">
@@ -77,7 +73,7 @@
                         <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                               aria-hidden="true"></i></span><br>Archivos</td>
                         <td>
-                          <select2 :id="application.id" :options="deliveries" v-model="application.delivery" @onChangeSelected="onChangeDelivery">
+                          <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id" @onChangeSelected="onChangeDelivery">
                           </select2>
                         </td>
                       </tr>
@@ -104,6 +100,10 @@
                     @pagechanged="onPageChange" />
                 </div>
               </div>
+                </div>
+                <!-- /.box-body -->
+              </div>
+
             </div><!-- /.tab-pane -->
             <div class="tab-pane" id="tab_2">
             </div><!-- /.tab-pane -->
