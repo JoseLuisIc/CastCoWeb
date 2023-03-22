@@ -36,7 +36,8 @@
                         <th>Material
                         </th>
                         <th># Entrega</th>
-                        <th>Status</th>
+                        <th>Status Postulacion</th>
+                        <th>Status Proyecto</th>
                       </tr>
                     </thead>
                     <thead>
@@ -54,6 +55,7 @@
                           <select2 :id="selectedDelivery" :options="filterDeliveries" v-model="filters.delivery" @onChangeSelected="search" >
                           </select2>
                         </td>
+                        <td></td>
                         <td></td>
                       </tr>
                     </thead>
@@ -76,6 +78,8 @@
                           <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id" @onChangeSelected="onChangeDelivery">
                           </select2>
                         </td>
+                        <td></td>
+                        <td></td>
                       </tr>
                     </tbody>
 

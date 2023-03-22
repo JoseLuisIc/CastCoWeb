@@ -70,6 +70,17 @@ const routes = [
         }
       },
       {
+        path: '/admin/agencies/talents',
+        component: TalentView,
+        name: '/admin/agencies/talents',
+        meta: {
+          module: 'Agencias',
+          description: 'Listado de Agencias',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
         path: '/admin/proyects',
         component: ProyectsView,
         name: 'admin/proyects',
@@ -146,6 +157,13 @@ const routes = [
         path: '/agency/talents',
         component: TalentView,
         name: 'agency/talentos',
+        module: 'Talentos',
+        meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth] }
+      },
+      {
+        path: '/agency/talents/:id',
+        component: PostulateView,
+        name: 'agency/talentos/postulaciones',
         module: 'Talentos',
         meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth] }
       },

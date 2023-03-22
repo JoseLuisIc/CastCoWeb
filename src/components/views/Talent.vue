@@ -72,6 +72,9 @@
                             <button class="btn edit" v-on:click=editUser(user.id)><i class="fa fa-edit"></i></button>
                             <button class="btn reset" v-on:click=modalResetPwd(user.id)><i
                                 class="fa fa-refresh"></i></button>
+
+                            <button class="btn reset" v-on:click=postulate(user.id)><i
+                            class="fa fa-eye"></i></button>
                           </div>
                         </td>
                       </tr>
@@ -647,6 +650,9 @@ export default {
     searchInput(e) {
       this.filters.search = e.target.value
       this.callUser()
+    },
+    postulate(id) {
+      this.$router.push({ path: `/agency/talents/${id}` })
     }
   }
 }

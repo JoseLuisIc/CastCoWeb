@@ -67,7 +67,6 @@
 
 
   </section>
-
 </template>
 
 <script>
@@ -87,6 +86,7 @@ export default {
   data() {
     return {
       idProject: 0,
+      idPostulation: '',
       totalPage: 1,
       start: 0,
       length: 10,
@@ -101,6 +101,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      if (this.$route.params.hasOwnProperty('id')) {
+        this.idPostulation = this.$route.params.id
+        // this.fetchProyect(this.$route.params.id)
+      }
       this.fetchApplications()
     })
   },
@@ -165,7 +169,7 @@ export default {
       params.append('project', '')
       params.append('character', '')
       params.append('delivery', '')
-      params.append('user', '')
+      params.append('user', this.idPostulation)
       params.append('page_size', this.length)
       params.append('page', this.currentPage)
       api
