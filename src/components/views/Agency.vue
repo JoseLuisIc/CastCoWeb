@@ -34,8 +34,8 @@
                     <thead>
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Email</th>
-                        <th style="width: 207px;">Nombre agencia</th>
+                          tabindex="0">Nombre agencia</th>
+                        <th style="width: 207px;">Email</th>
                         <th style="width: 142px;">Encargado
                         </th>
                         <th style="width: 182px;">Telefono</th>
@@ -46,8 +46,8 @@
                     </thead>
                     <tbody>
                       <tr v-for="user in users">
-                        <td>{{ user.email }} </td>
                         <td>{{ user.extras.name }} </td>
+                        <td>{{ user.email }} </td>
                         <td>{{ user.extras.booker_name }} </td>
                         <td>{{ user.extras.phone }} </td>
                         <td>{{ user.extras.city }} </td>

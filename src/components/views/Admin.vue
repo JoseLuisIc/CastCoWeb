@@ -31,8 +31,8 @@
                     <thead>
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0" class="sorting_asc">Email</th>
-                        <th>Nombres</th>
+                          tabindex="0">Nombres</th>
+                        <th>Email</th>
                         <th>Apellidos
                         </th>
                         <th style="width: 101px;">Acciones</th>
@@ -40,8 +40,8 @@
                     </thead>
                     <tbody>
                       <tr v-for="user in users">
-                        <td>{{ user.email }} </td>
                         <td>{{ user.first_name }} </td>
+                        <td>{{ user.email }} </td>
                         <td>{{ user.last_name }} </td>
                         <td>
                           <div class="btn-group">

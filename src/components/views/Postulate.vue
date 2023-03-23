@@ -29,11 +29,11 @@
                     class="table table-bordered table-striped dataTable display responsive nowrap">
                     <thead>
                       <tr role="row">
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="1">Nombre</th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="3">Descripción</th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="4">Personaje</th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="4"># Entrega</th>
-                        <th colspan="1" rowspan="1" class="sorting" tabindex="4"># Acciones</th>
+                        <th >Nombre</th>
+                        <th >Descripción</th>
+                        <th >Personaje</th>
+                        <th ># Entrega</th>
+                        <th ># Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
