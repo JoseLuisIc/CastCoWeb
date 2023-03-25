@@ -58,6 +58,7 @@
                             <button class="btn edit" v-on:click=editUser(user.id)><i class="fa fa-edit"></i></button>
                             <button class="btn reset" v-on:click=modalResetPwd(user.id)><i
                                 class="fa fa-refresh"></i></button>
+                                <button class="btn reset" v-on:click=usuarios(user.id)><i class="fa fa-eye"></i></button>
                           </div>
                         </td>
                       </tr>
@@ -392,6 +393,9 @@ export default {
     },
     search() {
       this.callUser()
+    },
+    usuarios(id) {
+      this.$router.push({ path: `/agencies/user/${id}` })
     }
   }
 }

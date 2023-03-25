@@ -35,7 +35,7 @@
                   </div>
                   <div class="form-group">
                     <label for="budget" class="col-form-label">Presuspueto:</label>
-                    <input class="form-control" id="budget" v-model="project.budget" />
+                    <input type="number" class="form-control" id="budget" v-model="project.budget" />
                   </div>
                   <div class="form-group">
                     <label for="material_type" class="col-form-label">Tipo de material:</label>
@@ -86,8 +86,8 @@
                     <input class="form-control" id="use_of_image" v-model="project.use_of_image" />
                   </div>
                   <div class="form-group">
-                    <label for="agency_budget" class="col-form-label">Presuspueto Agencia:</label>
-                    <input class="form-control" id="agency_budget" v-model="project.agency_budget" />
+                    <label for="agency_budget" class="col-form-label">Presupuesto Agencia:</label>
+                    <input type="number" @blur="validatePresupuestoAgencia" class="form-control" id="agency_budget" v-model="project.agency_budget" />
                   </div>
                   <div class="form-group">
                     <label for="characteristics" class="col-form-label">Caracteristicas:</label>
@@ -372,6 +372,16 @@ export default {
             console.log(errors)
           }
         })
+    },
+    validatePresupuestoAgencia(e) {
+      var number = e.target.value
+      if (/^(?!0+\.00)(?=.{1,9}(\.|$))(?!0(?!\.))\d{1,3}(,\d{3})*(\.\d+)?$/.test(number)) {
+        this.error.agency_budget = ''
+        console.log(number)
+      } else {
+        console.log(number)
+        this.project.agency_budget = ''
+      }
     },
     deleteFile(e) {
       e.preventDefault()

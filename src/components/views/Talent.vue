@@ -212,21 +212,21 @@
               </div>
               <div class="form-group">
                 <label for="phone" class="col-form-label">Telefono:</label>
-                <input class="form-control" id="phone" v-model="user.phone" />
+                <input type="text" @blur=validateNumber class="form-control" id="phone" v-model="user.phone" />
                 <div v-if=error.phone class="text-red">
                   <p>{{ error.phone }}</p>
                 </div>
               </div>
               <div class="form-group" v-bind:class="error.height !== '' ? 'has-error' : ''">
                 <label for="height" class="col-form-label">Altura:</label>
-                <input class="form-control" id="height" v-model="user.height" />
+                <input type="number" class="form-control" id="height" v-model="user.height" />
                 <div v-if=error.height class="text-red">
                   <p>{{ error.height }}</p>
                 </div>
               </div>
               <div class="form-group" v-bind:class="error.shoe_size !== '' ? 'has-error' : ''">
                 <label for="shoe_size" class="col-form-label"># Calzado:</label>
-                <input class="form-control" id="shoe_size" v-model="user.shoe_size" />
+                <input type="number" class="form-control" id="shoe_size" v-model="user.shoe_size" />
                 <div v-if=error.shoe_size class="text-red">
                   <p>{{ error.shoe_size }}</p>
                 </div>
@@ -596,6 +596,14 @@ export default {
         this.error.state = ''
       } else {
         this.error.state = ''
+      }
+    },
+    validateNumber(e) {
+      var number = e.target.value
+      if (/^\(?(\d{3})\)?[-]?(\d{3})[-]?(\d{4})$/.test(number)) {
+        this.error.phone = ''
+      } else {
+        this.user.phone = ''
       }
     },
     modalResetPwd(idUser) {

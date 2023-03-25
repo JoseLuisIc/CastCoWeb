@@ -6,8 +6,7 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-primary" data-toggle="modal"
-              data-target="#modalUserCreate"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
+
             <input id="btnModalEdit" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalUserEdit" />
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
@@ -29,13 +28,15 @@
                     class="table table-bordered table-striped dataTable display responsive nowrap">
                     <thead>
                       <tr role="row">
-                        <th >Nombre</th>
-                        <th >Descripción</th>
-                        <th >Personaje</th>
-                        <th ># Entrega</th>
-                        <th ># Acciones</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Personaje</th>
+                        <th>Entrega</th>
+                        <th>Materiales</th>
+
                       </tr>
                     </thead>
+
                     <tbody>
                       <tr v-for="application in applications">
                         <td>{{ application.project.name }} </td>
@@ -43,11 +44,7 @@
                         <td>{{ application.character.name }}</td>
                         <td>{{ application.delivery != null ? application.delivery.name : "Sin Asignar" }}</td>
                         <td>
-                          <div class="btn-group">
-                            <button class="btn delete" :id="application.id"><i class="fa fa-trash"></i></button>
-                            <button class="btn edit" :id="application.id"><i class="fa fa-edit"></i></button>
-                            <button class="btn view" :id="application.id"><i class="fa fa-eye"></i></button>
-                          </div>
+
                         </td>
                       </tr>
                     </tbody>
