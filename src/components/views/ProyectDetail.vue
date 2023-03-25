@@ -78,8 +78,13 @@
                           <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id" @onChangeSelected="onChangeDelivery">
                           </select2>
                         </td>
-                        <td></td>
-                        <td></td>
+                        <td>
+
+                        </td>
+                        <td>
+                          <select2 :id="application.id" :options="statusProject" v-model="application.status" @onChangeSelected="onChangeStatus">
+                          </select2>
+                        </td>
                       </tr>
                     </tbody>
 
@@ -181,6 +186,11 @@ export default {
       characters: [],
       deliveries: [],
       materials: [],
+      statusProject: [
+        {id: '1', text: 'En Entrega'},
+        {id: '2', text: 'Callback'},
+        {id: '3', text: 'Finalizado'}
+      ],
       selectedCharacter: '0',
       selectedDelivery: '0',
       optionDefault: { id: 0, text: 'Todos' },
@@ -297,6 +307,21 @@ export default {
         .request('patch', 'applications/' + applicationId + '/', { character: characterId }, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.alertShow('Personaje', 'Se modifico el personaje', 'success', 'fa fa-check')
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    onChangeStatus({value, id}) {
+      var status = value
+      var applicationId = id
+      api
+        .request('patch', 'applications/' + applicationId + '/', { status: status }, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.alertShow('Estatus', 'Se actualizo el estatus', 'success', 'fa fa-check')
         })
         .catch(error => {
           if (error.response) {
