@@ -92,10 +92,7 @@
               <label for="last_name" class="col-form-label">Apellidos:</label>
               <input class="form-control" id="last_name" v-model="user.last_name" />
             </div>
-            <div class="form-group">
-              <label for="instagram" class="col-form-label">Instagram:</label>
-              <input class="form-control" id="instagram" v-model="user.instagram" />
-            </div>
+           
             <div class="form-group">
               <input class="form-control" id="id" type="hidden" v-model="user.id" />
               <input class="form-control" id="role" type="hidden" v-model="user.role" />
