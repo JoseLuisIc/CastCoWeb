@@ -60,7 +60,7 @@
                         <td>
                           <div class="widget-user-image">
                             <img class="img-circle" :src="user.extras.photo" alt="Avatar">
-                          </div>{{ user.first_name }}  {{  user.last_name }}
+                          </div>{{ user.first_name }} {{ user.last_name }}
                         </td>
                         <td>{{ user.email }} </td>
                         <td>{{ user.extras.age }} </td>
@@ -73,8 +73,7 @@
                             <button class="btn reset" v-on:click=modalResetPwd(user.id)><i
                                 class="fa fa-refresh"></i></button>
 
-                            <button class="btn reset" v-on:click=postulate(user.id)><i
-                            class="fa fa-eye"></i></button>
+                            <button class="btn reset" v-on:click=postulate(user.id)><i class="fa fa-eye"></i></button>
                           </div>
                         </td>
                       </tr>
@@ -368,11 +367,15 @@ export default {
         instagram: '',
         age: '',
         city: ''
-      }
+      },
+      agencyId: ''
     }
   },
   mounted() {
     this.$nextTick(() => {
+      if (this.$route.params.hasOwnProperty('id')) {
+        this.agencyId = this.$route.params.id
+      }
       this.callUser()
       this.getStates()
     })
@@ -492,6 +495,7 @@ export default {
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       params.append('ordering', 'first_name')
+      params.append('agency', this.agencyId)
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {

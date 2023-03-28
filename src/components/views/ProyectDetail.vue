@@ -22,73 +22,81 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                   <div class="row">
-                <div class="col-sm-12 table-responsive">
-                  <table aria-describedby="example1_info" role="grid" id="tableProyects"
-                    class="table table-bordered table-striped dataTable display responsive nowrap">
-                    <thead>
-                      <tr role="row">
-                        <th>Personaje</th>
-                        <th>Postulante</th>
-                        <!-- <th>Nombre</th>
+                    <div class="col-sm-12 table-responsive">
+                      <table aria-describedby="example1_info" role="grid" id="tableProyects"
+                        class="table table-bordered table-striped dataTable display responsive nowrap">
+                        <thead>
+                          <tr role="row">
+                            <th>Personaje</th>
+                            <th>Postulante</th>
+                            <!-- <th>Nombre</th>
                         <th>Nombre público
                         </th>
                         <th>Descripción</th> -->
-                        <th>Material
-                        </th>
-                        <th># Entrega</th>
-                        <th>Status Postulacion</th>
-                        <th>Status Proyecto</th>
-                      </tr>
-                    </thead>
-                    <thead>
-                      <tr role="row">
-                        <td>
-                          <select2 :id="selectedCharacter" :options="filterCharacters" v-model="filters.character" @onChangeSelected="search">
-                          </select2>
-                        </td>
-                        <td><input type="search" name="" id="" class="form-control" placeholder="Nombre del postulante" v-model="filters.name" v-on:keyup="search"></td>
-                        <td></td>
-                        <!-- <td></td>
+                            <th>Material
+                            </th>
+                            <th># Entrega</th>
+                            <th>Status Postulacion</th>
+                            <th>Status Proyecto</th>
+                          </tr>
+                        </thead>
+                        <thead>
+                          <tr role="row">
+                            <td>
+                              <select2 :id="selectedCharacter" :options="filterCharacters" v-model="filters.character"
+                                @onChangeSelected="search">
+                              </select2>
+                            </td>
+                            <td><input type="search" name="" id="" class="form-control"
+                                placeholder="Nombre del postulante" v-model="filters.name" v-on:keyup="search"></td>
+                            <td></td>
+                            <!-- <td></td>
                         <td></td>
                         <td></td> -->
-                        <td>
-                          <select2 :id="selectedDelivery" :options="filterDeliveries" v-model="filters.delivery" @onChangeSelected="search" >
-                          </select2>
-                        </td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="application in applications">
-                        <td>
-                          <select2 :id="application.id" :options="characters" v-model="application.character.id" @onChangeSelected="onChangeCharacter">
-                          </select2>
-                        </td>
-                        <td>
-                          <div class="widget-user-image"><img :src="application.user.photo" alt="Avatar"
-                              class="img-circle"></div>{{ application.user.first_name }}
-                        </td>
-                        <!-- <td>{{ application.project.name }} </td>
+                            <td>
+                              <select2 :id="selectedDelivery" :options="filterDeliveries" v-model="filters.delivery"
+                                @onChangeSelected="search">
+                              </select2>
+                            </td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="application in applications">
+                            <td>
+                              <select2 :id="application.id" :options="characters" v-model="application.character.id"
+                                @onChangeSelected="onChangeCharacter">
+                              </select2>
+                            </td>
+                            <td>
+                              <div class="widget-user-image"><img :src="application.user.photo" alt="Avatar"
+                                  class="img-circle"></div>{{ application.user.first_name }}
+                            </td>
+                            <!-- <td>{{ application.project.name }} </td>
                         <td>{{ application.project.public_name }} </td>
                         <td>{{ application.project.description }} </td> -->
-                        <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
-                              aria-hidden="true"></i></span><br>Archivos</td>
-                        <td>
-                          <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id" @onChangeSelected="onChangeDelivery">
-                          </select2>
-                        </td>
-                        <td>
+                            <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
+                                  aria-hidden="true"></i></span><br>Archivos</td>
+                            <td>
+                              <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id"
+                                @onChangeSelected="onChangeDelivery">
+                              </select2>
+                            </td>
+                            <td>
+                              <select2 :id="application.id" :options="statusPostulate" v-model="application.status"
+                                @onChangeSelected="onChangeStatus">
+                              </select2>
+                            </td>
+                            <td>
+                              <select2 :id="application.id" :options="statusProject" v-model="application.status"
+                                @onChangeSelected="onChangeStatus">
+                              </select2>
+                            </td>
+                          </tr>
+                        </tbody>
 
-                        </td>
-                        <td>
-                          <select2 :id="application.id" :options="statusProject" v-model="application.status" @onChangeSelected="onChangeStatus">
-                          </select2>
-                        </td>
-                      </tr>
-                    </tbody>
-
-                    <!-- <tfoot>
+                        <!-- <tfoot>
                               <tr>
                                 <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                                     placeholder="Productora" data-index="0"></th>
@@ -104,11 +112,11 @@
 
                               </tr>
                             </tfoot> -->
-                  </table>
-                  <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
-                    @pagechanged="onPageChange" />
-                </div>
-              </div>
+                      </table>
+                      <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                        @pagechanged="onPageChange" />
+                    </div>
+                  </div>
                 </div>
                 <!-- /.box-body -->
               </div>
@@ -147,7 +155,11 @@
             </li>
           </ul>
 
-          <div v-if="materials.length == 0"> <center><h3>El usuario aun no carga su material</h3></center> </div>
+          <div v-if="materials.length == 0">
+            <center>
+              <h3>El usuario aun no carga su material</h3>
+            </center>
+          </div>
         </div>
       </div>
     </modal>
@@ -187,9 +199,13 @@ export default {
       deliveries: [],
       materials: [],
       statusProject: [
-        {id: '1', text: 'En Entrega'},
-        {id: '2', text: 'Callback'},
-        {id: '3', text: 'Finalizado'}
+        { id: '1', text: 'En Entrega' },
+        { id: '2', text: 'Callback' },
+        { id: '3', text: 'Finalizado' }
+      ],
+      statusPostulate: [
+        { id: '1', text: 'Procesando' },
+        { id: '2', text: 'Postulado' }
       ],
       selectedCharacter: '0',
       selectedDelivery: '0',
@@ -254,12 +270,12 @@ export default {
           })
 
           this.filterCharacters = Object.assign([], tmpCharacters)
-          this.filterCharacters.unshift({id: '', text: 'Todos'})
+          this.filterCharacters.unshift({ id: '', text: 'Todos' })
           this.filterDeliveries = Object.assign([], tmpDeliveries)
-          this.filterDeliveries.unshift({id: '', text: 'Todos'})
+          this.filterDeliveries.unshift({ id: '', text: 'Todos' })
           this.characters = Object.assign([], tmpCharacters)
           this.deliveries = Object.assign([], tmpDeliveries)
-          this.deliveries.unshift({id: 0, text: 'Sin asingancion'})
+          this.deliveries.unshift({ id: 0, text: 'Sin asingancion' })
         })
         .catch(error => {
           if (error.response) {
@@ -285,7 +301,7 @@ export default {
       this.materials = application.material
       this.showModalMaterial = true
     },
-    onChangeDelivery({value, id}) {
+    onChangeDelivery({ value, id }) {
       var deliveryId = value
       var applicationId = id
       api
@@ -300,7 +316,7 @@ export default {
           }
         })
     },
-    onChangeCharacter({value, id}) {
+    onChangeCharacter({ value, id }) {
       var characterId = value
       var applicationId = id
       api
@@ -315,7 +331,7 @@ export default {
           }
         })
     },
-    onChangeStatus({value, id}) {
+    onChangeStatus({ value, id }) {
       var status = value
       var applicationId = id
       api
@@ -433,5 +449,4 @@ video {
   justify-content: center;
   border: 3px solid #dbe4ed;
   /* Border color is optional */
-}
-</style>
+}</style>

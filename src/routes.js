@@ -81,9 +81,9 @@ const routes = [
         }
       },
       {
-        path: '/admin/agencies/user',
-        component: PostulateView,
-        name: 'agency/talentos/postulaciones',
+        path: '/admin/agencies/talents/:id',
+        component: TalentView,
+        name: '/admin/agency/talentos',
         module: 'Talentos',
         meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth] }
       },

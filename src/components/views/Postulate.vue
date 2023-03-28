@@ -43,9 +43,9 @@
                         <td>{{ application.project.desciption }} </td>
                         <td>{{ application.character.name }}</td>
                         <td>{{ application.delivery != null ? application.delivery.name : "Sin Asignar" }}</td>
-                        <td>
+                        <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
+                              aria-hidden="true"></i></span><br>Archivos</td>
 
-                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -61,7 +61,39 @@
         </div>
       </div>
     </div>
+    <modal v-if="showModalMaterial" @close="showModalMaterial = false" :iconClasses="['modal-lg']">
+      <h3 slot="header">Material</h3>
+      <div slot="body">
+        <div class="box-footer">
+          <ul class="mailbox-attachments clearfix">
+            <li v-for="(material, index) in materials">
+              <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'avi', 'PNG'].includes(material.type)" class="gallery center">
 
+                <img v-show="['jpg', 'png', 'jpeg', 'PNG'].includes(material.type)" :src='material.file' alt="">
+                <video v-show="['mp4', 'avi'].includes(material.type)" :src='material.file' controls
+                  width="200px"></video>
+
+                <!-- <div class="mailbox-attachment-info">
+                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
+                          class="fa fa-trash"></i> Eliminar</a>
+                      <span class="mailbox-attachment-size">
+                        &nbsp;
+                        <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile" @click="downloadFile"
+                          :id="material.id"><i class="fa fa-cloud-download"></i> Descargar</a>
+                      </span>
+                    </div> -->
+              </div>
+            </li>
+          </ul>
+
+          <div v-if="materials.length == 0">
+            <center>
+              <h3>El usuario aun no carga su material</h3>
+            </center>
+          </div>
+        </div>
+      </div>
+    </modal>
 
   </section>
 </template>
@@ -71,6 +103,7 @@ import api from '../../api'
 import util from '../../utils/util'
 import Pagination from '../widgets/Pagination.vue'
 import Modal from '../widgets/Modal.vue'
+
 // Require needed datatables modules
 require('datatables.net')
 
@@ -93,7 +126,9 @@ export default {
       applications: [],
       project: [],
       characters: [],
-      deliveries: []
+      deliveries: [],
+      showModalMaterial: false,
+      materials: []
     }
   },
   mounted() {
@@ -210,6 +245,10 @@ export default {
             this.error.email = errors.email[0]
           }
         })
+    },
+    viewMaterial(application) {
+      this.materials = application.material
+      this.showModalMaterial = true
     }
   }
 }

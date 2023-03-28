@@ -395,7 +395,7 @@ export default {
       this.callUser()
     },
     usuarios(id) {
-      this.$router.push({ path: `/agencies/user/${id}` })
+      this.$router.push({ path: `/admin/agencies/talents/${id}` })
     }
   }
 }
