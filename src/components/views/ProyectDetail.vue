@@ -88,11 +88,7 @@
                                 @onChangeSelected="onChangeStatus">
                               </select2>
                             </td>
-                            <td>
-                              <select2 :id="application.id" :options="statusProject" v-model="application.status"
-                                @onChangeSelected="onChangeStatus">
-                              </select2>
-                            </td>
+
                           </tr>
                         </tbody>
 
@@ -198,14 +194,10 @@ export default {
       characters: [],
       deliveries: [],
       materials: [],
-      statusProject: [
+      statusPostulate: [
         { id: '1', text: 'En Entrega' },
         { id: '2', text: 'Callback' },
         { id: '3', text: 'Finalizado' }
-      ],
-      statusPostulate: [
-        { id: '1', text: 'Procesando' },
-        { id: '2', text: 'Postulado' }
       ],
       selectedCharacter: '0',
       selectedDelivery: '0',
@@ -449,4 +441,5 @@ video {
   justify-content: center;
   border: 3px solid #dbe4ed;
   /* Border color is optional */
-}</style>
+}
+</style>
