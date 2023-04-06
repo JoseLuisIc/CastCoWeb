@@ -196,9 +196,8 @@ export default {
       deliveries: [],
       materials: [],
       statusPostulate: [
-        { id: '1', text: 'En Entrega' },
-        { id: '2', text: 'Callback' },
-        { id: '3', text: 'Finalizado' }
+        { id: '1', text: 'En proceso' },
+        { id: '2', text: 'Postulado' }
       ],
       selectedCharacter: '0',
       selectedDelivery: '0',

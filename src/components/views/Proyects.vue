@@ -65,7 +65,7 @@
                       <th colspan="1" rowspan="1" class="no-sort">Presupuesto Agencia</th>
                       <th colspan="1" rowspan="1" class="no-sort">Fecha producción</th>
                       <th colspan="1" rowspan="1" class="no-sort">Fecha de montaje</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Fecha de llamada</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Status de Postulacion</th>
                       <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;">Acciones</th>
                     </tr>
                   </thead>
