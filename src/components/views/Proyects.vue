@@ -295,7 +295,18 @@ export default {
           // { 'data': 'material' },
           { 'data': 'recording_date' },
           { 'data': 'fitting_date' },
-          { 'data': 'callback_date' },
+          {
+            'data': 'status',
+            render: function (data, type, row) {
+              return `<select id="selectStatusProject" class="form-control" name="status" data-index="${row.id}">
+                  <option value="1" ${row.status === 1 ? 'selected' : ''}>En Entrega</option>
+                  <option value="2" ${row.status === 2 ? 'selected' : ''}>Callback</option>
+                  <option value="3" ${row.status === 3 ? 'selected' : ''}>Finalizado</option>
+              </select>
+              `
+            }
+          },
+          // { 'data': 'callback_date' },
           // { 'data': 'start_date' },
           // { 'data': 'end_date' },
           // { 'data': 'created_by' },
@@ -355,6 +366,11 @@ export default {
         var col = $(this).data('index')
         console.log(col, $(this).val())
         that.updateProyect({ id: col, is_active: $(this).val() })
+      })
+      $('#tableProyects').on('change', '#selectStatusProject', function () {
+        var col = $(this).data('index')
+        console.log(col, $(this).val())
+        that.updateProyect({ id: col, status: $(this).val() })
       })
       $(this).ajaxError(function (event, request, settings) {
         console.log(event, request, settings)
