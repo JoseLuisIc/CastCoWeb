@@ -89,6 +89,7 @@
                               </select2>
                             </td>
 
+                            <td>{{ getStatus(application.project.status) }}</td>
                           </tr>
                         </tbody>
 
@@ -219,6 +220,23 @@ export default {
     })
   },
   methods: {
+    getStatus(idStatus) {
+      var status = ''
+      switch (idStatus) {
+        case 1:
+          status = 'En Entrega'
+          break
+        case 2:
+          status = 'Callback'
+          break
+        case 3:
+          status = 'Finalizado'
+          break
+        default:
+          break
+      }
+      return status
+    },
     onPageChange(page) {
       this.currentPage = page
       this.fetchApplications()
