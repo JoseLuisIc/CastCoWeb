@@ -89,7 +89,7 @@
                               </select2>
                             </td>
 
-                            <td>{{ getStatus(application.project.status) }}</td>
+                            <td><span class="label label-default">{{ getStatus(application.project.status) }}</span> </td>
                           </tr>
                         </tbody>
 
