@@ -49,22 +49,22 @@
                   <thead>
                     <tr role="row">
                       <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                        class="sorting_asc">Produccion</th>
+                        class="sorting_asc">Productora</th>
                       <th colspan="1" rowspan="1" class="sorting" tabindex="1">Nombre</th>
                       <th colspan="1" rowspan="1" class="sorting" tabindex="2">Nombre público
                       </th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="3">Dias de casting</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="4">Dinamica de casting</th>
+                      <th colspan="1" rowspan="1" class="sorting" tabindex="3">Descripción</th>
+                      <th colspan="1" rowspan="1" class="sorting" tabindex="4">Tipo de material</th>
                       <th colspan="1" rowspan="1" class="sorting" tabindex="5">Status</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Location</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Lugar de producción</th>
                       <th colspan="1" rowspan="1" class="no-sort">Competencia</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Work day</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Buy out GARANTIZADO</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Caracteristicas</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Uso de imagen</th>
                       <th colspan="1" rowspan="1" class="no-sort">Temporalidad</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Exclusividad</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Callback</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Fitting</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Shoot dates</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Agencia</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Presupuesto Agencia</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Fecha producción</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Fecha de montaje</th>
                       <th colspan="1" rowspan="1" class="no-sort">Status de Postulacion</th>
                       <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;">Acciones</th>
                     </tr>
@@ -273,8 +273,8 @@ export default {
           { 'data': 'producer' },
           { 'data': 'name' },
           { 'data': 'public_name' },
-          { 'data': 'casting_days' },
-          { 'data': 'casting_dynamics' },
+          { 'data': 'description' },
+          { 'data': 'material_type' },
           {
             'data': 'is_active',
             render: function (data, type, row) {
@@ -287,14 +287,14 @@ export default {
           },
           { 'data': 'production_place' },
           { 'data': 'competition' },
-          { 'data': 'work_day' },
-          { 'data': 'buy_out' },
+          { 'data': 'characteristics' },
+          { 'data': 'use_of_image' },
           { 'data': 'temporality' },
-          { 'data': 'exclusiveness' },
-          { 'data': 'callback_date' },
+          { 'data': 'budget' },
+          { 'data': 'agency_budget' },
           // { 'data': 'material' },
-          { 'data': 'fitting_date' },
           { 'data': 'recording_date' },
+          { 'data': 'fitting_date' },
           {
             'data': 'status',
             render: function (data, type, row) {

@@ -22,44 +22,40 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="producer" class="col-form-label">Producción:</label>
+                    <label for="producer" class="col-form-label">Productora:</label>
                     <input class="form-control" id="producer" v-model="project.producer" />
                   </div>
                   <div class="form-group">
-                    <label for="production_place" class="col-form-label">Location:</label>
+                    <label for="production_place" class="col-form-label">Lugar de produccion:</label>
                     <input class="form-control" id="production_place" v-model="project.production_place" />
-                  </div>
-                  <div class="form-group">
-                    <label for="casting_days" class="col-form-label">Dias de casting:</label>
-                    <input class="form-control" id="casting_days" v-model="project.casting_days" />
-                  </div>
-                  <div class="form-group">
-                    <label for="casting_dynamics" class="col-form-label">Dinamica de casting:</label>
-                    <input class="form-control" id="casting_dynamics" v-model="project.casting_dynamics" />
                   </div>
                   <div class="form-group">
                     <label for="temporality" class="col-form-label">Temporalidad:</label>
                     <input class="form-control" id="temporality" v-model="project.temporality" />
                   </div>
                   <div class="form-group">
-                    <label for="covid_test" class="col-form-label">Covid Test:</label>
-                    <input type="text" class="form-control" id="covid_test" v-model="project.covid_test" />
+                    <label for="budget" class="col-form-label">Presuspueto:</label>
+                    <input type="number" class="form-control" id="budget" v-model="project.budget" />
+                  </div>
+                  <div class="form-group">
+                    <label for="material_type" class="col-form-label">Tipo de material:</label>
+                    <input class="form-control" id="material_type" v-model="project.material_type" />
                   </div>
 
                   <div class="form-group" v-bind:class="error.recording_date !== '' ? 'has-error' : ''">
-                    <label for="recording_date" class="col-form-label">Shoot dates:</label>
-                    <input class="form-control" type="text" id="recording_date" v-model="project.recording_date" />
+                    <label for="recording_date" class="col-form-label">Fechas de grabación:</label>
+                    <input class="form-control" type="date" id="recording_date" v-model="project.recording_date" />
                     <span v-if=error.recording_date class="help-block">{{ error.recording_date }}</span>
                   </div>
                   <div class="form-group" v-bind:class="error.fitting_date !== '' ? 'has-error' : ''">
-                    <label for="fitting_date" class="col-form-label">Fitting:</label>
-                    <input class="form-control" type="text" id="fitting_date" v-model="project.fitting_date" />
+                    <label for="fitting_date" class="col-form-label">Fechas de fitting:</label>
+                    <input class="form-control" type="date" id="fitting_date" v-model="project.fitting_date" />
                     <span v-if=error.fitting_date class="help-block">{{ error.fitting_date }}</span>
                   </div>
-                  <div class="form-group" v-bind:class="error.callback_date !== '' ? 'has-error' : ''">
-                    <label for="callback_date" class="col-form-label">Callback:</label>
-                    <input class="form-control" type="text" id="callback_date" v-model="project.callback_date" />
-                    <span v-if=error.callback_date class="help-block">{{ error.callback_date }}</span>
+                  <div class="form-group" v-bind:class="error.created_at !== '' ? 'has-error' : ''">
+                    <label for="created_at" class="col-form-label">Fecha creación:</label>
+                    <input class="form-control" type="date" id="created_at" v-model="project.created_at" />
+                    <span v-if=error.created_at class="help-block">{{ error.created_at }}</span>
                   </div>
                   <div class="form-group">
                     <div class="form-check">
@@ -73,16 +69,12 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="payment_condition" class="col-form-label">Condiciones de pago:</label>
-                    <input class="form-control" id="payment_condition" v-model="project.payment_condition" />
-                  </div>
-                  <div class="form-group">
                     <label for="public_name" class="col-form-label">Nombre publico:</label>
                     <input class="form-control" id="public_name" v-model="project.public_name" />
                   </div>
                   <div class="form-group">
-                    <label for="temporality" class="col-form-label">Temporalidad:</label>
-                    <input class="form-control" id="temporality" v-model="project.temporality" />
+                    <label for="description" class="col-form-label">Descripción del proyecto:</label>
+                    <input class="form-control" id="description" v-model="project.description" />
                   </div>
                   <div class="form-group">
                     <label for="competition" class="col-form-label">Competencia:</label>
@@ -90,24 +82,31 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="use_of_image" class="col-form-label">Exclusividad:</label>
-                    <input class="form-control" id="use_of_image" v-model="project.exclusiveness" />
+                    <label for="use_of_image" class="col-form-label">Uso de imagen:</label>
+                    <input class="form-control" id="use_of_image" v-model="project.use_of_image" />
                   </div>
                   <div class="form-group">
-                    <label for="work_day" class="col-form-label">Work day:</label>
-                    <input type="text" class="form-control" id="work_day" v-model="project.work_day" />
+                    <label for="agency_budget" class="col-form-label">Presupuesto Agencia:</label>
+                    <input type="number" @blur="validatePresupuestoAgencia" class="form-control" id="agency_budget" v-model="project.agency_budget" />
                   </div>
                   <div class="form-group">
-                    <label for="buy_out" class="col-form-label">Buy out GARANTIZADO:</label>
-                    <input class="form-control" id="buy_out" v-model="project.buy_out" />
+                    <label for="characteristics" class="col-form-label">Caracteristicas:</label>
+                    <input class="form-control" id="characteristics" v-model="project.characteristics" />
                   </div>
-                  <div class="form-group">
-                    <label for="territory" class="col-form-label">Territorio:</label>
-                    <input class="form-control" id="territory" v-model="project.territory" />
+                  <div class="form-group" v-bind:class="error.callback_date !== '' ? 'has-error' : ''">
+                    <label for="callback_date" class="col-form-label">Fecha de callback:</label>
+                    <input class="form-control" type="date" id="callback_date" v-model="project.callback_date" />
+                    <span v-if=error.callback_date class="help-block">{{ error.callback_date }}</span>
                   </div>
-                  <div class="form-group">
-                    <label for="notes" class="col-form-label">Notas:</label>
-                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="5" v-model="project.notes"></textarea>
+                  <div class="form-group " v-bind:class="error.start_date !== '' ? 'has-error' : ''">
+                    <label for="start_date" class="col-form-label">Fecha de inicio:</label>
+                    <input class="form-control" type="date" id="start_date" v-model="project.start_date" />
+                    <span v-if=error.start_date class="help-block">{{ error.start_date}}</span>
+                  </div>
+                  <div class="form-group" v-bind:class="error.end_date !== '' ? 'has-error' : ''">
+                    <label for="end_date" class="col-form-label">Fecha de fin:</label>
+                    <input class="form-control" type="date" id="end_date" v-model="project.end_date" />
+                    <span v-if=error.end_date class="help-block">{{ error.end_date}}</span>
                   </div>
                 </div>
               </div>

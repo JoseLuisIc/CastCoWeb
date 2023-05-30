@@ -19,5 +19,14 @@ export default {
   updated_at: '',
   is_active: false,
   characteristics: '',
-  description: ''
+  description: '',
+  payment_condition: '',
+  covid_test: '',
+  casting_days: '',
+  casting_dynamics: '',
+  work_day: '',
+  buy_out: '',
+  exclusiveness: '',
+  territory: '',
+  notes: ''
 }
