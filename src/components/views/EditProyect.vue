@@ -22,6 +22,10 @@
                     </div>
                   </div>
                   <div class="form-group">
+                    <label for="description" class="col-form-label">Descripcion:</label>
+                    <input class="form-control" id="description" v-model="project.description" />
+                  </div>
+                  <div class="form-group">
                     <label for="producer" class="col-form-label">Producción:</label>
                     <input class="form-control" id="producer" v-model="project.producer" />
                   </div>
@@ -258,14 +262,8 @@ export default {
         })
     },
     updateProyect(dProyect) {
-      var projectFormData = new FormData()
-      Object.keys(this.project).forEach(key => {
-        if (key !== 'role' && key !== 'extras') {
-          projectFormData.append(key, this.project[key])
-        }
-      })
       api
-        .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': this.$store.state.token })
+        .request('patch', 'projects/' + dProyect.id + '/', this.project, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.alertShow('Actualizacion', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
         })
