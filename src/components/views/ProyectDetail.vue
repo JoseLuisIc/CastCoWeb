@@ -226,7 +226,6 @@ export default {
       if (this.$route.params.hasOwnProperty('id')) {
         this.idProject = this.$route.params.id
         this.fetchProject()
-        this.fetchApplications()
       }
     })
   },
@@ -298,6 +297,7 @@ export default {
           this.characters = Object.assign([], tmpCharacters)
           this.deliveries = Object.assign([], tmpDeliveries)
           this.deliveries.unshift({ id: '', text: 'Sin asingancion' })
+          this.fetchApplications()
         })
         .catch(error => {
           if (error.response) {
