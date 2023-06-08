@@ -67,8 +67,7 @@
                   </div>
                   <div class="form-group">
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="is_active"
-                        v-model="project.is_active">
+                      <input class="form-check-input" type="checkbox" value="" id="is_active" v-model="project.is_active">
                       <label class="form-check-label" for="is_active">
                         Activo
                       </label>
@@ -111,7 +110,8 @@
                   </div>
                   <div class="form-group">
                     <label for="notes" class="col-form-label">Notas:</label>
-                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="5" v-model="project.notes"></textarea>
+                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="5"
+                      v-model="project.notes"></textarea>
                   </div>
                 </div>
               </div>
@@ -138,7 +138,7 @@
         <!-- MAP & BOX PANE -->
         <div class="box box-success collapsed-box">
           <div class="box-header with-border">
-            <h3 class="box-title">Material</h3>
+            <h3 class="box-title">Material de ejemplos</h3>
             <div class="box-tools pull-right">
               <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
             </div>
@@ -155,6 +155,25 @@
                 <br>
               </div>
             </div><!-- /.col -->
+            <div class="box-footer clearfix">
+              <div class="form-group">
+                <div class="form-group">
+                  <label for="name" class="col-form-label">Nombre:</label>
+                  <input type="text" class="form-control" id="nameMaterial" v-model="nameMaterial">
+                </div>
+                <div class="form-group" v-if="!isEditMaterial">
+                  <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange"
+                    accept="image/*,video/mp4">
+
+                  <p class="help-block">Max. 30MB</p>
+                </div>
+                <button type="button" class="btn btn-primary" v-on:click="uploadFile" v-if="!isEditMaterial">Agregar</button>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary" v-on:click="updateMaterial" v-if="isEditMaterial">Actualizar</button>
+                  <button type="button" class="btn btn-default" v-on:click="cancelMaterial" v-if="isEditMaterial">Cancelar</button>
+                </div>
+              </div>
+            </div><!-- /.box-footer -->
             <div class="box-footer">
               <ul class="mailbox-attachments clearfix">
                 <li v-for="(material, index) in materials">
@@ -165,9 +184,12 @@
                         width="200px"></video>
                     </span>
                     <div class="mailbox-attachment-info">
+                      <p>{{ material.name }}</p>
                       <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
                           class="fa fa-trash"></i> Eliminar</a>
                       <span class="mailbox-attachment-size">
+                        <a class="btn btn-default btn-xs pull-left editFile" :id="material.id" @click="editFile"><i
+                          class="fa fa-edit"></i> Editar</a>
                         &nbsp;
                         <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
                           @click="downloadFile" :id="material.id"><i class="fa fa-cloud-download"></i> Descargar</a>
@@ -177,20 +199,6 @@
                 </li>
               </ul>
             </div>
-            <div class="box-footer clearfix">
-              <div class="form-group">
-                <div class="btn btn-sm btn-info btn-flat pull-left btn-file">
-                  <i class="fa fa-file-o"></i> Cargar material
-                  <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange"
-                    accept="image/*,video/mp4">
-                </div>
-
-                <button v-show="isPreviewFile" class="btn btn-sm btn-default btn-flat pull-right" style="float: right;"
-                  v-on:click="uploadFile"> <i class="fa fa-upload"></i> Subir
-                  material</button>
-                <p class="help-block">Max. 30MB</p>
-              </div>
-            </div><!-- /.box-footer -->
           </div><!-- /.box-body -->
         </div><!-- /.box -->
       </div><!-- /.col -->
@@ -199,7 +207,6 @@
       <module-delivery :idProject="this.$route.params.id"></module-delivery>
     </div><!-- /.row -->
   </section>
-
 </template>
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
@@ -235,7 +242,10 @@ export default {
       message: '',
       title: '',
       iconClass: '',
-      namePersonaje: ''
+      namePersonaje: '',
+      nameMaterial: '',
+      idMaterial: 0,
+      isEditMaterial: false
     }
   },
   mounted() {
@@ -338,6 +348,7 @@ export default {
       }
       var formData = new FormData()
       formData.append('file', this.file)
+      formData.append('name', this.nameMaterial)
       api
         .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -362,7 +373,7 @@ export default {
         .request('get', 'projects/' + idProject + '/material/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           that.materials = response.data.map(function (elem) {
-            return { id: elem['id'], file: elem['file'], type: elem['file'].split('.').pop() }
+            return { id: elem['id'], name: elem['name'], file: elem['file'], type: elem['file'].split('.').pop() }
           })
         })
         .catch(error => {
@@ -404,7 +415,7 @@ export default {
       e.preventDefault()
       const link = e.target
       console.log(link.href)
-      this.downloadFile(link.href, moment(new Date()).format('YYYY-MM-DD'))
+      this.download(link.href, moment(new Date()).format('YYYY-MM-DD'))
     },
     download(url, filename) {
       fetch(url)
@@ -416,6 +427,47 @@ export default {
           link.click()
         })
         .catch(console.error)
+    },
+    editFile(e) {
+      e.preventDefault()
+      console.log(e.target)
+      var materialId = e.target.id
+      var that = this
+      api
+        .request('get', `projects/${this.project.id}/material/${materialId}/`, {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          that.idMaterial = response.data.id
+          that.nameMaterial = response.data.name
+          that.isEditMaterial = true
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    updateMaterial(e) {
+      e.preventDefault()
+      console.log(e.target)
+      var that = this
+      api
+        .request('patch', `projects/${this.project.id}/material/${this.idMaterial}/`, {name: this.nameMaterial}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          that.cancelMaterial()
+          that.fetchMaterial(this.project.id)
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    cancelMaterial() {
+      this.idMaterial = 0
+      this.isEditMaterial = false
+      this.nameMaterial = ''
     }
   }
 }
@@ -477,5 +529,12 @@ div.desc {
 
 .box-footer {
   background-color: transparent !important;
+}
+.mailbox-attachments li {
+    float: left;
+    width: 240px;
+    border: 1px solid #eee;
+    margin-bottom: 10px;
+    margin-right: 10px;
 }
 </style>

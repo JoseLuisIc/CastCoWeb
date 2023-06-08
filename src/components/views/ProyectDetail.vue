@@ -17,7 +17,8 @@
               <div class="box">
                 <div class="box-header">
                   <h3 class="box-title"></h3>
-
+                  <button class="btn btn-success" v-on:click="exportPdf">Exportar PDF <i
+                      class="fa fa-file-pdf-o"></i></button>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -58,7 +59,11 @@
                                 @onChangeSelected="search">
                               </select2>
                             </td>
-                            <td></td>
+                            <td>
+                              <select2 :id="selectedPostulation" :options="filterPostulations"
+                                v-model="filters.postulation" @onChangeSelected="search">
+                              </select2>
+                            </td>
                             <td></td>
                           </tr>
                         </thead>
@@ -168,7 +173,7 @@ import api from '../../api'
 import toastr from 'toastr'
 import Pagination from '../widgets/Pagination.vue'
 import Modal from '../widgets/Modal.vue'
-
+import config from '../../config'
 import Select2 from '../widgets/Selet2.vue'
 // Datatable Modules
 export default {
@@ -199,13 +204,20 @@ export default {
         { id: '1', text: 'En proceso' },
         { id: '2', text: 'Postulado' }
       ],
-      selectedCharacter: '0',
-      selectedDelivery: '0',
-      optionDefault: { id: 0, text: 'Todos' },
+      filterPostulations: [
+        { id: '', text: 'Todos' },
+        { id: '1', text: 'En proceso' },
+        { id: '2', text: 'Postulado' }
+      ],
+      selectedCharacter: '',
+      selectedDelivery: '',
+      selectedPostulation: '',
+      optionDefault: { id: '', text: 'Todos' },
       filters: {
         name: '',
         character: '',
-        delivery: ''
+        delivery: '',
+        postulation: ''
       }
     }
   },
@@ -247,6 +259,7 @@ export default {
       params.append('project', this.idProject)
       params.append('character', this.filters.character)
       params.append('delivery', this.filters.delivery)
+      params.append('status', this.filters.postulation)
       params.append('user', '')
       params.append('page_size', this.length)
       params.append('page', this.currentPage)
@@ -284,7 +297,7 @@ export default {
           this.filterDeliveries.unshift({ id: '', text: 'Todos' })
           this.characters = Object.assign([], tmpCharacters)
           this.deliveries = Object.assign([], tmpDeliveries)
-          this.deliveries.unshift({ id: 0, text: 'Sin asingancion' })
+          this.deliveries.unshift({ id: '', text: 'Sin asingancion' })
         })
         .catch(error => {
           if (error.response) {
@@ -364,6 +377,58 @@ export default {
     },
     search(e) {
       this.fetchApplications()
+    },
+    exportPdf() {
+      var that = this
+      var url = `${config.serverURI}projects/${this.idProject}/export/`
+      console.log(this.filters)
+      var data = new FormData()
+      data.append('character', this.filters.character)
+      data.append('delivery', this.filters.delivery)
+      data.append('status', this.filters.postulation)
+      var oReq = new XMLHttpRequest()
+      oReq.open('post', url, true)
+      oReq.setRequestHeader('Authorization', this.$store.state.token)
+      oReq.responseType = 'blob'
+
+      oReq.onload = function (oEvent) {
+        var filename = `${that.project.name}.pdf`
+        that.downloadFile(oReq.response, filename, null)
+      }
+      oReq.send(data)
+      // api
+      //   .request('post', `projects/${this.idProject}/export/`, {}, { 'Authorization': this.$store.state.token })
+      //   .then(res => {
+      //     // console.log(res.data)
+      //     that.downloadFile(res.data, `${that.project.name}.pdf`, null)
+      //   })
+      //   .catch(error => {
+      //     if (error.response) {
+      //       var errors = error.response.data
+      //       console.log(errors)
+      //     }
+      //   })
+    },
+    downloadFile(data, filename, mime) {
+      const blob = new Blob([data], { type: mime || 'application/octet-stream' })
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        window.navigator.msSaveBlob(blob, filename)
+        return
+      }
+      const blobURL = window.URL.createObjectURL(blob)
+      const tempLink = document.createElement('a')
+      tempLink.style.display = 'none'
+      tempLink.href = blobURL
+      tempLink.setAttribute('download', filename)
+      if (typeof tempLink.download === 'undefined') {
+        tempLink.setAttribute('target', '_blank')
+      }
+      document.body.appendChild(tempLink)
+      tempLink.click()
+      document.body.removeChild(tempLink)
+      setTimeout(() => {
+        window.URL.revokeObjectURL(blobURL)
+      }, 100)
     }
   }
 }

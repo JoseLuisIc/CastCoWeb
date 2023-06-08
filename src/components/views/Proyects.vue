@@ -44,8 +44,7 @@
             <div class="row">
               <div class="col-sm-12 table-responsive">
                 <table aria-describedby="example1_info" role="grid" id="tableProyects"
-                  class="table table-bordered table-striped dataTable display responsive display nowrap"
-                  cellspacing="0">
+                  class="table table-bordered table-striped dataTable display responsive display nowrap" cellspacing="0">
                   <thead>
                     <tr role="row">
                       <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
@@ -53,15 +52,15 @@
                       <th colspan="1" rowspan="1" class="sorting" tabindex="1">Nombre</th>
                       <th colspan="1" rowspan="1" class="sorting" tabindex="2">Nombre público
                       </th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="3">Dias de casting</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="4">Dinamica de casting</th>
+                      <!-- <th colspan="1" rowspan="1" class="sorting" tabindex="3">Dias de casting</th>
+                      <th colspan="1" rowspan="1" class="sorting" tabindex="4">Dinamica de casting</th> -->
                       <th colspan="1" rowspan="1" class="sorting" tabindex="5">Status</th>
                       <th colspan="1" rowspan="1" class="no-sort">Location</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Competencia</th>
+                      <!-- <th colspan="1" rowspan="1" class="no-sort">Competencia</th>
                       <th colspan="1" rowspan="1" class="no-sort">Work day</th>
                       <th colspan="1" rowspan="1" class="no-sort">Buy out GARANTIZADO</th>
                       <th colspan="1" rowspan="1" class="no-sort">Temporalidad</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Exclusividad</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Exclusividad</th> -->
                       <th colspan="1" rowspan="1" class="no-sort">Callback</th>
                       <th colspan="1" rowspan="1" class="no-sort">Fitting</th>
                       <th colspan="1" rowspan="1" class="no-sort">Shoot dates</th>
@@ -75,23 +74,23 @@
                           placeholder="Productora" data-index="0"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Nombre" data-index="1"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <!-- <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Nombre público" data-index="2"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Descripción" data-index="3"></th>
+                          placeholder="Descripción" data-index="3"></th> -->
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Tipo de material" data-index="4">
+                          placeholder="Tipo de material" data-index="2">
                       </th>
                       <th rowspan="1" colspan="1" class="sorting_disabled">
-                        <select class="form-control" data-index="5" id="status">
+                        <select class="form-control" data-index="3" id="status">
                           <option value="">Todos</option>
                           <option value="true">Activo</option>
                           <option value="false">Inactivo</option>
                         </select>
                       </th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Lugar de producción" data-index="6"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                          placeholder="Location" data-index="4"></th>
+                      <!-- <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Competencia" data-index="7"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Caracteristicas" data-index="8"></th>
@@ -100,15 +99,19 @@
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Temporalidad" data-index="10"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Agencia" data-index="11"></th>
+                          placeholder="Agencia" data-index="11"></th> -->
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Presupuesto Agencia" data-index="12"></th>
+                          placeholder="Callback" data-index="5"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha producción" data-index="13"></th>
+                          placeholder="Fitting" data-index="6"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha de montaje" data-index="14"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Fecha de llamada" data-index="15"></th>
+                          placeholder="Shoot dates" data-index="7"></th>
+                      <th rowspan="1" colspan="1" class="sorting_disabled"><select id="selectFilterStatusProject"
+                          class="form-control" name="status" data-index="8">
+                          <option value="1" selected="">En Entrega</option>
+                          <option value="2">Callback</option>
+                          <option value="3">Finalizado</option>
+                        </select></th>
                       <th rowspan="1" colspan="1"></th>
                     </tr>
                   </tfoot>
@@ -130,7 +133,6 @@
 
     </modal>
   </section>
-
 </template>
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
@@ -273,8 +275,8 @@ export default {
           { 'data': 'producer' },
           { 'data': 'name' },
           { 'data': 'public_name' },
-          { 'data': 'casting_days' },
-          { 'data': 'casting_dynamics' },
+          // { 'data': 'casting_days' },
+          // { 'data': 'casting_dynamics' },
           {
             'data': 'is_active',
             render: function (data, type, row) {
@@ -286,11 +288,11 @@ export default {
             }
           },
           { 'data': 'production_place' },
-          { 'data': 'competition' },
-          { 'data': 'work_day' },
-          { 'data': 'buy_out' },
-          { 'data': 'temporality' },
-          { 'data': 'exclusiveness' },
+          // { 'data': 'competition' },
+          // { 'data': 'work_day' },
+          // { 'data': 'buy_out' },
+          // { 'data': 'temporality' },
+          // { 'data': 'exclusiveness' },
           { 'data': 'callback_date' },
           // { 'data': 'material' },
           { 'data': 'fitting_date' },
@@ -355,6 +357,14 @@ export default {
           .draw()
       })
       $('#tableProyects').on('change', '#status', function () {
+        var col = $(this).data('index')
+        console.log(col)
+        that.table
+          .column(col)
+          .search(this.value)
+          .draw()
+      })
+      $('#tableProyects').on('change', '#selectFilterStatusProject', function () {
         var col = $(this).data('index')
         console.log(col)
         that.table
