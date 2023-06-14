@@ -84,7 +84,7 @@
                             <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                                   aria-hidden="true"></i></span><br>Archivos</td>
                             <td>
-                              <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id"
+                              <select2 :id="application.id" :options="deliveries"
                                 @onChangeSelected="onChangeDelivery">
                               </select2>
                             </td>
@@ -143,7 +143,7 @@
                 <img v-show="['jpg', 'png', 'jpeg', 'PNG'].includes(material.type)" :src='material.file' alt="">
                 <video v-show="['mp4', 'avi'].includes(material.type)" :src='material.file' controls
                   width="200px"></video>
-
+                <p style="text-align: center;">{{ material.name }}</p>
                 <!-- <div class="mailbox-attachment-info">
                       <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
                           class="fa fa-trash"></i> Eliminar</a>
