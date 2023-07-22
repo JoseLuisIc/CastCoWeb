@@ -84,7 +84,10 @@
                             <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                                   aria-hidden="true"></i></span><br>Archivos</td>
                             <td>
-                              <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id"
+                              <select2 :id="application.id" :options="deliveries" v-model="deliveryDefault" v-if="application.delivery === null"
+                                @onChangeSelected="onChangeDelivery">
+                              </select2>
+                              <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id" v-else
                                 @onChangeSelected="onChangeDelivery">
                               </select2>
                             </td>
@@ -200,6 +203,7 @@ export default {
       characters: [],
       deliveries: [],
       materials: [],
+      deliveryDefault: '',
       statusPostulate: [
         { id: '1', text: 'En proceso' },
         { id: '2', text: 'Postulado' }
