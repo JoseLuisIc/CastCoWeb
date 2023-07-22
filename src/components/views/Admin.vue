@@ -32,8 +32,8 @@
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0">Nombres</th>
-                        <th>Email</th>
                         <th>Apellidos
+                        <th>Email</th>
                         </th>
                         <th style="width: 101px;">Acciones</th>
                       </tr>
@@ -41,8 +41,8 @@
                     <tbody>
                       <tr v-for="user in users">
                         <td>{{ user.first_name }} </td>
-                        <td>{{ user.email }} </td>
                         <td>{{ user.last_name }} </td>
+                        <td>{{ user.email }} </td>
                         <td>
                           <div class="btn-group">
                             <button class="btn delete" v-on:click=confirmDelete(user.id)><i class="fa fa-trash"></i></button>

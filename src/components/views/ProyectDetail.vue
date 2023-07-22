@@ -84,7 +84,7 @@
                             <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                                   aria-hidden="true"></i></span><br>Archivos</td>
                             <td>
-                              <select2 :id="application.id" :options="deliveries"
+                              <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id"
                                 @onChangeSelected="onChangeDelivery">
                               </select2>
                             </td>
