@@ -5,17 +5,17 @@
       <!-- Info boxes -->
       <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-xs-12">
-        <info-box color-class="bg-yellow" :icon-classes="['fa', 'fa-user']" text="Administradores" :number="admins"
+        <info-box color-class="bg-black" :icon-classes="['fa', 'fa-user']" text="Administradores" :number="admins"
         link="admins"></info-box>
       </div>
       <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-xs-12">
-        <info-box color-class="bg-aqua" :icon-classes="['fa', 'fa-user']" text="Talentos" :number="talents"
+        <info-box color-class="bg-black" :icon-classes="['fa', 'fa-users']" text="Talentos" :number="talents"
           link="talents"></info-box>
       </div>
       <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-xs-12">
-        <info-box color-class="bg-red" :icon-classes="['fa', 'fa-user']" text="Agencias" :number="agencies"
+        <info-box color-class="bg-black" :icon-classes="['fa', 'fa-user']" text="Agencias" :number="agencies"
           link="agencies"></info-box>
       </div>
       <!-- /.col -->
@@ -24,7 +24,7 @@
       <div class="clearfix visible-sm-block"></div>
 
       <div class="col-md-3 col-sm-6 col-xs-12">
-        <info-box color-class="bg-green" :icon-classes="['fa', 'fa-list-alt']" text="Proyectos" :number="projects"
+        <info-box color-class="bg-black" :icon-classes="['fa', 'fa-list-alt']" text="Proyectos" :number="projects"
           link="proyects"></info-box>
       </div>
     </div>

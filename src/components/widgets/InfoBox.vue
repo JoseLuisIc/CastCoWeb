@@ -10,7 +10,7 @@
         <i :class="iconClasses"></i>
       </div>
       <router-link class="small-box-footer" :to="link">
-          Ver más <i :class="iconClasses"></i>
+          Ver más <i class=""></i>
       </router-link>
     </div>
   </div>
@@ -43,3 +43,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.info-box .fa{
+  color: white;
+}
+</style>

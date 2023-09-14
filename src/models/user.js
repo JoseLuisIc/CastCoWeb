@@ -19,7 +19,9 @@ export default {
     shirt_size: 0,
     job_occupation: '',
     skills: '',
-    role: util.TALENT
+    role: util.TALENT,
+    name: '',
+    booker_name: ''
   },
   error: {
     id: '',

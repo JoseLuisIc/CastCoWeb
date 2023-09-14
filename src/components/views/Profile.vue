@@ -92,13 +92,33 @@
                         <p>{{ error.email }}</p>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group"  v-if="role !== AGENCY">
                       <label for="first_name" class="col-form-label">Nombres:</label>
                       <input class="form-control" id="first_name" v-model="user.first_name" />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-if="role !== AGENCY">
                       <label for="last_name" class="col-form-label">Apellidos:</label>
                       <input class="form-control" id="last_name" v-model="user.last_name" />
+                    </div>
+                    <div class="form-group"  v-if="role === AGENCY">
+                      <label for="first_name" class="col-form-label">Nombre de agencia:</label>
+                      <input class="form-control" id="first_name" v-model="user.name" />
+                    </div>
+                    <div class="form-group" v-if="role === AGENCY">
+                      <label for="last_name" class="col-form-label">Nombre del encargado:</label>
+                      <input class="form-control" id="last_name" v-model="user.booker_name" />
+                    </div>
+
+                    <div class="form-group" v-if="role === AGENCY">
+                      <label for="instagram" class="col-form-label">Instagram:</label>
+                      <input class="form-control" id="instagram" v-model="user.instagram" />
+                    </div>
+                    <div class="form-group" v-if="role === AGENCY">
+                      <label for="phone" class="col-form-label">Telefono:</label>
+                      <input class="form-control" id="phone" v-model="user.phone" />
+                      <div v-if=error.phone class="text-red">
+                        <p>{{ error.phone }}</p>
+                      </div>
                     </div>
                     <div class="form-group" v-if="role === TALENT">
                       <label for="lgtbq" class="col-form-label">LGTBQ:</label>
