@@ -31,7 +31,6 @@
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Personaje</th>
-                        <th>Entrega</th>
                         <th>Materiales</th>
 
                       </tr>
@@ -42,7 +41,6 @@
                         <td>{{ application.project.name }} </td>
                         <td>{{ application.project.desciption }} </td>
                         <td>{{ application.character.name }}</td>
-                        <td>{{ application.delivery != null ? application.delivery.name : "Sin Asignar" }}</td>
                         <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                               aria-hidden="true"></i></span><br>Archivos</td>
 
