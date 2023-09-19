@@ -34,7 +34,7 @@
                     <button class="btn delete" v-on:click="deleteCharacters(character.id)"><i
                         class="fa fa-trash"></i></button>
                     <button class="btn edit" v-on:click="showEdit(character)"><i class="fa fa-edit"></i></button>
-                    <button class="btn show" v-on:click="showMaterial(character.id)"><i class="fa fa-eye"></i></button>
+                    <button class="btn show" v-on:click="showMaterial(character.id)"><i class="fa fa-file"></i></button>
                   </div>
                 </td>
               </tr>

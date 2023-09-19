@@ -93,7 +93,7 @@
     </div>
     <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-lg']">
       <h3 slot="header">Nuevo Usuario</h3>
-      <div slot="body">
+      <div slot="body" style="overflow-y: scroll; overflow-x: hidden; height: 500px;">
         <form>
           <div v-if="isNew">
             <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">

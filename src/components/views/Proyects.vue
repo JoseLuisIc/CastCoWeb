@@ -412,7 +412,7 @@ export default {
           <div class="btn-group">
             <button class="btn delete" id="${id}"><i class="fa fa-trash"></i></button>
             <button class="btn edit" id="${id}"><i class="fa fa-edit"></i></button>
-            <button class="btn view" id="${id}"><i class="fa fa-eye"></i></button>
+            <button class="btn view" id="${id}"><i class="fa fa-group"></i></button>
           </div>
         </td>`
     },

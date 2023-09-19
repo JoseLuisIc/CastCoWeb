@@ -101,7 +101,8 @@
                     <input type="text" class="form-control" id="work_day" v-model="project.work_day" />
                   </div>
                   <div class="form-group">
-                    <label for="buy_out" class="col-form-label">Buy out GARANTIZADO:</label>
+                    <!-- <label for="buy_out" class="col-form-label">Buy out GARANTIZADO:</label> -->
+                    <label for="buy_out" class="col-form-label">Presupuesto:</label>
                     <input class="form-control" id="buy_out" v-model="project.buy_out" />
                   </div>
                   <div class="form-group">
@@ -167,10 +168,13 @@
 
                   <p class="help-block">Max. 30MB</p>
                 </div>
-                <button type="button" class="btn btn-primary" v-on:click="uploadFile" v-if="!isEditMaterial">Agregar</button>
+                <button type="button" class="btn btn-primary" v-on:click="uploadFile"
+                  v-if="!isEditMaterial">Agregar</button>
                 <div class="form-group">
-                  <button type="button" class="btn btn-primary" v-on:click="updateMaterial" v-if="isEditMaterial">Actualizar</button>
-                  <button type="button" class="btn btn-default" v-on:click="cancelMaterial" v-if="isEditMaterial">Cancelar</button>
+                  <button type="button" class="btn btn-primary" v-on:click="updateMaterial"
+                    v-if="isEditMaterial">Actualizar</button>
+                  <button type="button" class="btn btn-default" v-on:click="cancelMaterial"
+                    v-if="isEditMaterial">Cancelar</button>
                 </div>
               </div>
             </div><!-- /.box-footer -->
@@ -189,7 +193,7 @@
                           class="fa fa-trash"></i> Eliminar</a>
                       <span class="mailbox-attachment-size">
                         <a class="btn btn-default btn-xs pull-left editFile" :id="material.id" @click="editFile"><i
-                          class="fa fa-edit"></i> Editar</a>
+                            class="fa fa-edit"></i> Editar</a>
                         &nbsp;
                         <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
                           @click="downloadFile" :id="material.id"><i class="fa fa-cloud-download"></i> Descargar</a>
@@ -233,7 +237,12 @@ export default {
       previewSrc: { src: '', type: '' },
       isPreviewFile: false,
       project: project,
-      error: project,
+      error: {
+        name: '',
+        recording_date: '',
+        fitting_date: '',
+        callback_date: ''
+      },
       projects: [],
       agencies: [],
       states: [],
@@ -291,20 +300,27 @@ export default {
         })
     },
     saveProyect() {
-      api
-        .request('post', 'projects/', this.project, { 'Authorization': this.$store.state.token })
-        .then(response => {
-          this.alertShow('Guardar', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
-        })
-        .catch(error => {
-          this.alertShow('Guardar', 'No se pudo actualizar intente nuevamente', 'error', 'fa fa-ban')
-          if (error.response) {
-            var errors = error.response.data
-            Object.keys(errors).forEach(key => {
-              this.error[key] = errors[key][0]
+      var that = this
+      if (this.validateForm()) {
+        api
+          .request('post', 'projects/', this.project, { 'Authorization': this.$store.state.token })
+          .then(response => {
+            this.alertShow('Guardar', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
+            Object.keys(that.project).forEach(key => {
+              that.error[key] = that.project[key]
             })
-          }
-        })
+            that.$router.push({ name: 'admin/proyects' })
+          })
+          .catch(error => {
+            this.alertShow('Guardar', 'No se pudo actualizar intente nuevamente', 'error', 'fa fa-ban')
+            if (error.response) {
+              var errors = error.response.data
+              Object.keys(errors).forEach(key => {
+                this.error[key] = errors[key][0]
+              })
+            }
+          })
+      }
     },
     renderView(data, row) {
       return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
@@ -452,7 +468,7 @@ export default {
       console.log(e.target)
       var that = this
       api
-        .request('patch', `projects/${this.project.id}/material/${this.idMaterial}/`, {name: this.nameMaterial}, { 'Authorization': this.$store.state.token })
+        .request('patch', `projects/${this.project.id}/material/${this.idMaterial}/`, { name: this.nameMaterial }, { 'Authorization': this.$store.state.token })
         .then(response => {
           that.cancelMaterial()
           that.fetchMaterial(this.project.id)
@@ -468,6 +484,13 @@ export default {
       this.idMaterial = 0
       this.isEditMaterial = false
       this.nameMaterial = ''
+    },
+    validateForm() {
+      if (this.project.name === '') {
+        this.error.name = 'Ingrese un nombre es un dato obligatorio'
+        return false
+      }
+      return true
     }
   }
 }
@@ -530,11 +553,12 @@ div.desc {
 .box-footer {
   background-color: transparent !important;
 }
+
 .mailbox-attachments li {
-    float: left;
-    width: 240px;
-    border: 1px solid #eee;
-    margin-bottom: 10px;
-    margin-right: 10px;
+  float: left;
+  width: 240px;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+  margin-right: 10px;
 }
 </style>
