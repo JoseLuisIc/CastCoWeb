@@ -114,6 +114,15 @@
                     <textarea class="form-control" name="notes" id="notes" cols="30" rows="5"
                       v-model="project.notes"></textarea>
                   </div>
+                  <div class="form-group">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="is_active"
+                        v-model="project.multi_character">
+                      <label class="form-check-label" for="is_active">
+                        Permitir multiples postulaciones por personaje
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -218,10 +227,10 @@
 <script>
 import moment from 'moment'
 import api from '../../api'
-import project from '../../models/project'
 import ModulePersonaje from './project/ModulePersonaje.vue'
 import ModuleDelivery from './project/ModuleDelivery.vue'
 import toastr from 'toastr'
+import project from '../../models/project'
 
 export default {
   name: 'Admins',
@@ -236,7 +245,39 @@ export default {
       file: null,
       previewSrc: { src: '', type: '' },
       isPreviewFile: false,
-      project: project,
+      project: {
+        id: 0,
+        name: '',
+        producer: '',
+        material_type: '',
+        production_place: '',
+        temporality: '',
+        budget: '',
+        fitting_date: '',
+        recording_date: '',
+        created_at: '',
+        public_name: '',
+        competition: '',
+        agency_budget: '',
+        use_of_image: '',
+        callback_date: '',
+        // start_date: '',
+        // end_date: '',
+        updated_at: '',
+        is_active: false,
+        characteristics: '',
+        description: '',
+        payment_condition: '',
+        covid_test: '',
+        casting_days: '',
+        casting_dynamics: '',
+        work_day: '',
+        buy_out: '',
+        exclusiveness: '',
+        territory: '',
+        notes: '',
+        multi_character: false
+      },
       error: {
         name: '',
         recording_date: '',
@@ -281,10 +322,14 @@ export default {
         })
     },
     updateProyect(dProyect) {
+      var that = this
       api
         .request('patch', 'projects/' + dProyect.id + '/', this.project, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.alertShow('Actualizacion', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
+          that.project = project
+          console.log(that.project)
+          that.$router.push({ name: 'admin/proyects' })
         })
         .catch(error => {
           this.alertShow('Actualizacion', 'No se pudo guardar intente nuevamente', 'error', 'fa fa-ban')
@@ -306,9 +351,7 @@ export default {
           .request('post', 'projects/', this.project, { 'Authorization': this.$store.state.token })
           .then(response => {
             this.alertShow('Guardar', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
-            Object.keys(that.project).forEach(key => {
-              that.error[key] = that.project[key]
-            })
+            that.project = project
             that.$router.push({ name: 'admin/proyects' })
           })
           .catch(error => {

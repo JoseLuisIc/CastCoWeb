@@ -437,8 +437,8 @@ export default {
         .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
           var user = response.data
-          this.editUser(user.id)
           this.showModal = false
+          this.editUser(user.id)
           toastr.success('Guardado', 'Se ha guardado el usuario')
         })
         .catch(error => {

@@ -382,9 +382,6 @@ export default {
         console.log(col, $(this).val())
         that.updateProyect({ id: col, status: $(this).val() })
       })
-      $(this).ajaxError(function (event, request, settings) {
-        console.log(event, request, settings)
-      })
       $('input[type=checkbox]').on('click', function (e) {
         // Get the column API object
         var index = $(this).val()

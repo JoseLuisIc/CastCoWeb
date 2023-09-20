@@ -28,5 +28,6 @@ export default {
   buy_out: '',
   exclusiveness: '',
   territory: '',
-  notes: ''
+  notes: '',
+  multi_character: false
 }
