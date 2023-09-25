@@ -17,7 +17,7 @@
               <div class="box">
                 <div class="box-header">
                   <h3 class="box-title"></h3>
-                  <button class="btn btn-success" v-on:click="exportPdf">Exportar PDF <i
+                  <button class="btn btn-success" v-on:click="exportPdf" v-if="applications.length > 0">Exportar PDF <i
                       class="fa fa-file-pdf-o"></i></button>
                 </div>
                 <!-- /.box-header -->
@@ -39,6 +39,7 @@
                             <th># Entrega</th>
                             <th>Status Postulacion</th>
                             <th>Status Proyecto</th>
+                            <th>Acciones</th>
                           </tr>
                         </thead>
                         <thead>
@@ -65,6 +66,7 @@
                               </select2>
                             </td>
                             <td></td>
+                            <td></td>
                           </tr>
                         </thead>
                         <tbody>
@@ -84,8 +86,8 @@
                             <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                                   aria-hidden="true"></i></span><br>Archivos</td>
                             <td>
-                              <select2 :id="application.id" :options="deliveries" v-model="deliveryDefault" v-if="application.delivery === null"
-                                @onChangeSelected="onChangeDelivery">
+                              <select2 :id="application.id" :options="deliveries" v-model="deliveryDefault"
+                                v-if="application.delivery === null" @onChangeSelected="onChangeDelivery">
                               </select2>
                               <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id" v-else
                                 @onChangeSelected="onChangeDelivery">
@@ -98,9 +100,14 @@
                             </td>
 
                             <td><span class="label label-default">{{ getStatus(application.project.status) }}</span> </td>
+                            <td>
+                              <div class="btn-group">
+                                <button class="btn delete" v-on:click=confirmDelete(application.id)><i
+                                    class="fa fa-trash"></i></button>
+                              </div>
+                            </td>
                           </tr>
                         </tbody>
-
                         <!-- <tfoot>
                               <tr>
                                 <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
@@ -118,7 +125,8 @@
                               </tr>
                             </tfoot> -->
                       </table>
-                      <pagination :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
+                      <div v-if="applications.length === 0"> <center><h3>No hay registros</h3></center></div>
+                      <pagination v-if="applications.length > 0" :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
                         @pagechanged="onPageChange" />
                     </div>
                   </div>
@@ -168,6 +176,15 @@
         </div>
       </div>
     </modal>
+    <modal v-if="showModalDelete" @close="showModalDelete = false">
+      <h3 slot="header">Eliminar Postulación</h3>
+      <div slot="body">
+        <p>Esta seguro que quiere eliminar la postulación?</p>
+      </div>
+
+      <button slot="footer" type="button" class="btn btn-danger" v-on:click="deletePostulation">Eliminar</button>
+
+    </modal>
   </section>
 </template>
 
@@ -189,6 +206,7 @@ export default {
   data() {
     return {
       showModalMaterial: false,
+      showModalDelete: false,
       totalPage: 1,
       idProject: 0,
       start: 0,
@@ -222,7 +240,8 @@ export default {
         character: '',
         delivery: '',
         postulation: ''
-      }
+      },
+      idPostulation: 0
     }
   },
   mounted() {
@@ -310,11 +329,12 @@ export default {
           }
         })
     },
-    confirmDelete(idProject) {
+    deletePostulation() {
       api
-        .request('get', 'applications/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('delete', 'applications/' + this.idPostulation + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.project = response.data
+          this.showModalDelete = false
+          this.fetchProject()
         })
         .catch(error => {
           if (error.response) {
@@ -322,6 +342,10 @@ export default {
             console.log(errors)
           }
         })
+    },
+    confirmDelete(id) {
+      this.showModalDelete = true
+      this.idPostulation = id
     },
     viewMaterial(application) {
       this.materials = application.material

@@ -82,6 +82,7 @@
                       </tfoot> -->
                   </table>
                   <div>
+                    <div v-if="users.length === 0"> <center><h3>No hay registros</h3></center></div>
                     <pagination :totalPages="totalPage" :perPage="parseInt(length)" :currentPage="currentPage"
                       @pagechanged="onPageChange" />
                   </div>
