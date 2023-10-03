@@ -79,10 +79,10 @@
         <div class="box-footer">
           <ul class="mailbox-attachments clearfix">
             <li v-for="(material, index) in materials">
-              <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'avi', 'PNG'].includes(material.type)" class="gallery center">
+              <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" class="gallery center">
 
-                <img v-show="['jpg', 'png', 'jpeg', 'PNG'].includes(material.type)" :src='material.file' alt="">
-                <video v-show="['mp4', 'avi'].includes(material.type)" :src='material.file' controls
+                <img v-show="['jpg', 'png', 'jpeg'].includes(String(material.type).toLowerCase())" :src='material.file' alt="">
+                <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.file' controls
                   width="200px"></video>
 
                 <!-- <div class="mailbox-attachment-info">

@@ -445,6 +445,7 @@ export default {
       this.clearParams()
       this.showModal = true
       this.isNew = true
+      this.isDisabled = false
     },
     updateUser(dUser) {
       var userFormData = new FormData()
@@ -516,6 +517,7 @@ export default {
       this.isNew = false
       this.resetErrors()
       this.isLoading = true
+      this.isDisabled = false
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
