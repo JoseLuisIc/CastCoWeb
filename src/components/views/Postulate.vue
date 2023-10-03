@@ -32,18 +32,23 @@
                         <th>Descripción</th>
                         <th>Personaje</th>
                         <th>Materiales</th>
-
+                        <th>Acciones</th>
                       </tr>
                     </thead>
 
                     <tbody>
                       <tr v-for="application in applications">
                         <td>{{ application.project.name }} </td>
-                        <td>{{ application.project.desciption }} </td>
+                        <td>{{ application.project.description }} </td>
                         <td>{{ application.character.name }}</td>
                         <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                               aria-hidden="true"></i></span><br>Archivos</td>
-
+                        <td>
+                          <div class="btn-group">
+                            <button class="btn delete" v-on:click=confirmDelete(application.id)><i
+                                class="fa fa-trash"></i></button>
+                          </div>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -59,6 +64,15 @@
         </div>
       </div>
     </div>
+    <modal v-if="showModalDelete" @close="showModalDelete = false" :iconClasses="['modal-md']">
+      <h3 slot="header">Eliminar Postulación</h3>
+      <div slot="body">
+        <p>Esta seguro que quiere eliminar la postulación?</p>
+      </div>
+
+      <button slot="footer" type="button" class="btn btn-danger" v-on:click="deletePostulation">Eliminar</button>
+
+    </modal>
     <modal v-if="showModalMaterial" @close="showModalMaterial = false" :iconClasses="['modal-lg']">
       <h3 slot="header">Material</h3>
       <div slot="body">
@@ -114,6 +128,7 @@ export default {
   data() {
     return {
       idProject: 0,
+      idUser: '',
       idPostulation: '',
       totalPage: 1,
       start: 0,
@@ -126,13 +141,14 @@ export default {
       characters: [],
       deliveries: [],
       showModalMaterial: false,
+      showModalDelete: false,
       materials: []
     }
   },
   mounted() {
     this.$nextTick(() => {
       if (this.$route.params.hasOwnProperty('id')) {
-        this.idPostulation = this.$route.params.id
+        this.idUser = this.$route.params.id
         // this.fetchProyect(this.$route.params.id)
       }
       this.fetchApplications()
@@ -152,54 +168,13 @@ export default {
         role: util.MANAGER
       }
     },
-    updateUser(dUser) {
-      api
-        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
-        .then(response => {
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            this.error.email = errors.email[0]
-          }
-        })
-    },
-    saveUser() {
-      api
-        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
-        .then(response => {
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            this.error.email = errors.email[0]
-            this.error.nombres = errors.nombres[1]
-          }
-        })
-    },
-    editUser(idUser) {
-      console.log(idUser)
-      this.isNew = false
-      api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
-        .then(response => {
-          // this.user = response.data
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
-    },
     fetchApplications() {
       var params = new FormData()
-      // ?search=&project=7829&character&delivery&user&page_size=10&page=1
       params.append('search', '')
       params.append('project', '')
       params.append('character', '')
       params.append('delivery', '')
-      params.append('user', this.idPostulation)
+      params.append('user', this.idUser)
       params.append('page_size', this.length)
       params.append('page', this.currentPage)
       api
@@ -217,31 +192,19 @@ export default {
           }
         })
     },
-    confirmDelete(idUser) {
-      api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
-        .then(response => {
-          // this.user = response.data
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
+    confirmDelete(id) {
+      this.showModalDelete = true
+      this.idPostulation = id
     },
-    deleteUser() {
-      console.log(this.user)
+    deletePostulation() {
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('delete', 'applications/' + this.idPostulation + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.callUser()
+          this.showModalDelete = false
+          this.fetchApplications()
         })
         .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            this.error.email = errors.email[0]
-          }
+          console.log(error)
         })
     },
     viewMaterial(application) {

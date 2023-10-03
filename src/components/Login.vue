@@ -15,7 +15,7 @@
           <span class="input-group-addon"><i class="fa fa-lock"></i></span>
           <input class="form-control" name="password" placeholder="Password" type="password" v-model="password">
         </div>
-        <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Iniciar sesiòn</button>
+        <button type="submit" v-bind:class="'btn btn-primary btn-lg ' + loading">Iniciar sesión</button>
       </form>
       <!-- errors -->
       <div v-if=response class="text-red">

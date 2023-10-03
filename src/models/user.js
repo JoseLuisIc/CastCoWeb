@@ -9,7 +9,7 @@ export default {
     photo: null,
     age: 0,
     state: { id: 0, code: '', name: '' },
-    agency: 0,
+    agency: { user: 0, name: '', booker_name: '', phone: '', city: '' },
     gender: 0,
     lgtbq: false,
     phone: null,

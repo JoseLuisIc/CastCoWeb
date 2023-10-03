@@ -1,7 +1,7 @@
 <template>
   <section class="content">
+    <loading :isLoading="isLoading"></loading>
     <div class="row center-block">
-      <h2></h2>
       <div class="col-md-12">
         <div class="box">
           <div class="box-header">
@@ -70,8 +70,8 @@
                             <button class="btn delete" v-on:click=confirmDelete(user.id)><i
                                 class="fa fa-trash"></i></button>
                             <button class="btn edit" v-on:click=editUser(user.id)><i class="fa fa-edit"></i></button>
-                            <button class="btn reset" v-on:click=modalResetPwd(user.id)><i
-                                class="fa fa-refresh"></i></button>
+                            <button v-if="getRol() === roles.MANAGER" class="btn reset"
+                              v-on:click=modalResetPwd(user.id)><i class="fa fa-refresh"></i></button>
 
                             <button class="btn reset" v-on:click=postulate(user.id)><i class="fa fa-eye"></i></button>
                           </div>
@@ -80,7 +80,11 @@
                     </tbody>
                   </table>
                   <div>
-                    <div v-if="users.length === 0"> <center><h3>No hay registros</h3></center></div>
+                    <div v-if="users.length === 0">
+                      <center>
+                        <h3>No hay registros</h3>
+                      </center>
+                    </div>
                     <pagination :totalPages="totalPage" :perPage="parseInt(length)" :currentPage="currentPage"
                       @pagechanged="onPageChange" />
                   </div>
@@ -95,6 +99,7 @@
     <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-lg']">
       <h3 slot="header">Nuevo Usuario</h3>
       <div slot="body" style="overflow-y: scroll; overflow-x: hidden; height: 500px;">
+
         <form>
           <div v-if="isNew">
             <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
@@ -104,9 +109,12 @@
                 <p>{{ error.email }}</p>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-bind:class="error.instagram !== '' ? 'has-error' : ''">
               <label for="instagram" class="col-form-label">Instagram:</label>
-              <input class="form-control" id="instagram" v-model="user.instagram" />
+              <input class="form-control" id="instagram" v-model="user.instagram" @blur="validateInstagram" />
+              <div v-if=error.instagram class="text-red">
+                <p>{{ error.instagram }}</p>
+              </div>
             </div>
             <div class="form-group">
               <input class="form-control" id="id" type="hidden" v-model="user.id" />
@@ -174,7 +182,7 @@
               </div>
               <div class="form-group" v-bind:class="error.agency !== '' ? 'has-error' : ''">
                 <label for="agency" class="col-form-label">Agencia:</label>
-                <select name="agency" class="form-control" id="agency" v-model="user.agency">
+                <select name="agency" class="form-control" id="agency" v-model="user.agency.user">
                   <option value="0" selected>Elegir Agencia</option>
                   <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.name }}
                   </option>
@@ -206,9 +214,12 @@
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group">
+              <div class="form-group" v-bind:class="error.instagram !== '' ? 'has-error' : ''">
                 <label for="instagram" class="col-form-label">Instagram:</label>
-                <input class="form-control" id="instagram" v-model="user.instagram" />
+                <input class="form-control" id="instagram" v-model="user.instagram" @blur="validateInstagram" />
+                <div v-if=error.instagram class="text-red">
+                  <p>{{ error.instagram }}</p>
+                </div>
               </div>
               <div class="form-group">
                 <label for="phone" class="col-form-label">Telefono:</label>
@@ -277,9 +288,10 @@
           </div>
         </form>
       </div>
-      <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
-      <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary"
-        v-on:click="updateUser(user)">Actualizar</button>
+      <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser"
+        :disabled='isDisabled'>Guardar</button>
+      <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="updateUser(user)"
+        :disabled='isDisabled'>Actualizar</button>
     </modal>
     <modal v-if="showModalDelete" @close="showModalDelete = false" :iconClasses="['modal-md']">
       <h3 slot="header">Eliminar Usuario</h3>
@@ -323,6 +335,7 @@ import api from '../../api'
 import util from '../../utils/util'
 import modelUser from '../../models/user'
 import Pagination from '../widgets/Pagination.vue'
+import Loading from '../widgets/Loading.vue'
 import Modal from '../widgets/Modal.vue'
 // Require needed datatables modules
 require('datatables.net')
@@ -331,7 +344,8 @@ export default {
   name: 'Admins',
   components: {
     Pagination,
-    Modal
+    Modal,
+    Loading
   },
   data() {
     return {
@@ -339,11 +353,14 @@ export default {
       showModalDelete: false,
       showModalReset: false,
       isNew: true,
+      isLoading: false,
+      roles: util,
       reset: {
         password: '',
         confirm_password: '',
         error: ''
       },
+      isDisabled: false,
       idProject: 0,
       totalPage: 1,
       start: 0,
@@ -352,7 +369,29 @@ export default {
       count: 0,
       currentPage: 1,
       table: null,
-      user: modelUser.user,
+      user: {
+        id: 0,
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: '',
+        photo: null,
+        age: 0,
+        state: { id: 0, code: '', name: '' },
+        agency: { user: 0, name: '', booker_name: '', phone: '', city: '' },
+        gender: 0,
+        lgtbq: false,
+        phone: null,
+        height: 0,
+        shoe_size: 0,
+        pant_size: 0,
+        shirt_size: 0,
+        job_occupation: '',
+        skills: '',
+        role: util.TALENT,
+        name: '',
+        booker_name: ''
+      },
       error: modelUser.error,
       users: [],
       agencies: [],
@@ -379,6 +418,8 @@ export default {
       }
       this.callUser()
       this.getStates()
+      this.getAgencies()
+      this.getRol()
     })
   },
   methods: {
@@ -387,6 +428,12 @@ export default {
         if (key !== 'role') {
           this.user[key] = ''
         }
+        if (key === 'agency') {
+          this.user[key] = { user: 0, name: '', booker_name: '', phone: '', city: '' }
+        }
+      })
+      Object.keys(this.error).forEach(key => {
+        this.error[key] = ''
       })
     },
     onPageChange(page) {
@@ -404,24 +451,35 @@ export default {
       console.log(dUser)
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
-          if (key === 'state') {
-            var state = this.user[key]
-            userFormData.append(key, state.id)
-          } else if (key === 'photo') {
-            if (this.file !== null) {
-              userFormData.append(key, this.file)
-            }
-          } else {
-            userFormData.append(key, this.user[key])
+          switch (key) {
+            case 'state':
+              var state = this.user[key]
+              userFormData.append(key, state.id)
+              break
+            case 'photo':
+              if (this.file !== null) {
+                userFormData.append(key, this.file)
+              }
+              break
+            case 'agency':
+              var agency = this.user[key]
+              userFormData.append(key, agency.user)
+              break
+            default:
+              userFormData.append(key, this.user[key])
+              break
           }
         }
       })
+      this.isLoading = true
       api
         .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.showModal = false
           this.callUser()
+          this.clearParams()
           toastr.success('Actualización', 'Se ha actualizado el usuario')
+          this.isLoading = false
         })
         .catch(error => {
           this.resetErrors()
@@ -430,10 +488,12 @@ export default {
             Object.keys(errors).forEach(key => {
               this.error[key] = errors[key][0]
             })
+            this.isLoading = false
           }
         })
     },
     saveUser() {
+      this.isLoading = true
       api
         .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -441,33 +501,29 @@ export default {
           this.showModal = false
           this.editUser(user.id)
           toastr.success('Guardado', 'Se ha guardado el usuario')
+          this.isLoading = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
           }
+          this.isLoading = false
         })
     },
     editUser(idUser) {
       var that = this
       this.isNew = false
-      const params = new URLSearchParams()
-      console.log(idUser)
-      params.append('pagination', false)
       this.resetErrors()
-      api
-        .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
-        .then(response => {
-          this.agencies = response.data
-        })
-        .catch(console.log)
+      this.isLoading = true
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           var userData = response.data
           var state = userData.extras.state === null ? { id: 0, code: '', name: '' } : userData.extras.state
+          var agency = userData.extras.agency === null || userData.extras.agency === undefined ? { id: 0, code: '', name: '' } : userData.extras.agency
           userData.extras.state = state
+          userData.extras.agency = agency
           Object.assign(this.user, userData)
           Object.assign(this.user, userData.extras)
           if (that.user.photo !== null) {
@@ -476,12 +532,14 @@ export default {
             console.log(that.previewSrc)
           }
           this.showModal = true
+          this.isLoading = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             console.log(errors)
           }
+          this.isLoading = false
         })
     },
     callUser() {
@@ -497,6 +555,7 @@ export default {
       params.append('page_size', this.length)
       params.append('ordering', 'first_name')
       params.append('agency', this.agencyId)
+      this.isLoading = true
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -504,12 +563,14 @@ export default {
           this.users = json.results
           this.count = json.count
           this.totalPage = Math.ceil(this.count / this.length)
+          this.isLoading = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             console.log(errors)
           }
+          this.isLoading = false
         })
     },
     confirmDelete(idUser) {
@@ -528,17 +589,20 @@ export default {
     },
     deleteUser() {
       console.log(this.user)
+      this.isLoading = true
       api
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.showModalDelete = false
           this.callUser()
+          this.isLoading = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             console.log(errors)
           }
+          this.isLoading = false
         })
     },
     onFileChange(e) {
@@ -579,6 +643,16 @@ export default {
           }
         })
     },
+    getAgencies() {
+      const params = new URLSearchParams()
+      params.append('pagination', false)
+      api
+        .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.agencies = response.data
+        })
+        .catch(console.log)
+    },
     validateEmail(e) {
       var email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -586,32 +660,28 @@ export default {
       } else {
         this.error.email = 'Ingrese un correo valido'
       }
-    },
-    validatAge(e) {
-      var age = e.target.value
-      if (/^[123456789]\d{9}$/.test(age)) {
-        this.error.age = ''
-      } else {
-        this.error.age = 'Ingrese una edad '
-      }
-    },
-    validatestate(e) {
-      var state = e.target.value
-      if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(state)) {
-        this.error.state = ''
-      } else {
-        this.error.state = ''
-      }
+      this.validateForm()
     },
     validateNumber(e) {
       var number = e.target.value
-      if (/^\(?(\d{3})\)?[-]?(\d{3})[-]?(\d{4})$/.test(number)) {
+      if (/^\d{10}$/.test(number)) {
         this.error.phone = ''
       } else {
-        this.user.phone = ''
+        this.error.phone = 'Ingrese su numero de celular'
       }
+      this.validateForm()
+    },
+    validateInstagram(e) {
+      var instagram = e.target.value
+      if (/@([A-Za-z._])\w+/.test(instagram)) {
+        this.error.instagram = ''
+      } else {
+        this.error.instagram = 'No corresponde a un usuario de instagram'
+      }
+      this.validateForm()
     },
     modalResetPwd(idUser) {
+      this.isLoading = true
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -620,12 +690,14 @@ export default {
           this.showModal = false
           this.reset.password = ''
           this.reset.confirm_password = ''
+          this.isLoading = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             console.log(errors)
           }
+          this.isLoading = false
         })
     },
     resetPassword() {
@@ -635,6 +707,7 @@ export default {
         password: this.reset.password,
         confirm_password: this.reset.confirm_password
       }
+      this.isLoading = true
       api
         .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -644,12 +717,14 @@ export default {
           this.showModalDelete = false
           toastr.success('Guardado', 'Se ha guardado correctamente la contrseña')
           this.showModalReset = false
+          this.isLoading = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             that.reset.error = errors.password[0]
           }
+          this.isLoading = false
         })
     },
     resetErrors() {
@@ -666,6 +741,20 @@ export default {
     },
     postulate(id) {
       this.$router.push({ path: `/agency/talents/${id}` })
+    },
+    getRol() {
+      return this.$store.state.user.role
+    },
+    validateForm() {
+      var values = Object.values(this.error).filter(value => {
+        return value.length > 0
+      })
+      console.log(values)
+      if (values.length > 0) {
+        this.isDisabled = true
+      } else {
+        this.isDisabled = false
+      }
     }
   }
 }
