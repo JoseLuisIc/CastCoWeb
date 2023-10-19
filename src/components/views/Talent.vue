@@ -449,7 +449,6 @@ export default {
     },
     updateUser(dUser) {
       var userFormData = new FormData()
-      console.log(dUser)
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
           switch (key) {
@@ -464,7 +463,12 @@ export default {
               break
             case 'agency':
               var agency = this.user[key]
-              userFormData.append(key, agency.user)
+              if (agency.user !== null && agency.user !== '' && agency.user !== undefined) {
+                userFormData.append(key, agency.user)
+              }
+              break
+            case 'email':
+              console.log(key)
               break
             default:
               userFormData.append(key, this.user[key])
