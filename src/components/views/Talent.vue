@@ -656,6 +656,7 @@ export default {
         .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.agencies = response.data
+          this.agencies.unshift({id: null, name: 'Particular'})
         })
         .catch(console.log)
     },
