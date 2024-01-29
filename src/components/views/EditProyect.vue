@@ -157,9 +157,9 @@
             <div class='col-sm-6'>
               <div id="preview" v-show="isPreviewFile">
                 <form id="upload">
-                  <img v-show="['jpg', 'png', 'jpeg', 'PNG'].includes(previewSrc.type)" class='img-responsive'
+                  <img v-show="['jpg', 'png', 'jpeg'].includes(previewSrc.type.toLowerCase())" class='img-responsive'
                     :src='previewSrc.src' alt='Photo'>
-                  <video v-show="['mp4', 'avi'].includes(previewSrc.type)" :src='previewSrc.src' controls
+                  <video v-show="['mp4', 'avi', 'mov','wmv','mkv'].includes(previewSrc.type.toLowerCase())" :src='previewSrc.src' controls
                     width="500px"></video>
                 </form>
                 <br>
@@ -190,10 +190,10 @@
             <div class="box-footer">
               <ul class="mailbox-attachments clearfix">
                 <li v-for="(material, index) in materials">
-                  <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'avi', 'PNG'].includes(material.type)">
+                  <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
                     <span class="mailbox-attachment-icon has-img">
-                      <img v-show="['jpg', 'png', 'jpeg', 'PNG'].includes(material.type)" :src='material.file' alt="">
-                      <video v-show="['mp4', 'avi'].includes(material.type)" :src='material.file' controls
+                      <img v-show="['jpg', 'png', 'jpeg'].includes(material.type.toLowerCase())" :src='material.file' alt="">
+                      <video v-show="['mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())" :src='material.file' controls
                         width="200px"></video>
                     </span>
                     <div class="mailbox-attachment-info">
