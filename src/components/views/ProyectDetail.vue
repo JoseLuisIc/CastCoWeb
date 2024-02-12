@@ -362,7 +362,7 @@ export default {
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
-            console.log(errors)
+            this.alertShow('Error', errors.detail, 'error', 'fa fa-error')
           }
         })
     },
