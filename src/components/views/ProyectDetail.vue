@@ -323,6 +323,15 @@ export default {
             $('.viewMaterial').on('click', function () {
               that.viewMaterial(this.id)
             })
+            $('.selectDelivery').on('change', function () {
+              that.onChangeDelivery({value: this.value, id: this.id})
+            })
+            $('.selectCharacter').on('change', function () {
+              that.onChangeCharacter({value: this.value, id: this.id})
+            })
+            $('.selectPostulation').on('change', function () {
+              that.onChangeStatus({value: this.value, id: this.id})
+            })
           },
           error: function (jqXHR, ajaxOptions, thrownError) {
           }
@@ -335,7 +344,7 @@ export default {
               for (let index = 0; index < that.characters.length; index++) {
                 options += `<option value='${that.characters[index].id}'  ${row.character === null ? 0 : row.character.id === that.characters[index].id ? 'selected' : ''}>${that.characters[index].text}</option>`
               }
-              return `<select id="selectDelivery" class="form-control" name="character" data-index="${row.character === null ? 0 : row.character.id}">
+              return `<select id="${row.id}" class="selectCharacter form-control" name="character" data-index="${row.character === null ? 0 : row.character.id}">
                 ${options}
               </select>
               `
@@ -362,7 +371,7 @@ export default {
               for (let index = 0; index < that.deliveries.length; index++) {
                 options += `<option value='${that.deliveries[index].id}'  ${row.delivery === null ? 0 : row.delivery.id === that.deliveries[index].id ? 'selected' : ''}>${that.deliveries[index].text}</option>`
               }
-              return `<select id="selectDelivery" class="form-control" name="delivery" data-index="${row.delivery === null ? 0 : row.delivery.id}">
+              return `<select id="${row.id}" class="selectDelivery form-control" name="delivery" data-index="${row.delivery === null ? 0 : row.delivery.id}">
                 ${options}
               </select>
               `
@@ -371,7 +380,7 @@ export default {
           {
             'data': 'status',
             render: function (data, type, row) {
-              return `<select id="selectStatusProject" class="form-control" name="status" data-index="${row.status}">
+              return `<select id="${row.id}" class="selectPostulation form-control" name="status" data-index="${row.status}">
                   <option value="1" ${row.status === 1 ? 'selected' : ''}>En proceso</option>
                   <option value="2" ${row.status === 2 ? 'selected' : ''}>Postulado</option>
               </select>
@@ -439,7 +448,7 @@ export default {
         .request('delete', 'applications/' + this.idPostulation + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.showModalDelete = false
-          this.fetchApplications()
+          this.fetchProject()
         })
         .catch(error => {
           if (error.response) {
@@ -550,18 +559,6 @@ export default {
         that.downloadFile(oReq.response, filename, null)
       }
       oReq.send(data)
-      // api
-      //   .request('post', `projects/${this.idProject}/export/`, {}, { 'Authorization': this.$store.state.token })
-      //   .then(res => {
-      //     // console.log(res.data)
-      //     that.downloadFile(res.data, `${that.project.name}.pdf`, null)
-      //   })
-      //   .catch(error => {
-      //     if (error.response) {
-      //       var errors = error.response.data
-      //       console.log(errors)
-      //     }
-      //   })
     },
     downloadFile(data, filename, mime) {
       const blob = new Blob([data], { type: mime || 'application/octet-stream' })
