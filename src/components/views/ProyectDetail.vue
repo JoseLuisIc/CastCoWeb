@@ -70,7 +70,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr v-for="application in applications">
+                          <!-- <tr v-for="application in applications">
                             <td>
                               <select2 :id="application.id" :options="characters" v-model="application.character.id"
                                 @onChangeSelected="onChangeCharacter">
@@ -80,33 +80,34 @@
                               <div class="widget-user-image"><img :src="application.user.photo" alt="Avatar"
                                   class="img-circle"></div>{{ application.user.first_name }}
                             </td>
-                            <!-- <td>{{ application.project.name }} </td>
-                        <td>{{ application.project.public_name }} </td>
-                        <td>{{ application.project.description }} </td> -->
                             <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                                   aria-hidden="true"></i></span><br>Archivos</td>
-                            <td>
+                            <td v-if="application.delivery == null">
                               <select2 :id="application.id" :options="deliveries" v-model="deliveryDefault"
-                                v-if="application.delivery === null" @onChangeSelected="onChangeDelivery">
-                              </select2>
-                              <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id" v-else
                                 @onChangeSelected="onChangeDelivery">
+                              </select2>                            
+                            </td>
+                            <td v-if="application.delivery != null">
+                              <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id"
+                                :value="application.delivery.id" @onChangeSelected="onChangeDelivery">
                               </select2>
                             </td>
                             <td>
-                              <select2 :id="application.id" :options="statusPostulate" v-model="application.status"
+                              <select2 :id="statusIdPostulate(application.id)" :options="statusPostulate"
+                                :value="application.status" v-model="application.status"
                                 @onChangeSelected="onChangeStatus">
                               </select2>
                             </td>
 
-                            <td><span class="label label-default">{{ getStatus(application.project.status) }}</span> </td>
+                            <td><span class="label label-default">{{ getStatus(application.project.status) }}</span>
+                            </td>
                             <td>
                               <div class="btn-group">
                                 <button class="btn delete" v-on:click=confirmDelete(application.id)><i
                                     class="fa fa-trash"></i></button>
                               </div>
                             </td>
-                          </tr>
+                          </tr> -->
                         </tbody>
                         <!-- <tfoot>
                               <tr>
@@ -125,9 +126,6 @@
                               </tr>
                             </tfoot> -->
                       </table>
-                      <div v-if="applications.length === 0"> <center><h3>No hay registros</h3></center></div>
-                      <pagination v-if="applications.length > 0" :totalPages="totalPage" :perPage="length" :currentPage="currentPage"
-                        @pagechanged="onPageChange" />
                     </div>
                   </div>
                 </div>
@@ -149,11 +147,14 @@
         <div class="box-footer">
           <ul class="mailbox-attachments clearfix">
             <li v-for="(material, index) in materials">
-              <div v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" class="gallery center">
+              <div
+                v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())"
+                class="gallery center">
 
-                <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())" :src='material.file' alt="">
-                <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.file' controls
-                  width="200px"></video>
+                <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())"
+                  :src='material.file' alt="">
+                <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.file'
+                  controls width="200px"></video>
                 <p style="text-align: center;">{{ material.name }}</p>
                 <!-- <div class="mailbox-attachment-info">
                       <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
@@ -189,17 +190,17 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import api from '../../api'
 import toastr from 'toastr'
-import Pagination from '../widgets/Pagination.vue'
 import Modal from '../widgets/Modal.vue'
 import config from '../../config'
 import Select2 from '../widgets/Selet2.vue'
+import esMX from '../../lang/es_mx'
 // Datatable Modules
 export default {
   name: 'Admins',
   components: {
-    Pagination,
     Modal,
     Select2
   },
@@ -223,8 +224,8 @@ export default {
       materials: [],
       deliveryDefault: '',
       statusPostulate: [
-        { id: '1', text: 'En proceso' },
-        { id: '2', text: 'Postulado' }
+        { id: 1, text: 'En proceso' },
+        { id: 2, text: 'Postulado' }
       ],
       filterPostulations: [
         { id: '', text: 'Todos' },
@@ -270,13 +271,16 @@ export default {
       }
       return status
     },
+    statusIdPostulate(id) {
+      return `postulate_${id}`
+    },
     onPageChange(page) {
       this.currentPage = page
-      this.fetchApplications()
+      this.fetchProject()
     },
     fetchApplications() {
-      var params = new FormData()
-      // ?search=&project=7829&character&delivery&user&page_size=10&page=1
+      var params = new URLSearchParams()
+      params.append('format', 'datatables')
       params.append('search', this.filters.name)
       params.append('project', this.idProject)
       params.append('character', this.filters.character)
@@ -285,20 +289,121 @@ export default {
       params.append('user', '')
       params.append('page_size', this.length)
       params.append('page', this.currentPage)
-      api
-        .request('get', `applications/?` + new URLSearchParams(params).toString(), {}, { 'Authorization': this.$store.state.token })
-        .then(response => {
-          console.log(response)
-          var json = response.data
-          this.count = json.count
-          this.applications = json.results
-          this.totalPage = Math.ceil(this.count / this.length)
-        })
-        .catch(error => {
-          if (error.response) {
+      var that = this
+      this.table = $('#tableProyects').on('page.dt', function (d) {
+        var info = that.table.page.info()
+        that.currentPage = info.page === 0 ? 1 : info.page + 1
 
+        var params = new URLSearchParams()
+        params.append('format', 'datatables')
+        params.append('search', that.filters.name)
+        params.append('project', that.idProject)
+        params.append('character', that.filters.character)
+        params.append('delivery', that.filters.delivery)
+        params.append('status', that.filters.postulation)
+        params.append('user', '')
+        params.append('page_size', that.length)
+        params.append('page', that.currentPage)
+        that.table.ajax.url(config.serverURI + 'applications/?' + params)
+      }).DataTable({
+        'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        'responsive': true,
+        'processing': true,
+        'serverSide': true,
+        'ajax': {
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', that.$store.state.token)
+          },
+          url: config.serverURI + 'applications/?' + params,
+          type: 'GET',
+          complete: function () {
+            $('.delete').on('click', function () {
+              that.confirmDelete(this.id)
+            })
+            $('.viewMaterial').on('click', function () {
+              that.viewMaterial(this.id)
+            })
+          },
+          error: function (jqXHR, ajaxOptions, thrownError) {
           }
-        })
+        },
+        'columns': [
+          {
+            'data': 'character',
+            render: function (data, type, row) {
+              var options = ''
+              for (let index = 0; index < that.characters.length; index++) {
+                options += `<option value='${that.characters[index].id}'  ${row.character === null ? 0 : row.character.id === that.characters[index].id ? 'selected' : ''}>${that.characters[index].text}</option>`
+              }
+              return `<select id="selectDelivery" class="form-control" name="character" data-index="${row.character === null ? 0 : row.character.id}">
+                ${options}
+              </select>
+              `
+            }
+          },
+          {
+            'data': 'user',
+            render: function (data, type, row) {
+              return `<div class="widget-user-image"><img src="${row.user.photo}" alt="Avatar"
+                                  class="img-circle"></div>${row.user.first_name}`
+            }
+          },
+          {
+            'data': 'material',
+            render: function (data, type, row) {
+              return `<span id="${row.id}" class="viewMaterial"><i class="fa fa-file-image-o fa-3x"
+                                  aria-hidden="true"></i></span><br>Archivos`
+            }
+          },
+          {
+            'data': 'delivery',
+            render: function (data, type, row) {
+              var options = ''
+              for (let index = 0; index < that.deliveries.length; index++) {
+                options += `<option value='${that.deliveries[index].id}'  ${row.delivery === null ? 0 : row.delivery.id === that.deliveries[index].id ? 'selected' : ''}>${that.deliveries[index].text}</option>`
+              }
+              return `<select id="selectDelivery" class="form-control" name="delivery" data-index="${row.delivery === null ? 0 : row.delivery.id}">
+                ${options}
+              </select>
+              `
+            }
+          },
+          {
+            'data': 'status',
+            render: function (data, type, row) {
+              return `<select id="selectStatusProject" class="form-control" name="status" data-index="${row.status}">
+                  <option value="1" ${row.status === 1 ? 'selected' : ''}>En proceso</option>
+                  <option value="2" ${row.status === 2 ? 'selected' : ''}>Postulado</option>
+              </select>
+              `
+            }
+          },
+          {
+            'data': 'project',
+            render: function (data, type, row) {
+              return `<td><span class="label label-default">${that.getStatus(row.project.status)}</span>`
+            }
+          },
+          {
+            'data': 'id',
+            className: 'dt-center editor-edit',
+            defaultContent: '',
+            orderable: false,
+            'render': (data, type, row, meta) => {
+              return this.renderView(data, row)
+            }
+          }
+        ],
+        'language': esMX
+      })
+    },
+    renderView(id, row) {
+      return `
+        <td>
+          <div class="btn-group">
+            <button class="btn delete" id="${id}"><i class="fa fa-trash"></i></button>
+          </div>
+        </td>`
     },
     fetchProject() {
       api
@@ -334,7 +439,7 @@ export default {
         .request('delete', 'applications/' + this.idPostulation + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.showModalDelete = false
-          this.fetchProject()
+          this.fetchApplications()
         })
         .catch(error => {
           if (error.response) {
@@ -347,8 +452,19 @@ export default {
       this.showModalDelete = true
       this.idPostulation = id
     },
-    viewMaterial(application) {
-      this.materials = application.material
+    viewMaterial(id) {
+      api
+        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          console.log(response)
+          this.materials = response.data.material
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
       this.showModalMaterial = true
     },
     onChangeDelivery({ value, id }) {
@@ -404,7 +520,17 @@ export default {
       toastr[type](message, title)
     },
     search(e) {
-      this.fetchApplications()
+      var params = new URLSearchParams()
+      params.append('format', 'datatables')
+      params.append('search', this.filters.name)
+      params.append('project', this.idProject)
+      params.append('character', this.filters.character)
+      params.append('delivery', this.filters.delivery)
+      params.append('status', this.filters.postulation)
+      params.append('user', '')
+      params.append('page_size', this.length)
+      params.append('page', this.currentPage)
+      this.table.ajax.url(config.serverURI + 'applications/?' + params).load()
     },
     exportPdf() {
       var that = this
