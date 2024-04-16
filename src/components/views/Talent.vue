@@ -680,7 +680,7 @@ export default {
     },
     validateInstagram(e) {
       var instagram = e.target.value
-      if (/@([A-Za-z._])\w+/.test(instagram)) {
+      if (/@[a-zA-Z0-9._]{1,29}$/.test(instagram)) {
         this.error.instagram = ''
       } else {
         this.error.instagram = 'No corresponde a un usuario de instagram'
