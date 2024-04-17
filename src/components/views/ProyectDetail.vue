@@ -70,61 +70,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <!-- <tr v-for="application in applications">
-                            <td>
-                              <select2 :id="application.id" :options="characters" v-model="application.character.id"
-                                @onChangeSelected="onChangeCharacter">
-                              </select2>
-                            </td>
-                            <td>
-                              <div class="widget-user-image"><img :src="application.user.photo" alt="Avatar"
-                                  class="img-circle"></div>{{ application.user.first_name }}
-                            </td>
-                            <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
-                                  aria-hidden="true"></i></span><br>Archivos</td>
-                            <td v-if="application.delivery == null">
-                              <select2 :id="application.id" :options="deliveries" v-model="deliveryDefault"
-                                @onChangeSelected="onChangeDelivery">
-                              </select2>                            
-                            </td>
-                            <td v-if="application.delivery != null">
-                              <select2 :id="application.id" :options="deliveries" v-model="application.delivery.id"
-                                :value="application.delivery.id" @onChangeSelected="onChangeDelivery">
-                              </select2>
-                            </td>
-                            <td>
-                              <select2 :id="statusIdPostulate(application.id)" :options="statusPostulate"
-                                :value="application.status" v-model="application.status"
-                                @onChangeSelected="onChangeStatus">
-                              </select2>
-                            </td>
-
-                            <td><span class="label label-default">{{ getStatus(application.project.status) }}</span>
-                            </td>
-                            <td>
-                              <div class="btn-group">
-                                <button class="btn delete" v-on:click=confirmDelete(application.id)><i
-                                    class="fa fa-trash"></i></button>
-                              </div>
-                            </td>
-                          </tr> -->
                         </tbody>
-                        <!-- <tfoot>
-                              <tr>
-                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                                    placeholder="Productora" data-index="0"></th>
-                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                                    placeholder="Nombre" data-index="1"></th>
-                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                                    placeholder="Nombre público" data-index="2"></th>
-                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                                    placeholder="Descripción" data-index="3"></th>
-                                <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                                    placeholder="Tipo de material" data-index="4">
-                                </th>
-
-                              </tr>
-                            </tfoot> -->
                       </table>
                     </div>
                   </div>
@@ -316,7 +262,9 @@ export default {
           },
           url: config.serverURI + 'applications/?' + params,
           type: 'GET',
-          complete: function () {
+          complete: function (response) {
+            console.log('tableProyects')
+            that.applications = response['responseJSON'].data
             $('.delete').on('click', function () {
               that.confirmDelete(this.id)
             })
