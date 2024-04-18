@@ -236,22 +236,7 @@ export default {
       params.append('page_size', this.length)
       params.append('page', this.currentPage)
       var that = this
-      this.table = $('#tableProyects').on('page.dt', function (d) {
-        var info = that.table.page.info()
-        that.currentPage = info.page === 0 ? 1 : info.page + 1
-
-        var params = new URLSearchParams()
-        params.append('format', 'datatables')
-        params.append('search', that.filters.name)
-        params.append('project', that.idProject)
-        params.append('character', that.filters.character)
-        params.append('delivery', that.filters.delivery)
-        params.append('status', that.filters.postulation)
-        params.append('user', '')
-        params.append('page_size', that.length)
-        params.append('page', that.currentPage)
-        that.table.ajax.url(config.serverURI + 'applications/?' + params)
-      }).DataTable({
+      this.table = $('#tableProyects').DataTable({
         'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
         'responsive': true,
         'processing': true,
@@ -272,13 +257,13 @@ export default {
               that.viewMaterial(this.id)
             })
             $('.selectDelivery').on('change', function () {
-              that.onChangeDelivery({value: this.value, id: this.id})
+              that.onChangeDelivery({ value: this.value, id: this.id })
             })
             $('.selectCharacter').on('change', function () {
-              that.onChangeCharacter({value: this.value, id: this.id})
+              that.onChangeCharacter({ value: this.value, id: this.id })
             })
             $('.selectPostulation').on('change', function () {
-              that.onChangeStatus({value: this.value, id: this.id})
+              that.onChangeStatus({ value: this.value, id: this.id })
             })
           },
           error: function (jqXHR, ajaxOptions, thrownError) {
@@ -352,6 +337,36 @@ export default {
           }
         ],
         'language': esMX
+      })
+      this.table.on('page.dt', function (d) {
+        var info = that.table.page.info()
+        console.log(info)
+        that.currentPage = info.page === 0 ? 1 : info.page + 1
+
+        var params = new URLSearchParams()
+        params.append('format', 'datatables')
+        params.append('search', that.filters.name)
+        params.append('project', that.idProject)
+        params.append('character', that.filters.character)
+        params.append('delivery', that.filters.delivery)
+        params.append('status', that.filters.postulation)
+        params.append('user', '')
+        params.append('page_size', that.length)
+        params.append('page', that.currentPage)
+        that.table.ajax.url(config.serverURI + 'applications/?' + params)
+      })
+      this.table.on('length.dt', function (e, settings, len) {
+        var params = new URLSearchParams()
+        params.append('format', 'datatables')
+        params.append('search', that.filters.name)
+        params.append('project', that.idProject)
+        params.append('character', that.filters.character)
+        params.append('delivery', that.filters.delivery)
+        params.append('status', that.filters.postulation)
+        params.append('user', '')
+        params.append('page_size', len)
+        params.append('page', that.currentPage)
+        that.table.ajax.url(config.serverURI + 'applications/?' + params)
       })
     },
     renderView(id, row) {
