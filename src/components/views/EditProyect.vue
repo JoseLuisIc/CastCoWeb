@@ -30,7 +30,7 @@
                     <input class="form-control" id="producer" v-model="project.producer" />
                   </div>
                   <div class="form-group">
-                    <label for="production_place" class="col-form-label">Location:</label>
+                    <label for="production_place" class="col-form-label">Locación:</label>
                     <input class="form-control" id="production_place" v-model="project.production_place" />
                   </div>
                   <div class="form-group">
@@ -45,10 +45,10 @@
                     <label for="temporality" class="col-form-label">Temporalidad:</label>
                     <input class="form-control" id="temporality" v-model="project.temporality" />
                   </div>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label for="covid_test" class="col-form-label">Covid Test:</label>
                     <input type="text" class="form-control" id="covid_test" v-model="project.covid_test" />
-                  </div>
+                  </div> -->
 
                   <div class="form-group" v-bind:class="error.recording_date !== '' ? 'has-error' : ''">
                     <label for="recording_date" class="col-form-label">Shoot dates:</label>

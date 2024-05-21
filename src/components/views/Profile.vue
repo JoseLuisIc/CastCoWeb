@@ -92,7 +92,7 @@
                         <p>{{ error.email }}</p>
                       </div>
                     </div>
-                    <div class="form-group"  v-if="role !== AGENCY">
+                    <div class="form-group" v-if="role !== AGENCY">
                       <label for="first_name" class="col-form-label">Nombres:</label>
                       <input class="form-control" id="first_name" v-model="user.first_name" />
                     </div>
@@ -100,7 +100,7 @@
                       <label for="last_name" class="col-form-label">Apellidos:</label>
                       <input class="form-control" id="last_name" v-model="user.last_name" />
                     </div>
-                    <div class="form-group"  v-if="role === AGENCY">
+                    <div class="form-group" v-if="role === AGENCY">
                       <label for="first_name" class="col-form-label">Nombre de agencia:</label>
                       <input class="form-control" id="first_name" v-model="user.name" />
                     </div>
@@ -139,6 +139,17 @@
                         <p>{{ error.age }}</p>
                       </div>
                     </div>
+                    <div class="form-group" v-bind:class="error.agency !== '' ? 'has-error' : ''">
+                      <label for="agency" class="col-form-label">Agencia:</label>
+                      <select name="agency" class="form-control" id="agency" v-model="user.agency.user">
+                        <option value="0" selected>Elegir Agencia</option>
+                        <option v-for="(agency, index) in agencies" :key="index" :value="agency.id">{{ agency.name }}
+                        </option>
+                      </select>
+                      <div v-if=error.agency class="text-red">
+                        <p>{{ error.agency }}</p>
+                      </div>
+                    </div>
                     <div class="form-group">
                       <label for="state" class="col-form-label">Estado:</label>
                       <select name="state" class="form-control" id="state" v-model="user.state.id">
@@ -174,14 +185,14 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="height" class="col-form-label">Altura:</label>
+                      <label for="height" class="col-form-label">Altura (cm):</label>
                       <input class="form-control" id="height" v-model="user.height" />
                       <div v-if=error.height class="text-red">
                         <p>{{ error.height }}</p>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="shoe_size" class="col-form-label"># Calzado:</label>
+                      <label for="shoe_size" class="col-form-label"># Calzado (cm):</label>
                       <input class="form-control" id="shoe_size" v-model="user.shoe_size" />
                       <div v-if=error.shoe_size class="text-red">
                         <p>{{ error.shoe_size }}</p>
@@ -262,6 +273,7 @@ export default {
     this.$nextTick(() => {
       this.fetchProfile()
       this.getStates()
+      this.getAgencies()
     })
   },
   data() {
@@ -331,6 +343,17 @@ export default {
           }
         })
     },
+    getAgencies() {
+      const params = new URLSearchParams()
+      params.append('pagination', false)
+      api
+        .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.agencies = response.data
+          // this.agencies.unshift({id: null, name: 'Particular'})
+        })
+        .catch(console.log)
+    },
     validateEmail(e) {
       var email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
@@ -343,17 +366,28 @@ export default {
       var userFormData = new FormData()
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
-          if (key === 'state') {
-            var state = this.user[key]
-            userFormData.append(key, state.id)
-          } else {
-            if (key === 'photo') {
+          switch (key) {
+            case 'state':
+              var state = this.user[key]
+              userFormData.append(key, state.id)
+              break
+            case 'photo':
               if (this.user[key] instanceof File) {
-                userFormData.append(key, this.user[key])
+                userFormData.append(key, this.file)
               }
-            } else {
+              break
+            case 'agency':
+              var agency = this.user[key]
+              if (agency.user !== null && agency.user !== '' && agency.user !== undefined) {
+                userFormData.append(key, agency.user)
+              }
+              break
+            case 'email':
+              console.log(key)
+              break
+            default:
               userFormData.append(key, this.user[key])
-            }
+              break
           }
         }
       })
@@ -407,8 +441,8 @@ export default {
 
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
+
 .timeline-footer a.btn {
   margin-right: 10px;
 }
 </style>
-

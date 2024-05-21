@@ -143,7 +143,14 @@ import Modal from '../widgets/Modal.vue'
 import config from '../../config'
 import Select2 from '../widgets/Selet2.vue'
 import esMX from '../../lang/es_mx'
+import moment from 'moment'
+import settings from '../../config/settings'
 // Datatable Modules
+// require('datatables.net-buttons/js/dataTables.buttons.js')
+// require('datatables.net-buttons/js/buttons.colVis.js')
+// require('datatables.net-buttons/js/buttons.flash.js')
+// require('datatables.net-buttons/js/buttons.html5.js')
+// require('datatables.net-buttons/js/buttons.print.js')
 export default {
   name: 'Admins',
   components: {
@@ -237,7 +244,41 @@ export default {
       params.append('page', this.currentPage)
       var that = this
       this.table = $('#tableProyects').DataTable({
-        'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, '']],
+        'dom': 'Blfrtip',
+        'autoWidth': false,
+        'buttons': [
+          {
+            'extend': 'copy',
+            'className': 'btn btn-default',
+            'text': '<i class="fa  fa-copy"></i> Copiar',
+            'titleAttr': 'Copiar',
+            'exportOptions': {
+              'columns': ':visible',
+              'hiddenDefaultCol': 'visible'
+            }
+          },
+          {
+            'extend': 'csv',
+            'title': settings.name + 'Proyectos_' + moment(new Date()).format('YYYYMMDD'),
+            'className': 'btn btn-success',
+            'text': '<i class="fa fa-file-excel-o"></i> CSV',
+            'titleAttr': 'CSV',
+            'exportOptions': {
+              'columns': ':visible'
+            }
+          },
+          {
+            'extend': 'print',
+            'title': settings.name + 'Proyectos_' + moment(new Date()).format('YYYYMMDD'),
+            'className': 'btn btn-info',
+            'text': '<i class="fa fa-print"></i> Imprimir',
+            'titleAttr': 'Imprimir',
+            'exportOptions': {
+              'columns': ':visible'
+            }
+          }
+        ],
         'responsive': true,
         'processing': true,
         'serverSide': true,
@@ -513,10 +554,13 @@ export default {
       data.append('delivery', this.filters.delivery)
       data.append('status', this.filters.postulation)
       var oReq = new XMLHttpRequest()
+      oReq.timeout = 72000
       oReq.open('post', url, true)
       oReq.setRequestHeader('Authorization', this.$store.state.token)
       oReq.responseType = 'blob'
-
+      oReq.onprogress = function (ev) {
+        console.log(ev)
+      }
       oReq.onload = function (oEvent) {
         var filename = `${that.project.name}.pdf`
         that.downloadFile(oReq.response, filename, null)

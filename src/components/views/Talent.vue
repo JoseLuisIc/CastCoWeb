@@ -236,7 +236,7 @@
                 </div>
               </div>
               <div class="form-group" v-bind:class="error.shoe_size !== '' ? 'has-error' : ''">
-                <label for="shoe_size" class="col-form-label"># Calzado:</label>
+                <label for="shoe_size" class="col-form-label"># Calzado (cm):</label>
                 <input type="number" class="form-control" id="shoe_size" v-model="user.shoe_size" />
                 <div v-if=error.shoe_size class="text-red">
                   <p>{{ error.shoe_size }}</p>
@@ -656,7 +656,7 @@ export default {
         .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.agencies = response.data
-          this.agencies.unshift({id: null, name: 'Particular'})
+          // this.agencies.unshift({id: null, name: 'Particular'})
         })
         .catch(console.log)
     },

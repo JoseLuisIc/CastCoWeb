@@ -55,7 +55,7 @@
                       <!-- <th colspan="1" rowspan="1" class="sorting" tabindex="3">Dias de casting</th>
                       <th colspan="1" rowspan="1" class="sorting" tabindex="4">Dinamica de casting</th> -->
                       <th colspan="1" rowspan="1" class="sorting" tabindex="5">Status</th>
-                      <th colspan="1" rowspan="1" class="no-sort">Location</th>
+                      <th colspan="1" rowspan="1" class="no-sort">Locación</th>
                       <!-- <th colspan="1" rowspan="1" class="no-sort">Competencia</th>
                       <th colspan="1" rowspan="1" class="no-sort">Work day</th>
                       <th colspan="1" rowspan="1" class="no-sort">Buy out GARANTIZADO</th>
@@ -89,7 +89,7 @@
                         </select>
                       </th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
-                          placeholder="Location" data-index="4"></th>
+                          placeholder="Locación" data-index="4"></th>
                       <!-- <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Competencia" data-index="7"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
