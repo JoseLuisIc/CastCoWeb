@@ -297,7 +297,7 @@ export default {
       const params = new URLSearchParams()
       params.append('role', util.AGENCY)
       params.append('search', '')
-      params.append('ordering', 'email')
+      params.append('ordering', 'agency_name')
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       api
