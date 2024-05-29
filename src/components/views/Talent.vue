@@ -532,6 +532,7 @@ export default {
           userData.extras.agency = agency
           Object.assign(this.user, userData)
           Object.assign(this.user, userData.extras)
+          that.isPreviewFile = false
           if (that.user.photo !== null) {
             that.isPreviewFile = true
             that.previewSrc = that.user.photo
