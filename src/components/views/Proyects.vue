@@ -271,7 +271,7 @@ export default {
             $('.edit').on('click', function () {
               that.editProyect(this.id)
             })
-            if (that.role !== this.MANAGER) {
+            if (that.role !== that.MANAGER) {
               $('.edit').hide()
               $('.delete').hide()
             }
