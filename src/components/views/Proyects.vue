@@ -129,6 +129,7 @@
       <h3 slot="header">Eliminar Usuario</h3>
       <div slot="body">
         <p>Esta seguro que quiere eliminar al usuario?</p>
+        <input type="text" class="form-control" placeholder="Escribe el nombre del proyecto" v-model="confirmNameProyect">
       </div>
 
       <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteProyect">Eliminar</button>
@@ -189,7 +190,8 @@ export default {
       agencies: [],
       states: [],
       hiddenDefaultCol: [],
-      role: 0
+      role: 0,
+      confirmNameProyect: ''
     }
   },
   mounted() {
@@ -426,6 +428,7 @@ export default {
         </td>`
     },
     confirmDelete(idProject) {
+      this.confirmNameProyect = ''
       api
         .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -462,18 +465,24 @@ export default {
         })
     },
     deleteProyect() {
-      api
-        .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': this.$store.state.token })
-        .then(response => {
-          this.table.ajax.reload()
-          this.showModalDelete = false
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
+      if (this.project === this.confirmNameProyect) {
+        api
+          .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': this.$store.state.token })
+          .then(response => {
+            this.table.ajax.reload()
+            this.showModalDelete = false
+          })
+          .catch(error => {
+            if (error.response) {
+              var errors = error.response.data
+              console.log(errors)
+            }
+          })
+        this.confirmNameProyect = ''
+      } else {
+        toastr.error('Eliminar proyecto', 'No se puede eliminar el proyecto')
+        this.confirmNameProyect = ''
+      }
     },
     getStates() {
       api
