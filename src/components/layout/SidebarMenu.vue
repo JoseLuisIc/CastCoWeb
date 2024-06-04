@@ -49,6 +49,12 @@
         <span class="page">Talentos</span>
       </a>
     </router-link>
+    <router-link tag="li" class="pageLink" to="/agency/proyects" v-if="user.roles === AGENCY">
+      <a>
+        <i class="fa fa-list-alt"></i>
+        <span class="page">Proyectos</span>
+      </a>
+    </router-link>
     <router-link tag="li" class="pageLink" to="/admin/proyects" v-if="user.roles === MANAGER">
       <a>
         <i class="fa fa-list-alt"></i>

@@ -103,7 +103,8 @@
                   <div class="form-group">
                     <!-- <label for="buy_out" class="col-form-label">Buy out GARANTIZADO:</label> -->
                     <label for="buy_out" class="col-form-label">Presupuesto:</label>
-                    <input class="form-control" id="buy_out" v-model="project.buy_out" />
+                    <textarea class="form-control" name="buy_out" id="buy_out" cols="30" rows="5"
+                      v-model="project.buy_out"></textarea>
                   </div>
                   <div class="form-group">
                     <label for="territory" class="col-form-label">Territorio:</label>
@@ -191,10 +192,10 @@
               <ul class="mailbox-attachments clearfix">
                 <li v-for="(material, index) in materials">
                   <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
-                    <span class="mailbox-attachment-icon has-img">
-                      <img v-show="['jpg', 'png', 'jpeg'].includes(material.type.toLowerCase())" :src='material.file' alt="">
+                    <span class="mailbox-attachment-icon">
+                      <img v-show="['jpg', 'png', 'jpeg'].includes(material.type.toLowerCase())" :src='material.file' alt="" height="200px">
                       <video v-show="['mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())" :src='material.file' controls
-                        width="200px"></video>
+                        width="200px" height="200px"></video>
                     </span>
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
@@ -205,7 +206,7 @@
                             class="fa fa-edit"></i> Editar</a>
                         &nbsp;
                         <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
-                          @click="downloadFile" :id="material.id"><i class="fa fa-cloud-download"></i> Descargar</a>
+                          @click="downloadFile" :id="material.id" :name="material.name"><i class="fa fa-cloud-download"></i> Descargar</a>
                       </span>
                     </div>
                   </div>
@@ -225,7 +226,7 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
 </style>
 <script>
-import moment from 'moment'
+
 import api from '../../api'
 import ModulePersonaje from './project/ModulePersonaje.vue'
 import ModuleDelivery from './project/ModuleDelivery.vue'
@@ -474,7 +475,7 @@ export default {
       e.preventDefault()
       const link = e.target
       console.log(link.href)
-      this.download(link.href, moment(new Date()).format('YYYY-MM-DD'))
+      this.download(link.href, link.name)
     },
     download(url, filename) {
       fetch(url)

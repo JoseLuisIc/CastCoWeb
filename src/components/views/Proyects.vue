@@ -6,7 +6,8 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <router-link to="/admin/proyects/create" class="btn btn-primary"> <i class="fa fa-plus"> </i> Agregar
+            <router-link to="/admin/proyects/create" class="btn btn-primary" v-if="role === MANAGER"> <i
+                class="fa fa-plus"> </i> Agregar
               Nuevo</router-link>
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalProyectDelete" />
@@ -44,7 +45,8 @@
             <div class="row">
               <div class="col-sm-12 table-responsive">
                 <table aria-describedby="example1_info" role="grid" id="tableProyects"
-                  class="table table-bordered table-striped dataTable display responsive display nowrap" cellspacing="0">
+                  class="table table-bordered table-striped dataTable display responsive display nowrap"
+                  cellspacing="0">
                   <thead>
                     <tr role="row">
                       <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
@@ -138,6 +140,7 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
 </style>
 <script>
+import util from '../../utils/util'
 import $ from 'jquery'
 import api from '../../api'
 import config from '../../config'
@@ -175,6 +178,9 @@ export default {
   },
   data() {
     return {
+      MANAGER: util.MANAGER,
+      AGENCY: util.AGENCY,
+      TALENT: util.TALENT,
       showModalDelete: false,
       table: null,
       project: project,
@@ -182,12 +188,14 @@ export default {
       projects: [],
       agencies: [],
       states: [],
-      hiddenDefaultCol: []
+      hiddenDefaultCol: [],
+      role: 0
     }
   },
   mounted() {
     this.$nextTick(() => {
       this.callProyect()
+      this.role = this.$store.state.user.role
       if (localStorage.getItem('columnVisibleProyect') === null) {
         localStorage.setItem('columnVisibleProyect', JSON.stringify(this.hiddenDefaultCol))
       }
@@ -263,6 +271,10 @@ export default {
             $('.edit').on('click', function () {
               that.editProyect(this.id)
             })
+            if (that.role !== this.MANAGER) {
+              $('.edit').hide()
+              $('.delete').hide()
+            }
             $('.view').on('click', function () {
               that.detailProyect(this.id)
             })

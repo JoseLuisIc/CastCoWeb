@@ -17,8 +17,27 @@
               <div class="box">
                 <div class="box-header">
                   <h3 class="box-title"></h3>
-                  <button class="btn btn-success" v-on:click="exportPdf" v-if="applications.length > 0">Exportar PDF <i
-                      class="fa fa-file-pdf-o"></i></button>
+                  <button class="btn btn-default" v-on:click="downloadReport"
+                    v-if="applications.length > 0 && role === MANAGER">Descargar Reporte <i
+                      class="fa fa-download"></i></button>
+                  <div class="btn-group" style="float: right;">
+                    <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false"> Columnas Visibles
+                    </button>
+                    <ul class="dropdown-menu" id="hiddenColumns">
+                      <li>
+                        <!-- Task item -->
+                        <div class="form-group" style="margin-bottom: 0px !important;">
+                          <div class="form-check" style="padding-left: 5px;">
+                            <input id="checkAll" class="form-check-input" type="checkbox" value="-1">
+                            <label class="form-check-label">
+                              Ver Todos
+                            </label>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -30,10 +49,10 @@
                           <tr role="row">
                             <th>Personaje</th>
                             <th>Postulante</th>
-                            <!-- <th>Nombre</th>
-                        <th>Nombre público
-                        </th>
-                        <th>Descripción</th> -->
+                            <th>Instagram</th>
+                            <th>Edad
+                            </th>
+                            <th>Agencia</th>
                             <th>Material
                             </th>
                             <th># Entrega</th>
@@ -52,9 +71,9 @@
                             <td><input type="search" name="" id="" class="form-control"
                                 placeholder="Nombre del postulante" v-model="filters.name" v-on:keyup="search"></td>
                             <td></td>
-                            <!-- <td></td>
-                        <td></td>
-                        <td></td> -->
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td>
                               <select2 :id="selectedDelivery" :options="filterDeliveries" v-model="filters.delivery"
                                 @onChangeSelected="search">
@@ -102,15 +121,16 @@
                 <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.file'
                   controls width="200px"></video>
                 <p style="text-align: center;">{{ material.name }}</p>
-                <!-- <div class="mailbox-attachment-info">
-                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
-                          class="fa fa-trash"></i> Eliminar</a>
-                      <span class="mailbox-attachment-size">
-                        &nbsp;
-                        <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile" @click="downloadFile"
-                          :id="material.id"><i class="fa fa-cloud-download"></i> Descargar</a>
-                      </span>
-                    </div> -->
+                <div class="mailbox-attachment-info">
+                  <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
+                      class="fa fa-trash"></i> Eliminar</a>
+                  <span class="mailbox-attachment-size">
+                    &nbsp;
+                    <a :href="material.file" class="btn btn-default btn-xs pull-right downloadImage"
+                      @click="downloadImage" :id="material.id" :name="material.name" :type="material.type"><i
+                        class="fa fa-cloud-download"></i> Descargar</a>
+                  </span>
+                </div>
               </div>
             </li>
           </ul>
@@ -132,6 +152,212 @@
       <button slot="footer" type="button" class="btn btn-danger" v-on:click="deletePostulation">Eliminar</button>
 
     </modal>
+
+    <modal v-if="showModalDetail" @close="showModalDetail = false" :iconClasses="['modal-lg']">
+      <h3 slot="header">Detalle de Postulación</h3>
+      <div slot="body">
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-6">
+              <strong class="subtitle"><i class="fa fa-user margin-r-5"></i> Talento</strong>
+              <div class="box-body box-profile">
+                <img class="profile-user-img img-responsive img-circle" :src="postulation.user.photo">
+              </div>
+              <div class="user-block">
+
+                <span class="username">
+                  {{ postulation.user.first_name }} {{ postulation.user.last_name }}
+                </span>
+                <span class="description"><strong> Correo: </strong> {{ postulation.user.email }}</span>
+                <span class="description"><strong> Instagram: </strong> {{ postulation.user.instagram }}</span>
+                <span class="description"><strong> Telefono: </strong> {{ postulation.user.phone }}</span>
+                <span class="description"><strong> Edad: </strong> {{ postulation.user.age }}</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <strong class="subtitle"><i class="fa fa-building-o margin-r-5"></i> Agencia</strong>
+              <div class="user-block">
+                <span class="description"><strong> Nombre de Agencia: </strong> {{ postulation.user.agency.name
+                  }}</span>
+                <span class="description"><strong> Nombre de encargado: </strong> {{ postulation.user.agency.booker_name
+                  }}</span>
+                <span class="description"><strong> Telefono: </strong> {{ postulation.user.agency.phone }}</span>
+                <span class="description"><strong> Ciudad: </strong> {{ postulation.user.agency.city }}</span>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <strong class="subtitle"><i class="fa fa-list-alt margin-r-5"></i> Proyecto</strong>
+          <div class="user-block">
+            <span class="description"><strong> Nombre del Proyecto: </strong> {{ postulation.project.public_name
+              }}</span>
+            <span class="description"><strong> Descripción: </strong> {{ postulation.project.description }}</span>
+          </div>
+          <hr>
+          <strong class="subtitle"><i class="fa fa-male margin-r-5"></i> Personaje</strong>
+          <div class="user-block">
+            <span class="description"><strong> Nombre: </strong>{{ postulation.character.name }}</span>
+            <span class="description"><strong> Descripción: </strong> {{ postulation.character.description }}</span>
+            <span class="description"><strong> Genero: </strong> {{ postulation.character.gender }}</span>
+            <span class="description"><strong> Etnia: </strong> {{ postulation.character.ethnic_group }}</span>
+            <span class="description"><strong> Edad Aparente: </strong> {{ postulation.character.apparent_age }}</span>
+          </div>
+        </div>
+      </div>
+    </modal>
+
+    <modal v-if="showModalDeleteMaterial" @close="showModalDeleteMaterial = false">
+      <h3 slot="header">Eliminar Postulación</h3>
+      <div slot="body">
+        <p>Esta seguro que quiere eliminar la imagen?</p>
+      </div>
+
+      <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteMaterial">Eliminar</button>
+
+    </modal>
+    <modal v-if="showModalReport" @close="showModalReport = false">
+      <h3 slot="header">Descargar Reporte</h3>
+      <div slot="body">
+        <button class="btn btn-danger" v-on:click="exportPDF"
+          v-if="applications.length > 0 && role === MANAGER">Exportar PDF <i class="fa fa-file-pdf-o"></i></button>
+        <button class="btn btn-success" v-on:click="exportDocument('xlsx')"
+          v-if="applications.length > 0 && role === MANAGER">Exportar XLSX <i class="fa fa-file-excel-o"></i></button>
+        <button class="btn btn-info" v-on:click="exportDocument('numbers')"
+          v-if="applications.length > 0 && role === MANAGER">Exportar Numbers <i
+            class="fa fa-file-excel-o"></i></button>
+
+        <br>
+        <div class="form-group" style="margin-bottom: 0px !important;">
+          <div class="form-check" style="padding-left: 5px;">
+            <input class="form-check-input" type="checkbox" value="0" v-on:change="checkedAll">
+            <label class="form-check-label">
+              Todos
+            </label>
+          </div>
+        </div>
+        <br>
+        <ul>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="name" v-model="checkedNames">
+                <label class="form-check-label">
+                  Nombre
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="photo" v-model="checkedNames">
+                <label class="form-check-label">
+                  Foto
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="age" v-model="checkedNames">
+                <label class="form-check-label">
+                  Edad
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="agency" v-model="checkedNames">
+                <label class="form-check-label">
+                  Agencia
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="city" v-model="checkedNames">
+                <label class="form-check-label">
+                  Ciudad
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="instagram" v-model="checkedNames">
+                <label class="form-check-label">
+                  Instagram
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="dropbox" v-model="checkedNames">
+                <label class="form-check-label">
+                  Dropbox
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="casting_notes" v-model="checkedNames">
+                <label class="form-check-label">
+                  Casting Notes
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="director_notes" v-model="checkedNames">
+                <label class="form-check-label">
+                  Director Notes
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="production_node" v-model="checkedNames">
+                <label class="form-check-label">
+                  Production Node
+                </label>
+              </div>
+            </div>
+          </li>
+        </ul>
+        {{ checkedNames }}
+        <div class="progress progress-sm active" v-if="isShowDownload">
+          <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+            :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100" :style="percent">
+            <span class="sr-only">{{ progress }}% Complete</span>
+          </div>
+        </div>
+      </div>
+
+    </modal>
   </section>
 </template>
 
@@ -145,6 +371,7 @@ import Select2 from '../widgets/Selet2.vue'
 import esMX from '../../lang/es_mx'
 import moment from 'moment'
 import settings from '../../config/settings'
+import util from '../../utils/util'
 // Datatable Modules
 // require('datatables.net-buttons/js/dataTables.buttons.js')
 // require('datatables.net-buttons/js/buttons.colVis.js')
@@ -161,6 +388,8 @@ export default {
     return {
       showModalMaterial: false,
       showModalDelete: false,
+      showModalDetail: false,
+      showModalReport: false,
       totalPage: 1,
       idProject: 0,
       start: 0,
@@ -195,14 +424,28 @@ export default {
         delivery: '',
         postulation: ''
       },
-      idPostulation: 0
+      postulation: null,
+      idPostulation: 0,
+      idMaterial: 0,
+      role: 0,
+      MANAGER: util.MANAGER,
+      hiddenDefaultCol: [],
+      checkedNamesDefault: ['name', 'photo', 'age', 'agency', 'city', 'instagram', 'dropbox', 'casting_notes', 'director_notes', 'production_node'],
+      checkedNames: [],
+      progress: 0,
+      percent: 'width: 0%',
+      isShowDownload: false
     }
   },
   mounted() {
     this.$nextTick(() => {
+      this.role = this.$store.state.user.role
       if (this.$route.params.hasOwnProperty('id')) {
         this.idProject = this.$route.params.id
         this.fetchProject()
+      }
+      if (localStorage.getItem('columnVisibleProyectDetail') === null) {
+        localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(this.hiddenDefaultCol))
       }
     })
   },
@@ -291,6 +534,10 @@ export default {
           complete: function (response) {
             console.log('tableProyects')
             that.applications = response['responseJSON'].data
+            console.log(that.role)
+            if (that.role !== util.MANAGER) {
+              $('.delete').hide()
+            }
             $('.delete').on('click', function () {
               that.confirmDelete(this.id)
             })
@@ -305,6 +552,9 @@ export default {
             })
             $('.selectPostulation').on('change', function () {
               that.onChangeStatus({ value: this.value, id: this.id })
+            })
+            $('.detail').on('click', function () {
+              that.detail(this.id)
             })
           },
           error: function (jqXHR, ajaxOptions, thrownError) {
@@ -327,8 +577,27 @@ export default {
           {
             'data': 'user',
             render: function (data, type, row) {
-              return `<div class="widget-user-image"><img src="${row.user.photo}" alt="Avatar"
-                                  class="img-circle"></div>${row.user.first_name}`
+              return `<div class="widget-user-image"><img src="${row.user.photo}"
+                                  class="img-circle"> ${row.user.first_name} ${row.user.last_name}</div> ${row.user.email}`
+            }
+          },
+          {
+            'data': 'user',
+            render: function (data, type, row) {
+              return `<div>${row.user.instagram !== null ? row.user.instagram : ''}</div>`
+            }
+          },
+
+          {
+            'data': 'user',
+            render: function (data, type, row) {
+              return `<div>${row.user.age !== null ? row.user.age : ''}</div>`
+            }
+          },
+          {
+            'data': 'user',
+            render: function (data, type, row) {
+              return `<div>${row.user.agency.name !== undefined ? row.user.agency.name : ''}</div>`
             }
           },
           {
@@ -377,8 +646,29 @@ export default {
             }
           }
         ],
+        'columnDefs': [
+          { 'visible': false, 'targets': JSON.parse(localStorage.getItem('columnVisibleProyectDetail')) }
+        ],
         'language': esMX
       })
+      var columns = that.table.columns().header()
+      for (let index = 0; index < columns.length; index++) {
+        const element = columns[index]
+        var title = $(element).text()
+        var checked = !that.table.column(index).visible() ? 'checked' : ''
+        $('#hiddenColumns').append(`
+        <li>
+          <!-- Task item -->
+          <div class="form-group" style="margin-bottom: 0px !important;">
+            <div class="form-check" style="padding-left: 5px;">
+              <input class="form-check-input" type="checkbox" value="${index}" ${checked}>
+              <label class="form-check-label">
+                ${title}
+              </label>
+            </div>
+          </div>
+        </li>`)
+      }
       this.table.on('page.dt', function (d) {
         var info = that.table.page.info()
         console.log(info)
@@ -409,12 +699,33 @@ export default {
         params.append('page', that.currentPage)
         that.table.ajax.url(config.serverURI + 'applications/?' + params)
       })
+      $('#hiddenColumns input[type=checkbox]').on('click', function (e) {
+        // Get the column API object
+        var index = $(this).val()
+        if (index !== '-1') {
+          var column = that.table.column(index)
+          var columns = JSON.parse(localStorage.getItem('columnVisibleProyectDetail'))
+          if ($(this).prop('checked')) {
+            columns.push(parseInt(index))
+          } else {
+            columns = columns.filter(column => column !== parseInt(index))
+          }
+          localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(columns))
+
+          // Toggle the visibility
+          column.visible(!column.visible())
+        }
+      })
+      $('#checkAll').click(function () {
+        $('input:checkbox').not(this).trigger('click')
+      })
     },
     renderView(id, row) {
       return `
         <td>
           <div class="btn-group">
             <button class="btn delete" id="${id}"><i class="fa fa-trash"></i></button>
+            <button class="btn detail" id="${id}"><i class="fa fa-info-circle"></i></button>
           </div>
         </td>`
     },
@@ -437,7 +748,7 @@ export default {
           this.filterDeliveries.unshift({ id: '', text: 'Todos' })
           this.characters = Object.assign([], tmpCharacters)
           this.deliveries = Object.assign([], tmpDeliveries)
-          this.deliveries.unshift({ id: '', text: 'Sin asingancion' })
+          this.deliveries.unshift({ id: '', text: 'Sin asignación' })
           this.fetchApplications()
         })
         .catch(error => {
@@ -466,6 +777,7 @@ export default {
       this.idPostulation = id
     },
     viewMaterial(id) {
+      this.idPostulation = id
       api
         .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -545,7 +857,7 @@ export default {
       params.append('page', this.currentPage)
       this.table.ajax.url(config.serverURI + 'applications/?' + params).load()
     },
-    exportPdf() {
+    exportPDF() {
       var that = this
       var url = `${config.serverURI}projects/${this.idProject}/export/`
       console.log(this.filters)
@@ -553,17 +865,70 @@ export default {
       data.append('character', this.filters.character)
       data.append('delivery', this.filters.delivery)
       data.append('status', this.filters.postulation)
+      this.isShowDownload = true
+      this.checkedNamesDefault.forEach(element => {
+        var check = that.checkedNames.find(e => e === element)
+        if (check) {
+          data.append(element, true)
+        } else {
+          data.append(element, false)
+        }
+      })
       var oReq = new XMLHttpRequest()
       oReq.timeout = 72000
       oReq.open('post', url, true)
       oReq.setRequestHeader('Authorization', this.$store.state.token)
       oReq.responseType = 'blob'
       oReq.onprogress = function (ev) {
-        console.log(ev)
+        that.progress = ev.total / ev.loaded * 100
+        that.percent = `width: ${ev.total / ev.loaded * 100}%`
       }
       oReq.onload = function (oEvent) {
-        var filename = `${that.project.name}.pdf`
-        that.downloadFile(oReq.response, filename, null)
+        if (this.status === 200) {
+          var filename = `${that.project.name}.pdf`
+          that.downloadFile(oReq.response, filename, null)
+          that.isShowDownload = false
+        } else {
+          that.isShowDownload = false
+        }
+      }
+      oReq.send(data)
+    },
+    exportDocument(ext) {
+      var that = this
+      var url = `${config.serverURI}projects/${this.idProject}/document/`
+      console.log(this.filters)
+      var data = new FormData()
+      data.append('character', this.filters.character)
+      data.append('delivery', this.filters.delivery)
+      data.append('status', this.filters.postulation)
+      this.checkedNamesDefault.forEach(element => {
+        var check = that.checkedNames.find(e => e === element)
+        if (check) {
+          data.append(element, true)
+        } else {
+          console.log(check)
+          data.append(element, false)
+        }
+      })
+      data.append('ext', ext)
+      var oReq = new XMLHttpRequest()
+      oReq.timeout = 72000
+      oReq.open('post', url, true)
+      oReq.setRequestHeader('Authorization', this.$store.state.token)
+      oReq.responseType = 'blob'
+      oReq.onprogress = function (ev) {
+        that.progress = ev.total / ev.loaded * 100
+        that.percent = `width: ${ev.total / ev.loaded * 100}%`
+      }
+      oReq.onload = function (oEvent) {
+        if (this.status === 200) {
+          var filename = `${that.project.name}.${ext}`
+          that.downloadFile(oReq.response, filename, null)
+          that.isShowDownload = false
+        } else {
+          that.isShowDownload = false
+        }
       }
       oReq.send(data)
     },
@@ -587,6 +952,78 @@ export default {
       setTimeout(() => {
         window.URL.revokeObjectURL(blobURL)
       }, 100)
+    },
+    detail(id) {
+      this.showModalDetail = true
+      api
+        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          console.log(response)
+          this.postulation = response.data
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    closeDetail() {
+      this.showModalDetail = false
+    },
+    downloadImage(e) {
+      e.preventDefault()
+      const link = e.target
+      console.log(link.href)
+      this.download(link.href, link.name + '.' + link.type)
+    },
+    download(url, filename) {
+      fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+          const link = document.createElement('a')
+          link.href = URL.createObjectURL(blob)
+          link.download = filename
+          link.click()
+        })
+        .catch(console.error)
+    },
+    deleteFile(e) {
+      e.preventDefault()
+      const link = e.target
+      this.idMaterial = link.id
+      this.modalDeleteMaterial()
+    },
+    modalDeleteMaterial() {
+      this.showModalMaterial = false
+      this.showModalDeleteMaterial = true
+    },
+    deleteMaterial() {
+      this.showModalMaterial = true
+      this.showModalDeleteMaterial = false
+      api
+        .request('delete', `applications/${this.idPostulation}/material/${this.idMaterial}/`, {}, { 'Authorization': this.$store.state.token })
+        .then(response => {
+          this.alertShow('Estatus', 'Se elimino la imagen', 'success', 'fa fa-check')
+          this.viewMaterial(this.idPostulation)
+          this.onChangeStatus({ value: 1, id: this.idPostulation })
+        })
+        .catch(error => {
+          if (error.response) {
+            var errors = error.response.data
+            console.log(errors)
+          }
+        })
+    },
+    downloadReport() {
+      this.showModalReport = true
+    },
+    checkedAll(e) {
+      if (e.target.checked) {
+        this.checkedNames = this.checkedNamesDefault
+      } else {
+        this.checkedNames = []
+      }
     }
   }
 }
@@ -681,5 +1118,26 @@ video {
   justify-content: center;
   border: 3px solid #dbe4ed;
   /* Border color is optional */
+}
+
+.description {
+  color: #000000 !important;
+  font-size: 15px !important;
+}
+
+.subtitle {
+  font-size: medium !important;
+}
+
+.box-profile>.img-circle {
+  width: 200px;
+  height: 200px;
+}
+
+.user-block .username,
+.user-block .description,
+.user-block .comment {
+  display: block;
+  margin-left: 0px !important;
 }
 </style>

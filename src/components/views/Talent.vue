@@ -59,7 +59,7 @@
                       <tr v-for="user in users">
                         <td>
                           <div class="widget-user-image">
-                            <img class="img-circle" :src="user.extras.photo" alt="Avatar">
+                            <img class="img-circle" :src="user.extras.photo">
                           </div>{{ user.first_name }} {{ user.last_name }}
                         </td>
                         <td>{{ user.email }} </td>
@@ -562,6 +562,7 @@ export default {
       params.append('page_size', this.length)
       params.append('ordering', 'first_name')
       params.append('agency', this.agencyId)
+      console.log(this.agencyId)
       this.isLoading = true
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
