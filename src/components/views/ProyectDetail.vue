@@ -643,10 +643,10 @@ export default {
             render: function (data, type, row) {
               var view = `<span class="label label-info">Desconocido</span>`
               if (row.device === 'android') {
-                view = `<span class="label label-info"> <i class="fa fa-android"/>${row.device !== null ? row.device : ' Android'}</span>`
+                view = `<span class="label label-info"> <i class="fa fa-android"/> Android</span>`
               }
               if (row.device === 'ios') {
-                view = `<span class="label label-info"> <i class="fa fa-apple"/>${row.device !== null ? row.device : ' iOS'}</span>`
+                view = `<span class="label label-info"> <i class="fa fa-apple"/> iOS</span>`
               }
               return view
             }
