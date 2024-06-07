@@ -58,6 +58,7 @@
                             <th># Entrega</th>
                             <th>Status Postulacion</th>
                             <th>Status Proyecto</th>
+                            <th>Dispositivo</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
@@ -70,6 +71,7 @@
                             </td>
                             <td><input type="search" name="" id="" class="form-control"
                                 placeholder="Nombre del postulante" v-model="filters.name" v-on:keyup="search"></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -454,13 +456,13 @@ export default {
       var status = ''
       switch (idStatus) {
         case 1:
-          status = 'En Entrega'
+          status = `<span class="label label-default">En Entrega</span>`
           break
         case 2:
-          status = 'Callback'
+          status = `<span class="label label-info">Callback</span>`
           break
         case 3:
-          status = 'Finalizado'
+          status = `<span class="label label-success">Finalizado</span>`
           break
         default:
           break
@@ -633,7 +635,20 @@ export default {
           {
             'data': 'project',
             render: function (data, type, row) {
-              return `<td><span class="label label-default">${that.getStatus(row.project.status)}</span>`
+              return that.getStatus(row.project.status)
+            }
+          },
+          {
+            'data': 'device',
+            render: function (data, type, row) {
+              var view = `<span class="label label-info">Desconocido</span>`
+              if (row.device === 'android') {
+                view = `<span class="label label-info"> <i class="fa fa-android"/>${row.device !== null ? row.device : ' Android'}</span>`
+              }
+              if (row.device === 'ios') {
+                view = `<span class="label label-info"> <i class="fa fa-apple"/>${row.device !== null ? row.device : ' iOS'}</span>`
+              }
+              return view
             }
           },
           {

@@ -87,14 +87,14 @@
                     </div>
                     <div class="form-group">
                       <label for="email" class="col-form-label">Email:</label>
-                      <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
+                      <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail" disabled>
                       <div v-if=error.email class="text-red">
                         <p>{{ error.email }}</p>
                       </div>
                     </div>
                     <div class="form-group" v-if="role !== AGENCY">
                       <label for="first_name" class="col-form-label">Nombres:</label>
-                      <input class="form-control" id="first_name" v-model="user.first_name" />
+                      <input class="form-control" id="first_name" v-model="user.first_name"/>
                     </div>
                     <div class="form-group" v-if="role !== AGENCY">
                       <label for="last_name" class="col-form-label">Apellidos:</label>
@@ -102,11 +102,11 @@
                     </div>
                     <div class="form-group" v-if="role === AGENCY">
                       <label for="first_name" class="col-form-label">Nombre de agencia:</label>
-                      <input class="form-control" id="first_name" v-model="user.name" />
+                      <input class="form-control" id="first_name" v-model="user.name" disabled/>
                     </div>
                     <div class="form-group" v-if="role === AGENCY">
                       <label for="last_name" class="col-form-label">Nombre del encargado:</label>
-                      <input class="form-control" id="last_name" v-model="user.booker_name" />
+                      <input class="form-control" id="last_name" v-model="user.booker_name"/>
                     </div>
 
                     <div class="form-group" v-if="role === AGENCY">

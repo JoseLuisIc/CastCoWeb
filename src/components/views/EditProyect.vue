@@ -97,7 +97,7 @@
                     <input class="form-control" id="use_of_image" v-model="project.exclusiveness" />
                   </div>
                   <div class="form-group">
-                    <label for="work_day" class="col-form-label">Work day:</label>
+                    <label for="work_day" class="col-form-label">Medios:</label>
                     <input type="text" class="form-control" id="work_day" v-model="project.work_day" />
                   </div>
                   <div class="form-group">
@@ -174,9 +174,9 @@
                 </div>
                 <div class="form-group" v-if="!isEditMaterial">
                   <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange"
-                    accept="image/*,video/mp4">
+                    accept="image/*,video/*">
 
-                  <p class="help-block">Max. 30MB</p>
+                  <p class="help-block">Max. 50MB</p>
                 </div>
                 <button type="button" class="btn btn-primary" v-on:click="uploadFile"
                   v-if="!isEditMaterial">Agregar</button>
@@ -193,7 +193,7 @@
                 <li v-for="(material, index) in materials">
                   <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
                     <span class="mailbox-attachment-icon">
-                      <img v-show="['jpg', 'png', 'jpeg'].includes(material.type.toLowerCase())" :src='material.file' alt="" height="200px">
+                      <img v-show="['jpg', 'png', 'jpeg'].includes(material.type.toLowerCase())" :src='material.file' height="200px" width="200px">
                       <video v-show="['mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())" :src='material.file' controls
                         width="200px" height="200px"></video>
                     </span>
@@ -401,9 +401,9 @@ export default {
       toastr[type](message, title)
     },
     uploadFile() {
-      console.log(this.materials)
-      if (this.materials.length > 5) {
-        this.alertShow('Limite', 'Se alcanzo el limite permitido', 'error', 'fa fa-check')
+      console.log(this.file.size)
+      if (this.file.size > (1024 * 1024 * 50)) {
+        this.alertShow('Limite', 'No  se permite un archivo mayor a 50MB', 'error', 'fa fa-check')
         return false
       }
       var formData = new FormData()
