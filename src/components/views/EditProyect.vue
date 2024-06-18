@@ -23,7 +23,8 @@
                   </div>
                   <div class="form-group">
                     <label for="description" class="col-form-label">Descripcion:</label>
-                    <input class="form-control" id="description" v-model="project.description" />
+                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="5"
+                      v-model="project.description"></textarea>
                   </div>
                   <div class="form-group">
                     <label for="producer" class="col-form-label">Producción:</label>
@@ -67,7 +68,8 @@
                   </div>
                   <div class="form-group">
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="is_active" v-model="project.is_active">
+                      <input class="form-check-input" type="checkbox" value="" id="is_active"
+                        v-model="project.is_active">
                       <label class="form-check-label" for="is_active">
                         Activo
                       </label>
@@ -98,7 +100,8 @@
                   </div>
                   <div class="form-group">
                     <label for="work_day" class="col-form-label">Medios:</label>
-                    <input type="text" class="form-control" id="work_day" v-model="project.work_day" />
+                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="5"
+                      v-model="project.work_day"></textarea>
                   </div>
                   <div class="form-group">
                     <!-- <label for="buy_out" class="col-form-label">Buy out GARANTIZADO:</label> -->
@@ -160,8 +163,8 @@
                 <form id="upload">
                   <img v-show="['jpg', 'png', 'jpeg'].includes(previewSrc.type.toLowerCase())" class='img-responsive'
                     :src='previewSrc.src' alt='Photo'>
-                  <video v-show="['mp4', 'avi', 'mov','wmv','mkv'].includes(previewSrc.type.toLowerCase())" :src='previewSrc.src' controls
-                    width="500px"></video>
+                  <video v-show="['mp4', 'avi', 'mov', 'wmv', 'mkv'].includes(previewSrc.type.toLowerCase())"
+                    :src='previewSrc.src' controls width="500px"></video>
                 </form>
                 <br>
               </div>
@@ -191,11 +194,13 @@
             <div class="box-footer">
               <ul class="mailbox-attachments clearfix">
                 <li v-for="(material, index) in materials">
-                  <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
+                  <div
+                    v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
                     <span class="mailbox-attachment-icon">
-                      <img v-show="['jpg', 'png', 'jpeg'].includes(material.type.toLowerCase())" :src='material.file' height="200px" width="200px">
-                      <video v-show="['mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())" :src='material.file' controls
-                        width="200px" height="200px"></video>
+                      <img v-show="['jpg', 'png', 'jpeg'].includes(material.type.toLowerCase())" :src='material.file'
+                        height="200px" width="200px">
+                      <video v-show="['mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())"
+                        :src='material.file' controls width="200px" height="200px"></video>
                     </span>
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
@@ -206,7 +211,8 @@
                             class="fa fa-edit"></i> Editar</a>
                         &nbsp;
                         <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
-                          @click="downloadFile" :id="material.id" :name="material.name"><i class="fa fa-cloud-download"></i> Descargar</a>
+                          @click="downloadFile" :id="material.id" :name="material.name"><i
+                            class="fa fa-cloud-download"></i> Descargar</a>
                       </span>
                     </div>
                   </div>
@@ -539,6 +545,7 @@ export default {
   }
 }
 </script>
+
 <style>
 /* Using the bootstrap style, but overriding the font to not draw in
    the Glyphicons Halflings font as an additional requirement for sorting icons.
@@ -596,6 +603,8 @@ div.desc {
 
 .box-footer {
   background-color: transparent !important;
+  overflow-y: scroll;
+  max-height: 500px;
 }
 
 .mailbox-attachments li {

@@ -75,7 +75,6 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
                             <td>
                               <select2 :id="selectedDelivery" :options="filterDeliveries" v-model="filters.delivery"
                                 @onChangeSelected="search">
@@ -85,7 +84,8 @@
                               <select2 :id="selectedPostulation" :options="filterPostulations"
                                 v-model="filters.postulation" @onChangeSelected="search">
                               </select2>
-                            </td>
+                            </td>                            
+                            <td></td>
                             <td></td>
                             <td></td>
                           </tr>
@@ -1120,6 +1120,8 @@ div.desc {
 .box-footer {
   background-color: transparent !important;
   border: none;
+  overflow-y: scroll;
+  max-height: 500px;
 }
 
 video {
@@ -1154,5 +1156,10 @@ video {
 .user-block .comment {
   display: block;
   margin-left: 0px !important;
+}
+#app > div > div > section.content > div.modal-mask.modal > div > div > div.modal-body > div > div {
+  overflow-y: scroll;
+    max-height: 500px;
+    overflow-x: hidden;
 }
 </style>
