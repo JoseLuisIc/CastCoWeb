@@ -192,7 +192,7 @@
               </div>
             </div><!-- /.box-footer -->
             <div class="box-footer">
-              <ul class="mailbox-attachments clearfix">
+              <ul class="mailbox-attachments clearfix">               
                 <li v-for="(material, index) in materials">
                   <div
                     v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
@@ -202,6 +202,7 @@
                       <video v-show="['mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())"
                         :src='material.file' controls width="200px" height="200px"></video>
                     </span>
+
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
                       <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
@@ -603,15 +604,18 @@ div.desc {
 
 .box-footer {
   background-color: transparent !important;
+}
+
+#app>div>div>section.content>div.modal-mask.modal>div>div>div.modal-body>div>div {
   overflow-y: scroll;
   max-height: 500px;
 }
 
 .mailbox-attachments li {
-  float: left;
-  width: 240px;
+  width: 200px;
   border: 1px solid #eee;
   margin-bottom: 10px;
   margin-right: 10px;
+  display: inline-block;
 }
 </style>

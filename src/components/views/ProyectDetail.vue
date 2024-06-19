@@ -84,7 +84,7 @@
                               <select2 :id="selectedPostulation" :options="filterPostulations"
                                 v-model="filters.postulation" @onChangeSelected="search">
                               </select2>
-                            </td>                            
+                            </td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -113,8 +113,25 @@
       <div slot="body">
         <div class="box-footer">
           <ul class="mailbox-attachments clearfix">
-            <li v-for="(material, index) in materials">
-              <div
+            <li v-for="(material, index) in materials"
+              v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())">
+              <span class="mailbox-attachment-icon has-img">
+                <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())"
+                  :src='material.file' alt="">
+                <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.file'
+                  controls width="200px"></video>
+              </span>
+              <div class="mailbox-attachment-info">
+                <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
+                    class="fa fa-trash"></i> Eliminar</a>
+                <span class="mailbox-attachment-size">
+                  &nbsp;
+                  <a :href="material.file" class="btn btn-default btn-xs pull-right downloadImage"
+                    @click="downloadImage" :id="material.id" :name="material.name" :type="material.type"><i
+                      class="fa fa-cloud-download"></i> Descargar</a>
+                </span>
+              </div>
+              <!--<div
                 v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())"
                 class="gallery center">
 
@@ -133,7 +150,7 @@
                         class="fa fa-cloud-download"></i> Descargar</a>
                   </span>
                 </div>
-              </div>
+              </div>-->
             </li>
           </ul>
 
@@ -392,6 +409,7 @@ export default {
       showModalDelete: false,
       showModalDetail: false,
       showModalReport: false,
+      showModalDeleteMaterial: false,
       totalPage: 1,
       idProject: 0,
       start: 0,
@@ -793,6 +811,7 @@ export default {
     },
     viewMaterial(id) {
       this.idPostulation = id
+      this.materials = []
       api
         .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -969,10 +988,10 @@ export default {
       }, 100)
     },
     detail(id) {
-      this.showModalDetail = true
       api
         .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
+          this.showModalDetail = true
           console.log(response)
           this.postulation = response.data
         })
@@ -1120,13 +1139,16 @@ div.desc {
 .box-footer {
   background-color: transparent !important;
   border: none;
+}
+
+#app>div>div>section.content>div.modal-mask.modal>div>div>div.modal-body>div>div {
   overflow-y: scroll;
   max-height: 500px;
 }
 
 video {
   width: 100%;
-  height: 200px;
+  height: 175px;
 }
 
 .center {
@@ -1157,9 +1179,15 @@ video {
   display: block;
   margin-left: 0px !important;
 }
-#app > div > div > section.content > div.modal-mask.modal > div > div > div.modal-body > div > div {
+
+#app>div>div>section.content>div.modal-mask.modal>div>div>div.modal-body>div>div {
   overflow-y: scroll;
-    max-height: 500px;
-    overflow-x: hidden;
+  max-height: 500px;
+  overflow-x: hidden;
+}
+
+.mailbox-attachment-icon.has-img>img {
+  max-width: 100%;
+  height: 200px;
 }
 </style>
