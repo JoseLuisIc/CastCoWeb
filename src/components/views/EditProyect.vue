@@ -198,7 +198,7 @@
                     v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
                     <span class="mailbox-attachment-icon">
                       <img v-show="['jpg', 'png', 'jpeg'].includes(material.type.toLowerCase())" :src='material.file'
-                        height="200px" width="200px">
+                        height="200px" width="180px">
                       <video v-show="['mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())"
                         :src='material.file' controls width="200px" height="200px"></video>
                     </span>
@@ -206,14 +206,14 @@
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
                       <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
-                          class="fa fa-trash"></i> Eliminar</a>
+                          class="fa fa-trash"></i></a>
                       <span class="mailbox-attachment-size">
                         <a class="btn btn-default btn-xs pull-left editFile" :id="material.id" @click="editFile"><i
-                            class="fa fa-edit"></i> Editar</a>
+                            class="fa fa-edit"></i></a>
                         &nbsp;
                         <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
                           @click="downloadFile" :id="material.id" :name="material.name"><i
-                            class="fa fa-cloud-download"></i> Descargar</a>
+                            class="fa fa-cloud-download"></i></a>
                       </span>
                     </div>
                   </div>
