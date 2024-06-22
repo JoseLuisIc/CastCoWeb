@@ -64,7 +64,8 @@
 
               <div class="form-group">
                 <label for="name" class="col-form-label">Descripción:</label>
-                <input type="text" class="form-control" id="name" v-model="description">
+                <textarea class="form-control" name="notes" id="notes" cols="30" rows="5"
+                  v-model="description"></textarea>
               </div>
 
               <div class="form-group">
@@ -86,7 +87,8 @@
         </div>
       </div>
 
-      <button slot="footer" type="button" v-show="id != 0" class="btn btn-primary" v-on:click="update">Actualizar</button>
+      <button slot="footer" type="button" v-show="id != 0" class="btn btn-primary"
+        v-on:click="update">Actualizar</button>
       <button slot="footer" type="button" v-show="id == 0" class="btn btn-primary" v-on:click="save">Guardar</button>
     </modal>
 
@@ -115,7 +117,8 @@
               <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange"
                 accept="image/*,video/mp4">
             </div>
-            <button type="button" class="btn btn-primary" v-on:click="uploadFile" v-if="!isEditMaterial">Agregar</button>
+            <button type="button" class="btn btn-primary" v-on:click="uploadFile"
+              v-if="!isEditMaterial">Agregar</button>
             <div class="form-group">
               <button type="button" class="btn btn-primary" v-on:click="updateMaterial"
                 v-if="isEditMaterial">Actualizar</button>
