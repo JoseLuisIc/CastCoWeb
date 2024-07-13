@@ -565,13 +565,25 @@ export default {
               that.viewMaterial(this.id)
             })
             $('.selectDelivery').on('change', function () {
-              that.onChangeDelivery({ value: this.value, id: this.id })
+              if (that.role === util.MANAGER) {
+                that.onChangeDelivery({ value: this.value, id: this.id })
+                return
+              }
+              that.alertShow('Permisos', 'No tienes los permisos suficientes para realizar esta accion', 'error', 'fa fa-error')
             })
             $('.selectCharacter').on('change', function () {
-              that.onChangeCharacter({ value: this.value, id: this.id })
+              if (that.role === util.MANAGER) {
+                that.onChangeCharacter({ value: this.value, id: this.id })
+                return
+              }
+              that.alertShow('Permisos', 'No tienes los permisos suficientes para realizar esta accion', 'error', 'fa fa-error')
             })
             $('.selectPostulation').on('change', function () {
-              that.onChangeStatus({ value: this.value, id: this.id })
+              if (that.role === util.MANAGER) {
+                that.onChangeStatus({ value: this.value, id: this.id })
+                return
+              }
+              that.alertShow('Permisos', 'No tienes los permisos suficientes para realizar esta accion', 'error', 'fa fa-error')
             })
             $('.detail').on('click', function () {
               that.detail(this.id)

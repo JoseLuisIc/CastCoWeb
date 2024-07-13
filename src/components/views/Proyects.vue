@@ -129,7 +129,8 @@
       <h3 slot="header">Eliminar Usuario</h3>
       <div slot="body">
         <p>Esta seguro que quiere eliminar al usuario?</p>
-        <input type="text" class="form-control" placeholder="Escribe el nombre del proyecto" v-model="confirmNameProyect">
+        <input type="text" class="form-control" placeholder="Escribe el nombre del proyecto"
+          v-model="confirmNameProyect">
       </div>
 
       <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteProyect">Eliminar</button>
@@ -389,12 +390,20 @@ export default {
       $('#tableProyects').on('change', '#selectStatus', function () {
         var col = $(this).data('index')
         console.log(col, $(this).val())
-        that.updateProyect({ id: col, is_active: $(this).val() })
+        if (that.role === util.MANAGER) {
+          that.updateProyect({ id: col, is_active: $(this).val() })
+          return
+        }
+        toastr.error('Permisos', 'No tienes los permisos suficientes para realizar esta accion')
       })
       $('#tableProyects').on('change', '#selectStatusProject', function () {
         var col = $(this).data('index')
         console.log(col, $(this).val())
-        that.updateProyect({ id: col, status: $(this).val() })
+        if (that.role === util.MANAGER) {
+          that.updateProyect({ id: col, status: $(this).val() })
+          return
+        }
+        toastr.error('Permisos', 'No tienes los permisos suficientes para realizar esta accion')
       })
       $('input[type=checkbox]').on('click', function (e) {
         // Get the column API object
@@ -465,7 +474,10 @@ export default {
         })
     },
     deleteProyect() {
-      if (this.project === this.confirmNameProyect) {
+      console.log(this.confirmNameProyect)
+      console.log(this.project.name)
+      console.log(this.project.name === this.confirmNameProyect)
+      if (this.project.name === this.confirmNameProyect) {
         api
           .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': this.$store.state.token })
           .then(response => {
