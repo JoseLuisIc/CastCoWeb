@@ -100,7 +100,7 @@
                   </div>
                   <div class="form-group">
                     <label for="work_day" class="col-form-label">Medios:</label>
-                    <textarea class="form-control" name="notes" id="notes" cols="30" rows="5"
+                    <textarea class="form-control" name="work_day" id="work_day" cols="30" rows="5"
                       v-model="project.work_day"></textarea>
                   </div>
                   <div class="form-group">

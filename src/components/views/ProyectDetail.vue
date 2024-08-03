@@ -21,7 +21,7 @@
                     v-if="applications.length > 0 && role === MANAGER">Descargar Reporte <i
                       class="fa fa-download"></i></button>
                   <div class="btn-group" style="float: right;">
-                    <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
+                    <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"  v-if="role === MANAGER"
                       aria-haspopup="true" aria-expanded="false"> Columnas Visibles
                     </button>
                     <ul class="dropdown-menu" id="hiddenColumns">
@@ -47,47 +47,45 @@
                         class="table table-bordered table-striped dataTable display responsive nowrap">
                         <thead>
                           <tr role="row">
-                            <th>Personaje</th>
-                            <th>Postulante</th>
-                            <th>Instagram</th>
-                            <th>Edad
-                            </th>
-                            <th>Agencia</th>
-                            <th>Material
-                            </th>
-                            <th># Entrega</th>
-                            <th>Status Postulacion</th>
-                            <th>Status Proyecto</th>
-                            <th>Dispositivo</th>
+                            <th data-index="0">Personaje</th>
+                            <th data-index="1">Postulante</th>
+                            <th data-index="2">Instagram</th>
+                            <th data-index="3">Edad</th>
+                            <th data-index="4">Agencia</th>
+                            <th data-index="5">Material</th>
+                            <th data-index="6"># Entrega</th>
+                            <th data-index="7">Status Postulacion</th>
+                            <th data-index="8">Status Proyecto</th>
+                            <th data-index="9">Dispositivo</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
                         <thead>
                           <tr role="row">
-                            <td>
+                            <th v-if="role === MANAGER">
                               <select2 :id="selectedCharacter" :options="filterCharacters" v-model="filters.character"
                                 @onChangeSelected="search">
                               </select2>
-                            </td>
-                            <td><input type="search" name="" id="" class="form-control"
-                                placeholder="Nombre del postulante" v-model="filters.name" v-on:keyup="search"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
+                            </th>
+                            <th><input type="search" name="" id="" class="form-control"
+                                placeholder="Nombre del postulante" v-model="filters.name" v-on:keyup="search"></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th v-if="role === MANAGER">
                               <select2 :id="selectedDelivery" :options="filterDeliveries" v-model="filters.delivery"
                                 @onChangeSelected="search">
                               </select2>
-                            </td>
-                            <td>
+                            </th>
+                            <th v-if="role === MANAGER">
                               <select2 :id="selectedPostulation" :options="filterPostulations"
                                 v-model="filters.postulation" @onChangeSelected="search">
                               </select2>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            </th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -122,7 +120,7 @@
                   controls width="200px"></video>
               </span>
               <div class="mailbox-attachment-info">
-                <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
+                <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"  v-if="role === MANAGER"><i
                     class="fa fa-trash"></i> Eliminar</a>
                 <span class="mailbox-attachment-size">
                   &nbsp;
@@ -450,6 +448,7 @@ export default {
       role: 0,
       MANAGER: util.MANAGER,
       hiddenDefaultCol: [],
+      hiddenDefaultColAgency: [0, 6, 7],
       checkedNamesDefault: ['name', 'photo', 'age', 'agency', 'city', 'instagram', 'dropbox', 'casting_notes', 'director_notes', 'production_node'],
       checkedNames: [],
       progress: 0,
@@ -464,8 +463,14 @@ export default {
         this.idProject = this.$route.params.id
         this.fetchProject()
       }
-      if (localStorage.getItem('columnVisibleProyectDetail') === null) {
-        localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(this.hiddenDefaultCol))
+      if (this.role === util.MANAGER) {
+        if (localStorage.getItem('columnVisibleProyectDetail') === null || localStorage.getItem('columnVisibleProyectDetail').length === 0) {
+          localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(this.hiddenDefaultCol))
+        }
+      } else {
+        if (localStorage.getItem('columnVisibleProyectDetailAgency') === null) {
+          localStorage.setItem('columnVisibleProyectDetailAgency', JSON.stringify(this.hiddenDefaultColAgency))
+        }
       }
     })
   },
@@ -692,7 +697,7 @@ export default {
           }
         ],
         'columnDefs': [
-          { 'visible': false, 'targets': JSON.parse(localStorage.getItem('columnVisibleProyectDetail')) }
+          { 'visible': false, 'targets': JSON.parse(that.role === util.MANAGER ? localStorage.getItem('columnVisibleProyectDetail') : localStorage.getItem('columnVisibleProyectDetailAgency')) }
         ],
         'language': esMX
       })
@@ -749,13 +754,23 @@ export default {
         var index = $(this).val()
         if (index !== '-1') {
           var column = that.table.column(index)
-          var columns = JSON.parse(localStorage.getItem('columnVisibleProyectDetail'))
+          var columns
+          if (this.role === util.MANAGER) {
+            columns = JSON.parse(localStorage.getItem('columnVisibleProyectDetail'))
+          } else {
+            columns = JSON.parse(localStorage.getItem('columnVisibleProyectDetailAgency'))
+          }
+
           if ($(this).prop('checked')) {
             columns.push(parseInt(index))
           } else {
             columns = columns.filter(column => column !== parseInt(index))
           }
-          localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(columns))
+          if (this.role === util.MANAGER) {
+            localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(columns))
+          } else {
+            localStorage.setItem('columnVisibleProyectDetailAgency', JSON.stringify(columns))
+          }
 
           // Toggle the visibility
           column.visible(!column.visible())
