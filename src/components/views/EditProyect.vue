@@ -205,10 +205,10 @@
 
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
-                      <a class="btn btn-default btn pull-left deleteFile" :id="material.id" @click="deleteFile"><i
+                      <a class="btn btn-default btn pull-left deleteFile" :id="material.id" @click="deleteFile(material.id)"><i
                           class="fa fa-trash"></i></a>
                       <span class="mailbox-attachment-size">
-                        <a class="btn btn-default btn pull-left editFile" :id="material.id" @click="editFile"><i
+                        <a class="btn btn-default btn pull-left editFile" :id="material.id" @click="editFile(material.id)"><i
                             class="fa fa-edit"></i></a>
                         &nbsp;
                         <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
@@ -460,10 +460,8 @@ export default {
         this.project.agency_budget = ''
       }
     },
-    deleteFile(e) {
-      e.preventDefault()
-      console.log(e.target)
-      var materialId = e.target.id
+    deleteFile(materialId) {
+      console.log(materialId)
       var that = this
       api
         .request('delete', `projects/${this.project.id}/material/${materialId}/`, {}, { 'Authorization': this.$store.state.token })
@@ -495,10 +493,7 @@ export default {
         })
         .catch(console.error)
     },
-    editFile(e) {
-      e.preventDefault()
-      console.log(e.target)
-      var materialId = e.target.id
+    editFile(materialId) {
       var that = this
       api
         .request('get', `projects/${this.project.id}/material/${materialId}/`, {}, { 'Authorization': this.$store.state.token })
