@@ -192,7 +192,7 @@
               </div>
             </div><!-- /.box-footer -->
             <div class="box-footer">
-              <ul class="mailbox-attachments clearfix">               
+              <ul class="mailbox-attachments clearfix">
                 <li v-for="(material, index) in materials">
                   <div
                     v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
@@ -205,10 +205,10 @@
 
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
-                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
+                      <a class="btn btn-default btn pull-left deleteFile" :id="material.id" @click="deleteFile"><i
                           class="fa fa-trash"></i></a>
                       <span class="mailbox-attachment-size">
-                        <a class="btn btn-default btn-xs pull-left editFile" :id="material.id" @click="editFile"><i
+                        <a class="btn btn-default btn pull-left editFile" :id="material.id" @click="editFile"><i
                             class="fa fa-edit"></i></a>
                         &nbsp;
                         <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
@@ -506,6 +506,9 @@ export default {
           that.idMaterial = response.data.id
           that.nameMaterial = response.data.name
           that.isEditMaterial = true
+          // that.previewSrc.src = response.data.file
+          // that.previewSrc.type = response.data.type
+          // that.isPreviewFile = true
         })
         .catch(error => {
           if (error.response) {
