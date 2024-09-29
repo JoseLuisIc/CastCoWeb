@@ -40,7 +40,8 @@
                   </div>
                   <div class="form-group">
                     <label for="casting_dynamics" class="col-form-label">Dinamica de casting:</label>
-                    <input class="form-control" id="casting_dynamics" v-model="project.casting_dynamics" />
+                    <textarea class="form-control" name="casting_dynamics" id="casting_dynamics" cols="30" rows="5"
+                      v-model="project.casting_dynamics"></textarea>
                   </div>
                   <div class="form-group">
                     <label for="temporality" class="col-form-label">Temporalidad:</label>

@@ -21,8 +21,8 @@
                     v-if="applications.length > 0 && role === MANAGER">Descargar Reporte <i
                       class="fa fa-download"></i></button>
                   <div class="btn-group" style="float: right;">
-                    <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"  v-if="role === MANAGER"
-                      aria-haspopup="true" aria-expanded="false"> Columnas Visibles
+                    <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
+                      v-if="role === MANAGER" aria-haspopup="true" aria-expanded="false"> Columnas Visibles
                     </button>
                     <ul class="dropdown-menu" id="hiddenColumns">
                       <li>
@@ -120,8 +120,8 @@
                   controls width="200px"></video>
               </span>
               <div class="mailbox-attachment-info">
-                <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"  v-if="role === MANAGER"><i
-                    class="fa fa-trash"></i> Eliminar</a>
+                <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"
+                  v-if="role === MANAGER"><i class="fa fa-trash"></i> Eliminar</a>
                 <span class="mailbox-attachment-size">
                   &nbsp;
                   <a :href="material.file" class="btn btn-default btn-xs pull-right downloadImage"
@@ -805,6 +805,7 @@ export default {
           this.filterCharacters = Object.assign([], tmpCharacters)
           this.filterCharacters.unshift({ id: '', text: 'Todos' })
           this.filterDeliveries = Object.assign([], tmpDeliveries)
+          this.filterDeliveries.unshift({ id: '0', text: 'Sin asignación' })
           this.filterDeliveries.unshift({ id: '', text: 'Todos' })
           this.characters = Object.assign([], tmpCharacters)
           this.deliveries = Object.assign([], tmpDeliveries)
