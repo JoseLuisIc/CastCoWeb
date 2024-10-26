@@ -154,8 +154,7 @@ import Modal from '../widgets/Modal.vue'
 // require('datatables.net-buttons/js/buttons.flash.js')
 // require('datatables.net-buttons/js/buttons.html5.js')
 // require('datatables.net-buttons/js/buttons.print.js')
-import moment from 'moment'
-import settings from '../../config/settings'
+
 import esMX from '../../lang/es_mx'
 $.fn.dataTable.Api.register('sum()', function () {
   return this.flatten().reduce(function (a, b) {
@@ -220,38 +219,6 @@ export default {
         'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
         'dom': 'Blfrtip',
         'autoWidth': false,
-        'buttons': [
-          {
-            'extend': 'copy',
-            'className': 'btn btn-default',
-            'text': '<i class="fa  fa-copy"></i> Copiar',
-            'titleAttr': 'Copiar',
-            'exportOptions': {
-              'columns': ':visible',
-              'hiddenDefaultCol': 'visible'
-            }
-          },
-          {
-            'extend': 'csv',
-            'title': settings.name + 'Proyectos_' + moment(new Date()).format('YYYYMMDD'),
-            'className': 'btn btn-success',
-            'text': '<i class="fa fa-file-excel-o"></i> CSV',
-            'titleAttr': 'CSV',
-            'exportOptions': {
-              'columns': ':visible'
-            }
-          },
-          {
-            'extend': 'print',
-            'title': settings.name + 'Proyectos_' + moment(new Date()).format('YYYYMMDD'),
-            'className': 'btn btn-info',
-            'text': '<i class="fa fa-print"></i> Imprimir',
-            'titleAttr': 'Imprimir',
-            'exportOptions': {
-              'columns': ':visible'
-            }
-          }
-        ],
         'responsive': true,
         'processing': true,
         'serverSide': true,

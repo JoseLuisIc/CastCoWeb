@@ -1,32 +1,35 @@
 <template>
-  <div class="pull-right">
-    <ul class="pagination">
-      <!-- <li class="pagination-item" :disabled="isInFirstPage">
+  <div>
+    <div class="pull-left" style="padding: 20px;">Mostrando {{ calculatePage }} a {{ perPage * currentPage }} de {{ totalPages * perPage }} entradas</div>
+    <div class="pull-right">
+      <ul class="pagination">
+        <!-- <li class="pagination-item" :disabled="isInFirstPage">
         <a type="button" @click="onClickFirstPage">
           Primero
         </a>
       </li> -->
-      <li class="pagination-item" :disabled="isInFirstPage">
-        <a type="button" @click="onClickPreviousPage">
-          Anterior
-        </a>
-      </li>
-      <li v-for="page in pages" class="pagination-item" :class="{ active: isPageActive(page.name) }">
-        <a type="button" @click="onClickPage(page.name)" :disabled="page.isDisabled">
-          {{ page.name }}
-        </a>
-      </li>
-      <li class="pagination-item" :disabled="isInLastPage">
-        <a type="button" @click="onClickNextPage">
-          Siguiente
-        </a>
-      </li>
-      <!-- <li class="pagination-item" :disabled="isInLastPage">
+        <li class="pagination-item" :disabled="isInFirstPage">
+          <a type="button" @click="onClickPreviousPage">
+            Anterior
+          </a>
+        </li>
+        <li v-for="page in pages" class="pagination-item" :class="{ active: isPageActive(page.name) }">
+          <a type="button" @click="onClickPage(page.name)" :disabled="page.isDisabled">
+            {{ page.name }}
+          </a>
+        </li>
+        <li class="pagination-item" :disabled="isInLastPage">
+          <a type="button" @click="onClickNextPage">
+            Siguiente
+          </a>
+        </li>
+        <!-- <li class="pagination-item" :disabled="isInLastPage">
         <a type="button" @click="onClickLastPage">
           Ultimo
         </a>
       </li> -->
-    </ul>
+      </ul>
+    </div>
   </div>
 
 </template>
@@ -85,6 +88,12 @@ export default {
     },
     isInLastPage() {
       return this.currentPage === this.totalPages
+    },
+    calculatePage() {
+      if (this.currentPage === 1) {
+        return 1
+      }
+      return this.perPage * (this.currentPage - 1) + 1
     }
   },
   methods: {

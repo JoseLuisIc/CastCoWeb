@@ -723,7 +723,7 @@ export default {
         var info = that.table.page.info()
         console.log(info)
         that.currentPage = info.page === 0 ? 1 : info.page + 1
-
+        that.length = info.length
         var params = new URLSearchParams()
         params.append('format', 'datatables')
         params.append('search', that.filters.name)
@@ -737,6 +737,9 @@ export default {
         that.table.ajax.url(config.serverURI + 'applications/?' + params)
       })
       this.table.on('length.dt', function (e, settings, len) {
+        var info = that.table.page.info()
+        console.log(info)
+        that.currentPage = info.page === 0 ? 1 : info.page + 1
         var params = new URLSearchParams()
         params.append('format', 'datatables')
         params.append('search', that.filters.name)
@@ -1078,6 +1081,7 @@ export default {
         })
     },
     downloadReport() {
+      this.checkedNames = []
       this.showModalReport = true
     },
     checkedAll(e) {
