@@ -6,16 +6,16 @@
       <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-xs-12">
         <info-box color-class="bg-black" :icon-classes="['fa', 'fa-user']" text="Administradores" :number="admins"
-        link="admins"></info-box>
+          link="admins"></info-box>
       </div>
       <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-xs-12">
-        <info-box color-class="bg-black" :icon-classes="['fa', 'fa-users']" text="Talentos" :number="talents"
+        <info-box color-class="bg-red" :icon-classes="['fa', 'fa-users']" text="Talentos" :number="talents"
           link="talents"></info-box>
       </div>
       <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-xs-12">
-        <info-box color-class="bg-black" :icon-classes="['fa', 'fa-user']" text="Agencias" :number="agencies"
+        <info-box color-class="bg-green" :icon-classes="['fa', 'fa-user']" text="Agencias" :number="agencies"
           link="agencies"></info-box>
       </div>
       <!-- /.col -->
@@ -24,7 +24,11 @@
       <div class="clearfix visible-sm-block"></div>
 
       <div class="col-md-3 col-sm-6 col-xs-12">
-        <info-box color-class="bg-black" :icon-classes="['fa', 'fa-list-alt']" text="Proyectos" :number="projects"
+        <info-box color-class="bg-blue" :icon-classes="['fa', 'fa-list-alt']" text="Proyectos" :number="projects"
+          link="proyects"></info-box>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <info-box color-class="bg-yellow" :icon-classes="['fa', 'fa-list-alt']" text="Postulaciones" :number="applications"
           link="proyects"></info-box>
       </div>
     </div>
@@ -67,7 +71,6 @@ import Alert from '../widgets/Alert'
 import InfoBox from '../widgets/InfoBox'
 import ProcessInfoBox from '../widgets/ProcessInfoBox'
 import api from '../../api'
-import util from '../../utils/util'
 
 export default {
   name: 'Dashboard',
@@ -82,6 +85,7 @@ export default {
       talents: 0,
       agencies: 0,
       projects: 0,
+      applications: 0,
       generateRandomNumbers(numbers, max, min) {
         var a = []
         for (var i = 0; i < numbers; i++) {
@@ -93,18 +97,14 @@ export default {
   },
   methods: {
     getTotal() {
-      api.request('get', `users/?pagination=false`, {}, { 'Authorization': this.$store.state.token })
+      api.request('get', `dashboard-analytics/`, {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           var json = response.data
-          this.admins = json.filter(user => user.role === util.MANAGER).length
-          this.talents = json.filter(user => user.role === util.TALENT).length
-          this.agencies = json.filter(user => user.role === util.AGENCY).length
-        })
-        .catch(console.log())
-      api.request('get', `projects/?format=datatables&length=-1`, {}, { 'Authorization': this.$store.state.token })
-        .then(response => {
-          var data = response.data
-          this.projects = data.recordsTotal
+          this.admins = json.managers
+          this.talents = json.talents
+          this.agencies = json.agencies
+          this.projects = json.projects
+          this.applications = json.applications
         })
         .catch(console.log())
     }
