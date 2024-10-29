@@ -262,7 +262,7 @@ export default {
           {
             'data': 'is_active',
             render: function (data, type, row) {
-              return `<select id="selectStatus" class="form-control" name="status" data-index="${row.id}">
+              return `<select class="selectStatus" class="form-control" name="status" data-index="${row.id}">
                   <option value="true" ${row.is_active ? 'selected' : ''}>Activo</option>
                   <option value="false" ${row.is_active ? '' : 'selected'}>Inactivo</option>
               </select>
@@ -282,7 +282,7 @@ export default {
           {
             'data': 'status',
             render: function (data, type, row) {
-              return `<select id="selectStatusProject" class="form-control" name="status" data-index="${row.id}">
+              return `<select class="selectStatusProject" class="form-control" name="status" data-index="${row.id}">
                   <option value="1" ${row.status === 1 ? 'selected' : ''}>En Entrega</option>
                   <option value="2" ${row.status === 2 ? 'selected' : ''}>Callback</option>
                   <option value="3" ${row.status === 3 ? 'selected' : ''}>Finalizado</option>
@@ -338,7 +338,7 @@ export default {
           .search(this.value)
           .draw()
       })
-      $('#tableProyects').on('change', '#status', function () {
+      $('#tableProyects').on('change', '.status', function () {
         var col = $(this).data('index')
         console.log(col)
         that.table
@@ -354,7 +354,7 @@ export default {
           .search(this.value)
           .draw()
       })
-      $('#tableProyects').on('change', '#selectStatus', function () {
+      $('#tableProyects').on('change', '.selectStatus', function () {
         var col = $(this).data('index')
         console.log(col, $(this).val())
         if (that.role === util.MANAGER) {
