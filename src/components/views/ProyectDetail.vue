@@ -160,7 +160,7 @@
         </div>
       </div>
     </modal>
-    <modal v-if="showModalDelete" @close="showModalDelete = false">
+    <modal v-if="showModalDelete" @close="showModalDelete = false" :iconClasses="['modal-md']">
       <h3 slot="header">Eliminar Postulación</h3>
       <div slot="body">
         <p>Esta seguro que quiere eliminar la postulación?</p>
@@ -189,6 +189,7 @@
                 <span class="description"><strong> Instagram: </strong> {{ postulation.user.instagram }}</span>
                 <span class="description"><strong> Telefono: </strong> {{ postulation.user.phone }}</span>
                 <span class="description"><strong> Edad: </strong> {{ postulation.user.age }}</span>
+                <span class="description"><strong> Skills: </strong> {{ postulation.user.skills }}</span>
               </div>
             </div>
             <div class="col-md-6">
@@ -200,6 +201,14 @@
                   }}</span>
                 <span class="description"><strong> Telefono: </strong> {{ postulation.user.agency.phone }}</span>
                 <span class="description"><strong> Ciudad: </strong> {{ postulation.user.agency.city }}</span>
+              </div>
+              <br>
+              <div class="user-block">
+                <strong class="subtitle"><i class="fa fa-arrows-h margin-r-5"></i> Sizes</strong>
+                <span class="description"><strong> Height: </strong>{{ postulation.user.height }} cm</span>
+                <span class="description"><strong> Shirts: </strong> {{ postulation.user.shirt_size }}</span>
+                <span class="description"><strong> Pants: </strong>{{ postulation.user.pant_size }}</span>
+                <span class="description"><strong> Shoes: </strong> {{ postulation.user.shoe_size }} cm (MX)</span>
               </div>
             </div>
           </div>
@@ -223,7 +232,7 @@
       </div>
     </modal>
 
-    <modal v-if="showModalDeleteMaterial" @close="showModalDeleteMaterial = false">
+    <modal v-if="showModalDeleteMaterial" @close="showModalDeleteMaterial = false" :iconClasses="['modal-md']">
       <h3 slot="header">Eliminar Postulación</h3>
       <div slot="body">
         <p>Esta seguro que quiere eliminar la imagen?</p>
@@ -232,7 +241,7 @@
       <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteMaterial">Eliminar</button>
 
     </modal>
-    <modal v-if="showModalReport" @close="showModalReport = false">
+    <modal v-if="showModalReport" @close="showModalReport = false" :iconClasses="['modal-md']">
       <h3 slot="header">Descargar Reporte</h3>
       <div slot="body">
         <button class="btn btn-danger" v-on:click="exportPDF"
@@ -360,6 +369,28 @@
                 <input class="form-check-input" type="checkbox" value="production_node" v-model="checkedNames">
                 <label class="form-check-label">
                   Production Node
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="sizes" v-model="checkedNames">
+                <label class="form-check-label">
+                  Sizes
+                </label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <!-- Task item -->
+            <div class="form-group" style="margin-bottom: 0px !important;">
+              <div class="form-check" style="padding-left: 5px;">
+                <input class="form-check-input" type="checkbox" value="skills" v-model="checkedNames">
+                <label class="form-check-label">
+                  Skills
                 </label>
               </div>
             </div>

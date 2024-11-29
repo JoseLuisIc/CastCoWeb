@@ -14,6 +14,8 @@ import auth from './components/middleware/auth'
 import admin from './components/middleware/admin'
 import ProyectsDetailView from './components/views/ProyectDetail.vue'
 import PostulateView from './components/views/Postulate.vue'
+import StatesView from './components/views/State.vue'
+
 // Routes
 const routes = [
   {
@@ -139,6 +141,18 @@ const routes = [
           module: 'Perfil',
           description: 'Editar de Perfil',
           requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/admin/states',
+        alias: '',
+        component: StatesView,
+        name: 'admin/states',
+        meta: {
+          module: 'States',
+          requiresAuth: true,
+          description: 'Overview of environment',
           middleware: [auth, admin]
         }
       }

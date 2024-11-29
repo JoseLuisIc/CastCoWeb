@@ -32,9 +32,8 @@
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
                           tabindex="0">Nombres</th>
-                        <th>Apellidos
+                        <th>Apellidos</th>
                         <th>Email</th>
-                        </th>
                         <th style="width: 101px;">Acciones</th>
                       </tr>
                     </thead>
@@ -66,7 +65,7 @@
         </div>
       </div>
     </div>
-    <modal v-if="showModalDelete" @close="showModalDelete = false">
+    <modal v-if="showModalDelete" @close="showModalDelete = false" :iconClasses="['modal-md']">
       <h3 slot="header">Eliminar Usuario</h3>
       <div slot="body">
         <p>Esta seguro que quiere eliminar al usuario?</p>
@@ -75,7 +74,7 @@
       <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
 
     </modal>
-    <modal v-if="showModal" @close="showModal = false">
+    <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-md']">
       <h3 v-if="isNew" slot="header">Nuevo Usuario</h3>
       <h3 v-if="!isNew" slot="header">Actualizar Usuario</h3>
       <div slot="body">

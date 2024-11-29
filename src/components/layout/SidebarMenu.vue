@@ -85,6 +85,12 @@
         <span class="page">Perfil</span>
       </a>
     </router-link>
+    <router-link tag="li" class="pageLink" to="/admin/states" v-if="user.roles === MANAGER">
+      <a>
+        <i class="fa fa-list-alt"></i>
+        <span class="page">Estados</span>
+      </a>
+    </router-link>
     <li>
       <a href="javascript:;" v-on:click="logout">
         <i class="fa fa-sign-out"></i>
