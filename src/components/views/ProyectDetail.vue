@@ -480,7 +480,7 @@ export default {
       MANAGER: util.MANAGER,
       hiddenDefaultCol: [],
       hiddenDefaultColAgency: [0, 6, 7],
-      checkedNamesDefault: ['name', 'photo', 'age', 'agency', 'city', 'instagram', 'dropbox', 'casting_notes', 'director_notes', 'production_node'],
+      checkedNamesDefault: ['name', 'photo', 'age', 'agency', 'city', 'instagram', 'dropbox', 'casting_notes', 'director_notes', 'production_node', 'skills', 'sizes'],
       checkedNames: [],
       progress: 0,
       percent: 'width: 0%',
