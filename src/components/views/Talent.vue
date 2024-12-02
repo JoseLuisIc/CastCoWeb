@@ -635,14 +635,12 @@ export default {
     },
     getStates() {
       const params = new URLSearchParams()
-      params.append('search', '')
-      params.append('ordering', '')
-      params.append('length', 32)
+      params.append('pagination', false)
       api
         .request('get', 'states/?' + params, {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           console.log(response.data)
-          this.states = response.data.results
+          this.states = response.data
         })
         .catch(error => {
           if (error.response) {
