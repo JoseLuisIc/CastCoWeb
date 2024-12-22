@@ -5,7 +5,7 @@
       <img :src="'https://ui-avatars.com/api/?background=random&name=' + user.displayName" class="user-image"
         alt="User Image">
       <!-- hidden-xs hides the username on small devices so only the image appears. -->
-      <span class="hidden-xs">{{(user.displayName || user.email)}}</span>
+      <span class="hidden-xs">{{(user.displayName)}}</span>
     </a>
     <!-- Account Info and Menu -->
     <ul class="dropdown-menu">
@@ -13,6 +13,7 @@
         <p>
           <span>{{ user.displayName }}</span>
           <small>{{ getRol(user.roles) }}</small>
+          <small>{{ user.email}}</small>
         </p>
       </li>
       <li class="user-footer">
@@ -35,11 +36,12 @@
 <script>
 import $ from 'jquery'
 import util from '../../utils/util'
+import commonMethods from '../../commons/commonMethods'
 export default {
   name: 'UserMenu',
   props: ['user'],
+  mixins: [commonMethods],
   mounted() {
-    console.log(this.user)
     $.ajaxSetup({
       headers: { 'Authorization': this.$store.state.token },
       error: function (x, status, error) {
@@ -48,17 +50,6 @@ export default {
     })
   },
   methods: {
-    logout() {
-      this.$store.commit('SET_USER', null)
-      this.$store.commit('SET_TOKEN', null)
-
-      if (window.localStorage) {
-        window.localStorage.setItem('user', null)
-        window.localStorage.setItem('token', null)
-      }
-
-      this.$router.push('/login')
-    },
     getRol(rolId) {
       var rolString = ''
       switch (rolId) {

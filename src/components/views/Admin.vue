@@ -6,7 +6,7 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success" v-can="'create_admins'"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -44,9 +44,9 @@
                         <td>{{ user.email }} </td>
                         <td>
                           <div class="btn-group">
-                            <button class="btn delete" v-on:click=confirmDelete(user.id)><i class="fa fa-trash"></i></button>
-                            <button class="btn edit" v-on:click=editUser(user.id)><i class="fa fa-edit"></i></button>
-                            <button class="btn reset" v-on:click=modalResetPwd(user.id)><i class="fa fa-refresh"></i></button>
+                            <button class="btn delete" v-on:click=confirmDelete(user.id) v-can="'delete_admins'"><i class="fa fa-trash"></i></button>
+                            <button class="btn edit" v-on:click=editUser(user.id) v-can="'edit_admins'"><i class="fa fa-edit"></i></button>
+                            <button class="btn reset" v-on:click=modalResetPwd(user.id) v-can="'reset_password'"><i class="fa fa-refresh"></i></button>
                           </div>
                         </td>
                       </tr>

@@ -15,6 +15,7 @@ import admin from './components/middleware/admin'
 import ProyectsDetailView from './components/views/ProyectDetail.vue'
 import PostulateView from './components/views/Postulate.vue'
 import StatesView from './components/views/State.vue'
+import ManagerView from './components/views/Manager.vue'
 
 // Routes
 const routes = [
@@ -35,6 +36,17 @@ const routes = [
           module: 'Dashboard',
           requiresAuth: true,
           description: 'Overview of environment',
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/admin/managers',
+        component: ManagerView,
+        name: 'admin/managers',
+        meta: {
+          module: 'Managers',
+          description: 'Listado de Managers',
+          requiresAuth: true,
           middleware: [auth, admin]
         }
       },
@@ -149,6 +161,142 @@ const routes = [
         alias: '',
         component: StatesView,
         name: 'admin/states',
+        meta: {
+          module: 'States',
+          requiresAuth: true,
+          description: 'Overview of environment',
+          middleware: [auth, admin]
+        }
+      }
+    ]
+  },
+  {
+    path: '/manager',
+    component: DashView,
+    children: [
+      {
+        path: '/manager/dashboard',
+        alias: '',
+        component: DashboardView,
+        name: 'manager/ashboard',
+        meta: {
+          module: 'Dashboard',
+          requiresAuth: true,
+          description: 'Overview of environment',
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/admins',
+        component: AdminView,
+        name: 'manager/admins',
+        meta: {
+          module: 'Administadores',
+          description: 'Listado de Administradores',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/talents',
+        component: TalentView,
+        name: 'manager/talentos',
+        meta: {
+          module: 'Talentos',
+          description: 'Listado de Talentos',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/agencies',
+        component: AgencyView,
+        name: 'manager/agencies',
+        meta: {
+          module: 'Agencias',
+          description: 'Listado de Agencias',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/agencies/talents',
+        component: TalentView,
+        name: '/manager/agencies/talents',
+        meta: {
+          module: 'Agencias',
+          description: 'Listado de Agencias',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/agencies/talents/:id',
+        component: TalentView,
+        name: '/manager/agency/talentos',
+        module: 'Talentos',
+        meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth] }
+      },
+      {
+        path: '/manager/proyects',
+        component: ProyectsView,
+        name: 'manager/proyects',
+        meta: {
+          module: 'Proyectos',
+          description: 'Listado de Proyectos',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/proyects/:id/edit',
+        component: EditProyectView,
+        name: 'manager/proyects/edit',
+        meta: {
+          module: 'Editar',
+          description: 'Proyecto',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/proyects/create',
+        component: EditProyectView,
+        name: 'manager/proyects/create',
+        meta: {
+          module: 'Crear',
+          description: 'Proyecto',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/proyects/detail/:id',
+        component: ProyectsDetailView,
+        name: 'manager/proyects/detail',
+        meta: {
+          module: 'Detalle',
+          description: 'Proyecto',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/profile',
+        component: ProfileView,
+        name: 'manager/profile',
+        meta: {
+          module: 'Perfil',
+          description: 'Editar de Perfil',
+          requiresAuth: true,
+          middleware: [auth, admin]
+        }
+      },
+      {
+        path: '/manager/states',
+        alias: '',
+        component: StatesView,
+        name: 'manager/states',
         meta: {
           module: 'States',
           requiresAuth: true,

@@ -6,9 +6,7 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success" v-can="'create_agencies'"><i
-                class="fa fa-user-plus"> </i> Agregar
-              Nuevo</button>
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success" v-can="'create_managers'"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -16,7 +14,6 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div id="example1_length" class="dataTables_length">
-
                   </div>
                 </div>
               </div>
@@ -30,56 +27,30 @@
                     <option value="100">100</option>
                   </select> entradas
                   <table aria-describedby="example1_info" role="grid" id="tableUsers"
-                    class="table table-bordered table-striped dataTable display responsive nowrap">
+                    class="table table-bordered table-striped dataTable">
                     <thead>
                       <tr role="row">
                         <th aria-sort="ascending" style="width: 167px;" colspan="1" rowspan="1" aria-controls="example1"
-                          tabindex="0">Nombre agencia</th>
-                        <th style="width: 207px;">Email</th>
-                        <th style="width: 142px;">Encargado
-                        </th>
-                        <th style="width: 182px;">Telefono</th>
-
-                        <th style="width: 182px;">Ciudad</th>
+                          tabindex="0">Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
                         <th style="width: 101px;">Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr v-for="user in users">
-                        <td>{{ user.extras.name }} </td>
+                        <td>{{ user.first_name }} </td>
+                        <td>{{ user.last_name }} </td>
                         <td>{{ user.email }} </td>
-                        <td>{{ user.extras.booker_name }} </td>
-                        <td>{{ user.extras.phone }} </td>
-                        <td>{{ user.extras.city }} </td>
                         <td>
                           <div class="btn-group">
-                            <button class="btn delete" v-on:click=confirmDelete(user.id) v-can="'edit_agencies'"><i
-                                class="fa fa-trash"></i></button>
-                            <button class="btn edit" v-on:click=editUser(user.id) v-can="'delete_agencies'"><i class="fa fa-edit"></i></button>
-                            <button class="btn reset" v-on:click=modalResetPwd(user.id) v-can="'reset_password'"><i
-                                class="fa fa-refresh"></i></button>
-                                <button class="btn reset" v-on:click=usuarios(user.id) v-can="'view_agencies'"><i class="fa fa-eye"></i></button>
+                            <button class="btn delete" v-on:click=confirmDelete(user.id) v-can="'delete_managers'"><i class="fa fa-trash"></i></button>
+                            <button class="btn edit" v-on:click=editUser(user.id) v-can="'edit_managers'"><i class="fa fa-edit"></i></button>
+                            <button class="btn reset" v-on:click=modalResetPwd(user.id) v-can="'reset_password'"><i class="fa fa-refresh"></i></button>
                           </div>
                         </td>
                       </tr>
                     </tbody>
-                    <!-- <tfoot>
-                        <tr role="row">
-                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Email"
-                              data-index="0" autocomplete="off"></th>
-                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Nombre agencia"
-                              data-index="1" autocomplete="off"></th>
-                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Encargado"
-                              data-index="2" autocomplete="off"></th>
-                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Telefono"
-                              data-index="3" autocomplete="off"></th>
-                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Rol"
-                              data-index="5" autocomplete="off"></th>
-                          <th rowspan="1" colspan="1"><input class="form-control" type="text" placeholder="Ciudad"
-                              data-index="6" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"></th>
-                          <th rowspan=" 1" colspan="1"></th>
-                        </tr>
-                      </tfoot> -->
                   </table>
                   <div>
                     <div v-if="users.length === 0"> <center><h3>No hay registros</h3></center></div>
@@ -103,50 +74,34 @@
       <button slot="footer" type="button" class="btn btn-danger" v-on:click="deleteUser">Eliminar</button>
 
     </modal>
-
-    <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-lg']">
-      <h3 slot="header">Nuevo Usuario</h3>
+    <modal v-if="showModal" @close="showModal = false" :iconClasses="['modal-md']">
+      <h3 v-if="isNew" slot="header">Nuevo Usuario</h3>
+      <h3 v-if="!isNew" slot="header">Actualizar Usuario</h3>
       <div slot="body">
         <form>
-          <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
-            <label for="email" class="col-form-label">Email:</label>
-            <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-            <div v-if=error.email class="text-red">
-              <p>{{ error.email }}</p>
+            <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
+              <label for="email" class="col-form-label">Email:</label>
+              <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
+              <span v-if=error.email class="help-block">{{ error.email }}</span>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label for="instagram" class="col-form-label">Instagram:</label>
-            <input class="form-control" id="instagram" v-model="user.instagram" />
-          </div>
-          <div class="form-group" v-if="!isNew">
-            <label for="instagram" class="col-form-label">Nombre agencia:</label>
-            <input class="form-control" id="Nombre Agencia" type="text" v-model="user.name" />
-          </div>
-          <div class="form-group" v-if="!isNew">
-            <label for="instagram" class="col-form-label">Nombre encargado:</label>
-            <input class="form-control" id="Nombre Encargado" type="text" v-model="user.booker_name" />
-          </div>
-          <div class="form-group" v-if="!isNew">
-            <label for="instagram" class="col-form-label">Telefono:</label>
-            <input class="form-control" id="Nombre Encargado" type="text" v-model="user.phone" />
-          </div>
-          <div class="form-group" v-if="!isNew">
-            <label for="instagram" class="col-form-label">Ciudad:</label>
-            <input class="form-control" id="Nombre Encargado" type="text" v-model="user.city" />
-          </div>
-          <div class="form-group">
-            <input class="form-control" id="id" type="hidden" v-model="user.id" />
-            <input class="form-control" id="role" type="hidden" v-model="user.role" />
-          </div>
-        </form>
+            <div class="form-group">
+              <label for="first_name" class="col-form-label">Nombres:</label>
+              <input class="form-control" id="first_name" v-model="user.first_name">
+            </div>
+            <div class="form-group">
+              <label for="last_name" class="col-form-label">Apellidos:</label>
+              <input class="form-control" id="last_name" v-model="user.last_name" />
+            </div>
+           
+            <div class="form-group">
+              <input class="form-control" id="id" type="hidden" v-model="user.id" />
+              <input class="form-control" id="role" type="hidden" v-model="user.role" />
+            </div>
+          </form>
       </div>
-      <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
-      <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary"
-        v-on:click="updateUser(user)">Actualizar</button>
+        <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
+        <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
     </modal>
-
     <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="['modal-md']">
       <h3 slot="header">¿Cuál es mi contraseña?</h3>
       <div slot="body">
@@ -170,16 +125,18 @@
       <button slot="footer" class="btn btn-primary" v-on:click="resetPassword" aria-hidden="true">Guardar</button>
 
     </modal>
-  </section>
-</template>
 
+  </section>
+
+</template>
 <script>
 import toastr from 'toastr'
 import api from '../../api'
 import util from '../../utils/util'
-import agency from '../../models/agency'
+import admin from '../../models/admin'
 import Pagination from '../widgets/Pagination.vue'
 import Modal from '../widgets/Modal.vue'
+
 // Require needed datatables modules
 require('datatables.net')
 
@@ -197,23 +154,19 @@ export default {
       page: 1,
       count: 0,
       currentPage: 1,
-      showModalReset: false,
-      showModalDelete: false,
+      user: admin,
+      error: admin,
+      table: null,
+      users: [],
       showModal: false,
+      showModalDelete: false,
+      showModalReset: false,
       isNew: true,
       reset: {
         password: '',
         confirm_password: '',
         error: ''
-      },
-      user: agency,
-      error: {
-        email: '',
-        first_name: '',
-        last_name: '',
-        instagram: ''
-      },
-      users: []
+      }
     }
   },
   mounted() {
@@ -222,13 +175,6 @@ export default {
     })
   },
   methods: {
-    clearParams() {
-      Object.keys(this.user).forEach(key => {
-        if (key !== 'role') {
-          this.user[key] = ''
-        }
-      })
-    },
     onPageChange(page) {
       this.currentPage = page
       this.callUser()
@@ -236,14 +182,20 @@ export default {
     openModal() {
       this.showModal = true
       this.isNew = true
-      this.user = agency
-      this.clearParams()
+      this.user = {
+        id: 0,
+        email: '',
+        first_name: '',
+        last_name: '',
+        instagram: '',
+        role: util.MANAGER,
+        users: []
+      }
     },
     updateUser(dUser) {
       api
-        .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
+        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
-          console.log(response.data)
           this.showModal = false
           this.callUser()
           toastr.success('Actualización', 'Se ha actualizado el usuario')
@@ -259,32 +211,26 @@ export default {
       api
         .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
         .then(response => {
-          var user = response.data
-          this.editUser(user.id)
+          this.showModal = false
           this.callUser()
-          toastr.success('Guardado', 'Se ha guardado con exito')
+          toastr.success('Creación', 'Se ha creado el usuario')
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             this.error.email = errors.email[0]
+            this.error.nombres = errors.nombres[1]
           }
         })
     },
     editUser(idUser) {
       console.log(idUser)
-      Object.keys(this.error).forEach(key => {
-        this.error[key] = ''
-      })
       this.isNew = false
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          var userData = response.data
-          Object.assign(this.user, userData)
-          Object.assign(this.user, userData.extras)
+          this.user = response.data
           this.showModal = true
-          this.callUser()
         })
         .catch(error => {
           if (error.response) {
@@ -295,9 +241,8 @@ export default {
     },
     callUser() {
       const params = new URLSearchParams()
-      params.append('role', util.AGENCY)
-      params.append('search', '')
-      params.append('ordering', 'agency_name')
+      params.append('role', util.MANAGER)
+      params.append('ordering', 'email')
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       api
@@ -330,12 +275,12 @@ export default {
         })
     },
     deleteUser() {
-      console.log(this.user)
       api
         .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
-          this.callUser()
           this.showModalDelete = false
+          toastr.error('Eliminación', 'Se ha eliminado el usuario')
+          this.callUser()
         })
         .catch(error => {
           if (error.response) {
@@ -382,21 +327,20 @@ export default {
           this.reset.password = ''
           this.reset.confirm_password = ''
           this.reset.error = ''
+          this.showModalDelete = false
           toastr.success('Guardado', 'Se ha guardado correctamente la contrseña')
           this.showModalReset = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
+            console.log(errors)
             that.reset.error = errors.password[0]
           }
         })
     },
     search() {
       this.callUser()
-    },
-    usuarios(id) {
-      this.$router.push({ path: `/admin/agencies/talents/${id}` })
     }
   }
 }
@@ -404,15 +348,16 @@ export default {
 
 <style>
 /* Using the bootstrap style, but overriding the font to not draw in
-   the Glyphicons Halflings font as an additional requirement for sorting icons.
+  the Glyphicons Halflings font as an additional requirement for sorting icons.
 
-   An alternative to the solution active below is to use the jquery style
-   which uses images, but the color on the images does not match adminlte.
+  An alternative to the solution active below is to use the jquery style
+  which uses images, but the color on the images does not match adminlte.
 
 @import url('/static/js/plugins/datatables/jquery.dataTables.min.css');
 */
 
 @import url('/static/js/plugins/datatables/dataTables.bootstrap.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
 
 table.dataTable thead .sorting:after,
 table.dataTable thead .sorting_asc:after,

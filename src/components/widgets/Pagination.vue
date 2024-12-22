@@ -80,7 +80,6 @@ export default {
           isDisabled: i === this.currentPage
         })
       }
-      console.log(range)
       return range
     },
     isInFirstPage() {

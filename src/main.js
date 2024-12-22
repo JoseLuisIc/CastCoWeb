@@ -14,13 +14,26 @@ import { domain, count, prettyDate, pluralize } from './filters'
 
 // Import Views - Top level
 import AppView from './components/App.vue'
+// import registerServiceWorker from './registerServiceWorker'
 
 // Import Install and register helper items
 Vue.filter('count', count)
 Vue.filter('domain', domain)
 Vue.filter('prettyDate', prettyDate)
 Vue.filter('pluralize', pluralize)
+import { roles } from './roles.js' // Importa los roles y permisos definidos
 
+Vue.directive('can', {
+  bind(el, binding) {
+    const { role } = store.state.user // Obten el rol del usuario desde Vuex
+    const requiredPermission = binding.value
+    const hasAccess = roles[role].includes(requiredPermission)
+    if (!hasAccess) {
+      el.style.display = 'none'
+    }
+  }
+})
+// Vue.use(registerServiceWorker)
 Vue.use(VueRouter)
 
 // Routing logic
@@ -66,7 +79,7 @@ router.beforeEach((to, from, next) => {
       query: { redirect: to.fullPath }
     })
   } else {
-    console.log(to, from)
+    // console.log(to, from)
     if (to.meta.middleware) {
       const middleware = Array.isArray(to.meta.middleware)
         ? to.meta.middleware
@@ -100,7 +113,6 @@ if (window.localStorage) {
     console.log(error)
   }
 }
-
 // Start out app!
 // eslint-disable-next-line no-new
 new Vue({

@@ -72,9 +72,10 @@ export default {
     user () {
       var user = JSON.parse(localStorage.getItem('user'))
       return {
-        displayName: user.first_name,
+        displayName: user.first_name + ' ' + user.last_name,
         avatar: '',
-        roles: user.role
+        roles: user.role,
+        email: user.email
       }
     }
   }

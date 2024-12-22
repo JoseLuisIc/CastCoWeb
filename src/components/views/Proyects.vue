@@ -6,14 +6,14 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <router-link to="/admin/proyects/create" class="btn btn-primary" v-if="role === MANAGER"> <i
+            <router-link to="/admin/proyects/create" class="btn btn-primary" v-can="'create_projects'"> <i
                 class="fa fa-plus"> </i> Agregar
               Nuevo</router-link>
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
               data-target="#modalProyectDelete" />
 
             <div class="btn-group" style="float: right;">
-              <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
+              <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown" v-can="'visible_columns_projects'"
                 aria-haspopup="true" aria-expanded="false"> Columnas Visibles
               </button>
               <ul class="dropdown-menu" id="hiddenColumns">
@@ -142,12 +142,12 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
 </style>
 <script>
-import util from '../../utils/util'
 import $ from 'jquery'
 import api from '../../api'
 import config from '../../config'
 import project from '../../models/project'
 import Modal from '../widgets/Modal.vue'
+import commonMethods from '../../commons/commonMethods'
 // Datatable Modules
 // require('datatables.net-buttons/js/dataTables.buttons.js')
 // require('datatables.net-buttons/js/buttons.colVis.js')
@@ -177,11 +177,9 @@ export default {
   components: {
     Modal
   },
+  mixins: [commonMethods],
   data() {
     return {
-      MANAGER: util.MANAGER,
-      AGENCY: util.AGENCY,
-      TALENT: util.TALENT,
       showModalDelete: false,
       table: null,
       project: project,
@@ -241,8 +239,10 @@ export default {
             $('.edit').on('click', function () {
               that.editProyect(this.id)
             })
-            if (that.role !== that.MANAGER) {
+            if (!that.can('edit_projects')) {
               $('.edit').hide()
+            }
+            if (!that.can('delete_projects')) {
               $('.delete').hide()
             }
             $('.view').on('click', function () {
@@ -357,16 +357,16 @@ export default {
       $('#tableProyects').on('change', '.selectStatus', function () {
         var col = $(this).data('index')
         console.log(col, $(this).val())
-        if (that.role === util.MANAGER) {
+        if (that.can('edit_projects')) {
           that.updateProyect({ id: col, is_active: $(this).val() })
           return
         }
         toastr.error('Permisos', 'No tienes los permisos suficientes para realizar esta accion')
       })
-      $('#tableProyects').on('change', '#selectStatusProject', function () {
+      $('#tableProyects').on('change', '.selectStatusProject', function () {
         var col = $(this).data('index')
         console.log(col, $(this).val())
-        if (that.role === util.MANAGER) {
+        if (that.can('edit_projects')) {
           that.updateProyect({ id: col, status: $(this).val() })
           return
         }
@@ -441,9 +441,6 @@ export default {
         })
     },
     deleteProyect() {
-      console.log(this.confirmNameProyect)
-      console.log(this.project.name)
-      console.log(this.project.name === this.confirmNameProyect)
       if (this.project.name === this.confirmNameProyect) {
         api
           .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': this.$store.state.token })

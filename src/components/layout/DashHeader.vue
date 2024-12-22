@@ -17,10 +17,10 @@
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <!-- <messages-menu></messages-menu>
-          <notifications-menu></notifications-menu>
-          <tasks-menu></tasks-menu>
-          <user-menu :user="user"></user-menu> -->
+          <!-- <messages-menu></messages-menu> -->
+          <!-- <notifications-menu></notifications-menu> -->
+          <!-- <tasks-menu></tasks-menu> -->
+          <user-menu :user="user"></user-menu>
         </ul>
       </div>
     </nav>

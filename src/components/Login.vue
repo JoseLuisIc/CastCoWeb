@@ -30,7 +30,7 @@
 import api from '../api'
 import jwtdecode from 'jwt-decode'
 import util from '../utils/util'
-
+import store from '../store'
 export default {
   name: 'Login',
   data(router) {
@@ -68,7 +68,8 @@ export default {
             var decoded = jwtdecode(data.access)
             this.$store.commit('SET_USER', decoded.user)
             this.$store.commit('SET_TOKEN', token)
-
+            store.state.user = decoded.user
+            console.log(decoded)
             if (window.localStorage) {
               window.localStorage.setItem('user', JSON.stringify(decoded.user))
               window.localStorage.setItem('token', token)
