@@ -1,13 +1,20 @@
 <template>
   <div id="notFound">
     <img src="/static/img/logo.png" class="center-block logo">
+    <div class="error-page">
+        <h2 class="headline text-yellow"> 404</h2>
 
-    <div class="text-center col-sm-12">
-      <h1>You are lost.</h1>
-      <h4>This page doesn't exist.</h4>
-      <router-link to="/" class="vertical-5p lead">Take me home.</router-link>
-    </div>
+        <div class="error-content">
+          <h3><i class="fa fa-warning text-yellow"></i> ¡Ups! Página no encontrada.</h3>
+
+          <p>
+            No pudimos encontrar la página que estabas buscando.
+          </p>
+        </div>
+        <!-- /.error-content -->
+      </div>
   </div>
+  
 </template>
 <script>
 export default {
@@ -18,6 +25,9 @@ export default {
 <style>
 #notFound {
   padding: 10em;
-  color: white;
+  color: black;
+}
+#notFound > img {
+  background: black;
 }
 </style>

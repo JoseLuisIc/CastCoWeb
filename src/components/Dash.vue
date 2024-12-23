@@ -16,13 +16,7 @@
           <small>{{ $route.meta.description }}</small>
         </h1>
         <ol class="breadcrumb">
-          <router-link tag="li" class="pageLink" to="/admin/dashboard" v-if="user.roles === MANAGER">
-            <a>
-              <i class="fa fa-home"></i>
-              <span class="page">Home</span>
-            </a>
-          </router-link>
-          <router-link tag="li" class="pageLink" to="/agency/talents" v-if="user.roles === AGENCY">
+          <router-link tag="li" class="pageLink" to="/admin/dashboard" v-can="'view_dashboard'">
             <a>
               <i class="fa fa-home"></i>
               <span class="page">Home</span>
@@ -48,6 +42,7 @@ import DashFooter from './layout/DashFooter'
 import DashHeader from './layout/DashHeader'
 import Sidebar from './layout/Sidebar'
 import 'hideseek'
+import store from '../store'
 
 export default {
   name: 'Dash',
@@ -70,7 +65,7 @@ export default {
   },
   computed: {
     user () {
-      var user = JSON.parse(localStorage.getItem('user'))
+      var user = store.state.user
       return {
         displayName: user.first_name + ' ' + user.last_name,
         avatar: '',

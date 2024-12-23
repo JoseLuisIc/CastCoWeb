@@ -12,6 +12,7 @@ import EditProyectView from './components/views/EditProyect.vue'
 import ProfileView from './components/views/Profile.vue'
 import auth from './components/middleware/auth'
 import admin from './components/middleware/admin'
+import agency from './components/middleware/agency'
 import ProyectsDetailView from './components/views/ProyectDetail.vue'
 import PostulateView from './components/views/Postulate.vue'
 import StatesView from './components/views/State.vue'
@@ -167,6 +168,11 @@ const routes = [
           description: 'Overview of environment',
           middleware: [auth, admin]
         }
+      },
+      {
+        // not found handler
+        path: '*',
+        component: NotFoundView
       }
     ]
   },
@@ -303,6 +309,11 @@ const routes = [
           description: 'Overview of environment',
           middleware: [auth, admin]
         }
+      },
+      {
+        // not found handler
+        path: '*',
+        component: NotFoundView
       }
     ]
   },
@@ -319,7 +330,7 @@ const routes = [
         meta: {
           requiresAuth: true,
           description: 'Overview of environment',
-          middleware: [auth]
+          middleware: [auth, agency]
         }
       },
       {
@@ -327,14 +338,14 @@ const routes = [
         component: TalentView,
         name: 'agency/talentos',
         module: 'Talentos',
-        meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth] }
+        meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth, agency] }
       },
       {
         path: '/agency/talents/:id',
         component: PostulateView,
         name: 'agency/talentos/postulaciones',
         module: 'Talentos',
-        meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth] }
+        meta: { description: 'Listado de Talentos', requiresAuth: true, middleware: [auth, agency] }
       },
       {
         path: '/agency/proyects',
@@ -344,7 +355,7 @@ const routes = [
         meta: {
           description: 'Listado de Proyectos',
           requiresAuth: true,
-          middleware: [auth]
+          middleware: [auth, agency]
         }
       },
       {
@@ -355,7 +366,7 @@ const routes = [
         meta: {
           description: 'Proyecto',
           requiresAuth: true,
-          middleware: [auth]
+          middleware: [auth, agency]
         }
       },
       {
@@ -366,7 +377,7 @@ const routes = [
         meta: {
           description: 'Proyecto',
           requiresAuth: true,
-          middleware: [auth]
+          middleware: [auth, agency]
         }
       },
       {
@@ -377,7 +388,7 @@ const routes = [
         meta: {
           description: 'Proyecto',
           requiresAuth: true,
-          middleware: [auth]
+          middleware: [auth, agency]
         }
       },
       {
@@ -390,6 +401,11 @@ const routes = [
           requiresAuth: true,
           middleware: [auth]
         }
+      },
+      {
+        // not found handler
+        path: '*',
+        component: NotFoundView
       }
     ]
   },
@@ -418,6 +434,11 @@ const routes = [
           requiresAuth: true,
           middleware: [auth]
         }
+      },
+      {
+        // not found handler
+        path: '*',
+        component: NotFoundView
       }
     ]
   },

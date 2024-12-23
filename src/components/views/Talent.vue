@@ -59,7 +59,7 @@
                       <tr v-for="user in users">
                         <td>
                           <div class="widget-user-image">
-                            <img class="img-circle" :src="user.extras.photo">
+                            <img class="img-circle" :src="user.extras.photo || 'https://ui-avatars.com/api/?background=random&name=' + user.first_name + user.last_name ">
                           </div>{{ user.first_name }} {{ user.last_name }}
                         </td>
                         <td>{{ user.email }} </td>
