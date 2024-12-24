@@ -13,8 +13,8 @@
               data-target="#modalProyectDelete" />
 
             <div class="btn-group" style="float: right;">
-              <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown" v-can="'visible_columns_projects'"
-                aria-haspopup="true" aria-expanded="false"> Columnas Visibles
+              <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
+                v-can="'visible_columns_projects'" aria-haspopup="true" aria-expanded="false"> Columnas Visibles
               </button>
               <ul class="dropdown-menu" id="hiddenColumns">
                 <li>
@@ -169,6 +169,8 @@ $.fn.dataTable.Api.register('sum()', function () {
   }, 0)
 })
 import toastr from 'toastr'
+import store from '../../store'
+
 // Require needed datatables modules
 require('datatables.net')
 require('datatables.net-bs')
@@ -189,7 +191,8 @@ export default {
       states: [],
       hiddenDefaultCol: [],
       role: 0,
-      confirmNameProyect: ''
+      confirmNameProyect: '',
+      is_active: ''
     }
   },
   mounted() {
@@ -202,6 +205,9 @@ export default {
     })
   },
   methods: {
+    isAgency() {
+      return this.AGENCY === store.state.user.role
+    },
     openModal() {
       this.project = project
     },
@@ -213,6 +219,10 @@ export default {
       const params = new URLSearchParams()
       params.append('format', 'datatables')
       var that = this
+      if (that.isAgency()) {
+        $('#status').val('true')
+        that.is_active = true
+      }
       this.table = $('#tableProyects').DataTable({
         'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
         'dom': 'Blfrtip',
@@ -232,6 +242,9 @@ export default {
           },
           url: config.serverURI + 'projects/?' + params,
           type: 'GET',
+          data: function (d) {
+            d.is_active = that.is_active
+          },
           complete: function () {
             $('.delete').on('click', function () {
               that.confirmDelete(this.id)
@@ -338,9 +351,10 @@ export default {
           .search(this.value)
           .draw()
       })
-      $('#tableProyects').on('change', '.status', function () {
+      $('#tableProyects').on('change', '#status', function () {
         var col = $(this).data('index')
         console.log(col)
+        that.is_active = this.value
         that.table
           .column(col)
           .search(this.value)

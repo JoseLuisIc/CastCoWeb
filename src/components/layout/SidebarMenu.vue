@@ -1,13 +1,13 @@
 <template>
   <div>
-    <menu-admin :isActive=isActive :slug=slug v-if="user.roles === MANAGER"></menu-admin>
+    <menu-manager :isActive=isActive :slug=slug v-if="user.roles === MANAGER"></menu-manager>
     <menu-talent :isActive=isActive :slug=slug v-if="user.roles === TALENT"></menu-talent>
     <menu-agency :isActive=isActive :slug=slug v-if="user.roles === AGENCY"></menu-agency>
   </div>
 </template>
 <script>
 import util from '../../utils/util'
-import MenuAdmin from './MenuAdmin.vue'
+import MenuManager from './MenuManager.vue'
 import MenuAgency from './MenuAgency.vue'
 import MenuTalent from './MenuTalent.vue'
 
@@ -15,7 +15,7 @@ export default {
   name: 'SidebarMenu',
   props: ['user'],
   components: {
-    MenuAdmin,
+    MenuManager,
     MenuAgency,
     MenuTalent
   },

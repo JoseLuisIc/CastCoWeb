@@ -1,5 +1,6 @@
 <template>
   <section class="content">
+    <loading :isLoading="isLoading"></loading>
     <div class="row center-block">
       <h2></h2>
       <div class="col-md-12">
@@ -136,6 +137,7 @@ import util from '../../utils/util'
 import admin from '../../models/admin'
 import Pagination from '../widgets/Pagination.vue'
 import Modal from '../widgets/Modal.vue'
+import Loading from '../widgets/Loading.vue'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -144,7 +146,8 @@ export default {
   name: 'Admins',
   components: {
     Pagination,
-    Modal
+    Modal,
+    Loading
   },
   data() {
     return {
@@ -162,6 +165,7 @@ export default {
       showModalDelete: false,
       showModalReset: false,
       isNew: true,
+      isLoading: false,
       reset: {
         password: '',
         confirm_password: '',
@@ -226,17 +230,20 @@ export default {
     editUser(idUser) {
       console.log(idUser)
       this.isNew = false
+      this.isLoading = true
       api
         .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           this.user = response.data
           this.showModal = true
+          this.isLoading = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             console.log(errors)
           }
+          this.isLoading = false
         })
     },
     callUser() {
@@ -245,6 +252,7 @@ export default {
       params.append('ordering', 'email')
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
+      this.isLoading = true
       api
         .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
         .then(response => {
@@ -252,12 +260,14 @@ export default {
           this.users = json.results
           this.count = json.count
           this.totalPage = Math.ceil(this.count / this.length)
+          this.isLoading = false
         })
         .catch(error => {
           if (error.response) {
             var errors = error.response.data
             console.log(errors)
           }
+          this.isLoading = false
         })
     },
     confirmDelete(idUser) {

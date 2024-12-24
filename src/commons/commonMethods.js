@@ -1,6 +1,14 @@
 import { roles } from '../roles.js'
+import util from '../utils/util.js'
 
 export default {
+  data() {
+    return {
+      MANAGER: util.MANAGER,
+      AGENCY: util.AGENCY,
+      TALENT: util.TALENT
+    }
+  },
   methods: {
     logout() {
       this.$store.commit('SET_USER', null)
