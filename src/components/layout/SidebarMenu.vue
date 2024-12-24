@@ -1,5 +1,6 @@
 <template>
   <div>
+    <menu-admin :isActive=isActive :slug=slug v-if="user.roles === ADMIN"></menu-admin>
     <menu-manager :isActive=isActive :slug=slug v-if="user.roles === MANAGER"></menu-manager>
     <menu-talent :isActive=isActive :slug=slug v-if="user.roles === TALENT"></menu-talent>
     <menu-agency :isActive=isActive :slug=slug v-if="user.roles === AGENCY"></menu-agency>
@@ -21,6 +22,7 @@ export default {
   },
   data: function () {
     return {
+      ADMIN: util.ADMIN,
       MANAGER: util.MANAGER,
       AGENCY: util.AGENCY,
       TALENT: util.TALENT,

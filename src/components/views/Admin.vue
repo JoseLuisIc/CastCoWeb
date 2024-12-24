@@ -188,7 +188,7 @@ export default {
         first_name: '',
         last_name: '',
         instagram: '',
-        role: util.MANAGER,
+        role: util.ADMIN,
         users: []
       }
     },
@@ -241,7 +241,7 @@ export default {
     },
     callUser() {
       const params = new URLSearchParams()
-      params.append('role', util.MANAGER)
+      params.append('role', util.ADMIN)
       params.append('ordering', 'email')
       params.append('page', this.currentPage)
       params.append('page_size', this.length)

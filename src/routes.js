@@ -193,12 +193,12 @@ const routes = [
         }
       },
       {
-        path: '/manager/admins',
-        component: AdminView,
-        name: 'manager/admins',
+        path: '/manager/managers',
+        component: ManagerView,
+        name: 'manager/managers',
         meta: {
-          module: 'Administadores',
-          description: 'Listado de Administradores',
+          module: 'Managers',
+          description: 'Listado de Managers',
           requiresAuth: true,
           middleware: [auth, admin]
         }

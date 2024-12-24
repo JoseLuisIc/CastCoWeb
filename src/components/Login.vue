@@ -78,7 +78,7 @@ export default {
             }
             switch (decoded.user.role) {
               case util.MANAGER:
-                this.$router.push({ path: 'admin/dashboard' })
+                this.$router.push({ path: 'manager/dashboard' })
                 break
               case util.AGENCY:
                 this.$router.push({ path: 'agency/talents' })

@@ -1,7 +1,7 @@
 <template>
   <ul class="sidebar-menu">
     <li class="header">Administracion</li>
-    <router-link tag="li" class="pageLink" to="/admin/dashboard">
+    <router-link tag="li" class="pageLink" to="/manager/dashboard">
       <a>
         <i class="fa fa-desktop"></i>
         <span class="page">Dashboard</span>
@@ -18,7 +18,7 @@
       </a>
       <ul class="treeview-menu">
         <li v-bind:class="{ active: slug === 'managers' }">
-          <router-link class="pageLink" to="/admin/managers">
+          <router-link class="pageLink" to="/manager/managers">
             <a>
               <i class="fa fa-user"></i>
               <span class="page">Managers</span>
@@ -26,7 +26,7 @@
           </router-link>
         </li>
         <!-- <li v-bind:class="{ active: slug === 'admins' }">
-          <router-link class="pageLink" to="/admin/admins">
+          <router-link class="pageLink" to="/manager/managers">
             <a>
               <i class="fa fa-user"></i>
               <span class="page">Administradores</span>
@@ -34,7 +34,7 @@
           </router-link>
         </li> -->
         <li v-bind:class="{ active: slug === 'talents' }">
-          <router-link class="pageLink" to="/admin/talents">
+          <router-link class="pageLink" to="/manager/talents">
             <a>
               <i class="fa fa-user"></i>
               <span class="page">Talentos</span>
@@ -42,7 +42,7 @@
           </router-link>
         </li>
         <!-- <li v-bind:class="{ active: slug === 'agencies' }">
-          <router-link class="pageLink" to="/admin/agencies">
+          <router-link class="pageLink" to="/manager/agencies">
             <a>
               <i class="fa fa-user"></i>
               <span class="page">Agencias</span>
@@ -51,19 +51,19 @@
         </li> -->
       </ul>
     </li>
-    <router-link tag="li" class="pageLink" to="/admin/proyects">
+    <router-link tag="li" class="pageLink" to="/manager/proyects">
       <a>
         <i class="fa fa-list-alt"></i>
         <span class="page">Proyectos</span>
       </a>
     </router-link>
-    <!-- <router-link tag="li" class="pageLink" to="/admin/states">
+    <!-- <router-link tag="li" class="pageLink" to="/manager/states">
       <a>
         <i class="fa fa-list-alt"></i>
         <span class="page">Estados</span>
       </a>
     </router-link> -->
-    <router-link tag="li" class="pageLink" to="/admin/profile">
+    <router-link tag="li" class="pageLink" to="/manager/profile">
       <a>
         <i class="fa fa fa-user"></i>
         <span class="page">Perfil</span>
