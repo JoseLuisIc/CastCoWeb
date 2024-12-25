@@ -6,7 +6,8 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success" v-can="'create_admins'"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success"
+              v-can="'create_admins'"><i class="fa fa-user-plus"> </i> Agregar Nuevo</button>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -20,7 +21,8 @@
 
               <div class="row">
                 <div class="col-sm-12 table-responsive">
-                  Mostrar <select name="pant_size" class="form-control" id="pant_size" v-model="length" @change="search">
+                  Mostrar <select name="pant_size" class="form-control" id="pant_size" v-model="length"
+                    @change="search">
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -44,16 +46,23 @@
                         <td>{{ user.email }} </td>
                         <td>
                           <div class="btn-group">
-                            <button class="btn delete" v-on:click=confirmDelete(user.id) v-can="'delete_admins'"><i class="fa fa-trash"></i></button>
-                            <button class="btn edit" v-on:click=editUser(user.id) v-can="'edit_admins'"><i class="fa fa-edit"></i></button>
-                            <button class="btn reset" v-on:click=modalResetPwd(user.id) v-can="'reset_password'"><i class="fa fa-refresh"></i></button>
+                            <button class="btn delete" v-on:click=confirmDelete(user.id) v-can="'delete_admins'"><i
+                                class="fa fa-trash"></i></button>
+                            <button class="btn edit" v-on:click=editUser(user.id) v-can="'edit_admins'"><i
+                                class="fa fa-edit"></i></button>
+                            <button class="btn reset" v-on:click=modalResetPwd(user.id) v-can="'reset_password'"><i
+                                class="fa fa-refresh"></i></button>
                           </div>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                   <div>
-                    <div v-if="users.length === 0"> <center><h3>No hay registros</h3></center></div>
+                    <div v-if="users.length === 0">
+                      <center>
+                        <h3>No hay registros</h3>
+                      </center>
+                    </div>
                     <pagination :totalPages="totalPage" :perPage="parseInt(length)" :currentPage="currentPage"
                       @pagechanged="onPageChange" />
                   </div>
@@ -79,28 +88,29 @@
       <h3 v-if="!isNew" slot="header">Actualizar Usuario</h3>
       <div slot="body">
         <form>
-            <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
-              <label for="email" class="col-form-label">Email:</label>
-              <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
-              <span v-if=error.email class="help-block">{{ error.email }}</span>
-            </div>
-            <div class="form-group">
-              <label for="first_name" class="col-form-label">Nombres:</label>
-              <input class="form-control" id="first_name" v-model="user.first_name">
-            </div>
-            <div class="form-group">
-              <label for="last_name" class="col-form-label">Apellidos:</label>
-              <input class="form-control" id="last_name" v-model="user.last_name" />
-            </div>
-           
-            <div class="form-group">
-              <input class="form-control" id="id" type="hidden" v-model="user.id" />
-              <input class="form-control" id="role" type="hidden" v-model="user.role" />
-            </div>
-          </form>
+          <div class="form-group" v-bind:class="error.email !== '' ? 'has-error' : ''">
+            <label for="email" class="col-form-label">Email:</label>
+            <input type="text" class="form-control" id="email" v-model="user.email" @blur="validateEmail">
+            <span v-if=error.email class="help-block">{{ error.email }}</span>
+          </div>
+          <div class="form-group">
+            <label for="first_name" class="col-form-label">Nombres:</label>
+            <input class="form-control" id="first_name" v-model="user.first_name">
+          </div>
+          <div class="form-group">
+            <label for="last_name" class="col-form-label">Apellidos:</label>
+            <input class="form-control" id="last_name" v-model="user.last_name" />
+          </div>
+
+          <div class="form-group">
+            <input class="form-control" id="id" type="hidden" v-model="user.id" />
+            <input class="form-control" id="role" type="hidden" v-model="user.role" />
+          </div>
+        </form>
       </div>
-        <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
-        <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="updateUser(user)">Actualizar</button>
+      <button v-if="isNew" slot="footer" type="button" class="btn btn-primary" v-on:click="saveUser">Guardar</button>
+      <button v-if="!isNew" slot="footer" type="button" class="btn btn-primary"
+        v-on:click="updateUser(user)">Actualizar</button>
     </modal>
     <modal v-if="showModalReset" @close="showModalReset = false" :iconClasses="['modal-md']">
       <h3 slot="header">¿Cuál es mi contraseña?</h3>
@@ -194,7 +204,7 @@ export default {
     },
     updateUser(dUser) {
       api
-        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
+        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token }, 'edit_admins')
         .then(response => {
           this.showModal = false
           this.callUser()
@@ -209,7 +219,7 @@ export default {
     },
     saveUser() {
       api
-        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
+        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token }, 'create_admins')
         .then(response => {
           this.showModal = false
           this.callUser()
@@ -227,7 +237,7 @@ export default {
       console.log(idUser)
       this.isNew = false
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'edit_admins')
         .then(response => {
           this.user = response.data
           this.showModal = true
@@ -246,7 +256,7 @@ export default {
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token }, 'view_admins')
         .then(response => {
           var json = response.data
           this.users = json.results
@@ -262,7 +272,7 @@ export default {
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_admins')
         .then(response => {
           this.user = response.data
           this.showModalDelete = true
@@ -276,7 +286,7 @@ export default {
     },
     deleteUser() {
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_admins')
         .then(response => {
           this.showModalDelete = false
           toastr.error('Eliminación', 'Se ha eliminado el usuario')
@@ -299,7 +309,7 @@ export default {
     },
     modalResetPwd(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'reset_password')
         .then(response => {
           this.user = response.data
           this.showModalReset = true
@@ -322,7 +332,7 @@ export default {
         confirm_password: this.reset.confirm_password
       }
       api
-        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token })
+        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token }, 'reset_password')
         .then(response => {
           this.reset.password = ''
           this.reset.confirm_password = ''

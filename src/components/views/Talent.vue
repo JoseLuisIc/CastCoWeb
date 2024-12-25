@@ -6,7 +6,7 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success" v-can="'create_talent'"><i
+            <button id="btnModalCreate" v-on:click="openModal" type="button" class="btn btn-success" v-can="'create_talents'"><i
                 class="fa fa-user-plus"> </i> Agregar Nuevo</button>
 
           </div>
@@ -337,6 +337,7 @@ import modelUser from '../../models/user'
 import Pagination from '../widgets/Pagination.vue'
 import Loading from '../widgets/Loading.vue'
 import Modal from '../widgets/Modal.vue'
+import commonMethods from '../../commons/commonMethods'
 // Require needed datatables modules
 require('datatables.net')
 
@@ -347,6 +348,7 @@ export default {
     Modal,
     Loading
   },
+  mixins: [commonMethods],
   data() {
     return {
       showModal: false,
@@ -442,6 +444,10 @@ export default {
       this.callUser()
     },
     openModal() {
+      if (!this.can('create_talents')) {
+        toastr.error('Acceso denegado', 'No tienes permiso para realizar esta acción.')
+        return
+      }
       this.clearParams()
       this.showModal = true
       this.isNew = true
@@ -478,7 +484,7 @@ export default {
       })
       this.isLoading = true
       api
-        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token })
+        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token }, 'edit_talents')
         .then(response => {
           this.showModal = false
           this.callUser()
@@ -500,7 +506,7 @@ export default {
     saveUser() {
       this.isLoading = true
       api
-        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
+        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token }, 'create_talents')
         .then(response => {
           var user = response.data
           this.showModal = false
@@ -523,7 +529,7 @@ export default {
       this.isLoading = true
       this.isDisabled = false
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'edit_talents')
         .then(response => {
           var userData = response.data
           var state = userData.extras.state === null ? { id: 0, code: '', name: '' } : userData.extras.state
@@ -565,7 +571,7 @@ export default {
       console.log(this.agencyId)
       this.isLoading = true
       api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token }, 'view_talents')
         .then(response => {
           var json = response.data
           this.users = json.results
@@ -583,7 +589,7 @@ export default {
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_talents')
         .then(response => {
           this.user = response.data
           this.showModalDelete = true
@@ -599,7 +605,7 @@ export default {
       console.log(this.user)
       this.isLoading = true
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_talents')
         .then(response => {
           this.showModalDelete = false
           this.callUser()

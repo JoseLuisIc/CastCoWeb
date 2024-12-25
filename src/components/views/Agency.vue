@@ -180,6 +180,7 @@ import util from '../../utils/util'
 import agency from '../../models/agency'
 import Pagination from '../widgets/Pagination.vue'
 import Modal from '../widgets/Modal.vue'
+import commonMethods from '../../commons/commonMethods'
 // Require needed datatables modules
 require('datatables.net')
 
@@ -189,6 +190,7 @@ export default {
     Pagination,
     Modal
   },
+  mixins: [commonMethods],
   data() {
     return {
       totalPage: 1,
@@ -234,6 +236,10 @@ export default {
       this.callUser()
     },
     openModal() {
+      if (!this.can('create_agencies')) {
+        toastr.error('Acceso denegado', 'No tienes permiso para realizar esta acción.')
+        return
+      }
       this.showModal = true
       this.isNew = true
       this.user = agency
@@ -241,7 +247,7 @@ export default {
     },
     updateUser(dUser) {
       api
-        .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token })
+        .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token }, 'edit_agencies')
         .then(response => {
           console.log(response.data)
           this.showModal = false
@@ -257,7 +263,7 @@ export default {
     },
     saveUser() {
       api
-        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token })
+        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token }, 'create_agencies')
         .then(response => {
           var user = response.data
           this.editUser(user.id)
@@ -278,7 +284,7 @@ export default {
       })
       this.isNew = false
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'edit_agencies')
         .then(response => {
           var userData = response.data
           Object.assign(this.user, userData)
@@ -301,7 +307,7 @@ export default {
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token }, 'view_agencies')
         .then(response => {
           var json = response.data
           this.users = json.results
@@ -317,7 +323,7 @@ export default {
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_agencies')
         .then(response => {
           this.user = response.data
           this.showModalDelete = true
@@ -332,7 +338,7 @@ export default {
     deleteUser() {
       console.log(this.user)
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_agencies')
         .then(response => {
           this.callUser()
           this.showModalDelete = false
@@ -354,7 +360,7 @@ export default {
     },
     modalResetPwd(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'reset_password')
         .then(response => {
           this.user = response.data
           this.showModalReset = true
@@ -377,7 +383,7 @@ export default {
         confirm_password: this.reset.confirm_password
       }
       api
-        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token })
+        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token }, 'reset_password')
         .then(response => {
           this.reset.password = ''
           this.reset.confirm_password = ''
