@@ -12,6 +12,7 @@ import EditProyectView from './components/views/EditProyect.vue'
 import ProfileView from './components/views/Profile.vue'
 import auth from './components/middleware/auth'
 import admin from './components/middleware/admin'
+import manager from './components/middleware/manager'
 import agency from './components/middleware/agency'
 import ProyectsDetailView from './components/views/ProyectDetail.vue'
 import PostulateView from './components/views/Postulate.vue'
@@ -189,7 +190,7 @@ const routes = [
           module: 'Dashboard',
           requiresAuth: true,
           description: 'Overview of environment',
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -200,7 +201,7 @@ const routes = [
           module: 'Managers',
           description: 'Listado de Managers',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -211,7 +212,7 @@ const routes = [
           module: 'Talentos',
           description: 'Listado de Talentos',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -222,7 +223,7 @@ const routes = [
           module: 'Agencias',
           description: 'Listado de Agencias',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -233,7 +234,7 @@ const routes = [
           module: 'Agencias',
           description: 'Listado de Agencias',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -251,7 +252,7 @@ const routes = [
           module: 'Proyectos',
           description: 'Listado de Proyectos',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -262,7 +263,7 @@ const routes = [
           module: 'Editar',
           description: 'Proyecto',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -273,7 +274,7 @@ const routes = [
           module: 'Crear',
           description: 'Proyecto',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -284,7 +285,7 @@ const routes = [
           module: 'Detalle',
           description: 'Proyecto',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -295,7 +296,7 @@ const routes = [
           module: 'Perfil',
           description: 'Editar de Perfil',
           requiresAuth: true,
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {
@@ -307,7 +308,7 @@ const routes = [
           module: 'States',
           requiresAuth: true,
           description: 'Overview of environment',
-          middleware: [auth, admin]
+          middleware: [auth, manager]
         }
       },
       {

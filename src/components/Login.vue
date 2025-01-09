@@ -77,6 +77,9 @@ export default {
               window.localStorage.setItem('refresh', data.refresh)
             }
             switch (decoded.user.role) {
+              case util.ADMIN:
+                this.$router.push({ path: 'admin/dashboard' })
+                break
               case util.MANAGER:
                 this.$router.push({ path: 'manager/dashboard' })
                 break

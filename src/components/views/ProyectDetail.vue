@@ -17,12 +17,12 @@
               <div class="box">
                 <div class="box-header">
                   <h3 class="box-title"></h3>
-                  <button class="btn btn-default" v-on:click="downloadReport"
-                    v-if="applications.length > 0 && role === MANAGER">Descargar Reporte <i
-                      class="fa fa-download"></i></button>
+                  <button class="btn btn-default" v-on:click="downloadReport" v-if="applications.length > 0"
+                    v-can="'dowload_report'">Descargar Reporte <i class="fa fa-download"></i></button>
                   <div class="btn-group" style="float: right;">
                     <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
-                      v-if="role === MANAGER" aria-haspopup="true" aria-expanded="false"> Columnas Visibles
+                      v-can="'visible_columns_postulation'" aria-haspopup="true" aria-expanded="false"> Columnas
+                      Visibles
                     </button>
                     <ul class="dropdown-menu" id="hiddenColumns">
                       <li>
@@ -47,14 +47,14 @@
                         class="table table-bordered table-striped dataTable display responsive nowrap">
                         <thead>
                           <tr role="row">
-                            <th data-index="0">Personaje</th>
+                            <th data-index="0" v-can="'view_column'">Personaje</th>
                             <th data-index="1">Postulante</th>
                             <th data-index="2">Instagram</th>
                             <th data-index="3">Edad</th>
                             <th data-index="4">Agencia</th>
                             <th data-index="5">Material</th>
-                            <th data-index="6"># Entrega</th>
-                            <th data-index="7">Status Postulacion</th>
+                            <th data-index="6" v-can="'view_column'"># Entrega</th>
+                            <th data-index="7" v-can="'view_column'">Status Postulacion</th>
                             <th data-index="8">Status Proyecto</th>
                             <th data-index="9">Dispositivo</th>
                             <th>Acciones</th>
@@ -62,7 +62,7 @@
                         </thead>
                         <thead>
                           <tr role="row">
-                            <th v-if="role === MANAGER">
+                            <th v-can="'view_column'">
                               <select2 :id="selectedCharacter" :options="filterCharacters" v-model="filters.character"
                                 @onChangeSelected="search">
                               </select2>
@@ -73,12 +73,12 @@
                             <th></th>
                             <th></th>
                             <th></th>
-                            <th v-if="role === MANAGER">
+                            <th v-can="'view_column'">
                               <select2 :id="selectedDelivery" :options="filterDeliveries" v-model="filters.delivery"
                                 @onChangeSelected="search">
                               </select2>
                             </th>
-                            <th v-if="role === MANAGER">
+                            <th v-can="'view_column'">
                               <select2 :id="selectedPostulation" :options="filterPostulations"
                                 v-model="filters.postulation" @onChangeSelected="search">
                               </select2>
@@ -121,7 +121,7 @@
               </span>
               <div class="mailbox-attachment-info">
                 <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"
-                  v-if="role === MANAGER"><i class="fa fa-trash"></i> Eliminar</a>
+                  v-can="'delete_postulation'"><i class="fa fa-trash"></i> Eliminar</a>
                 <span class="mailbox-attachment-size">
                   &nbsp;
                   <a :href="material.file" class="btn btn-default btn-xs pull-right downloadImage"
@@ -244,13 +244,12 @@
     <modal v-if="showModalReport" @close="showModalReport = false" :iconClasses="['modal-md']">
       <h3 slot="header">Descargar Reporte</h3>
       <div slot="body">
-        <button class="btn btn-danger" v-on:click="exportPDF"
-          v-if="applications.length > 0 && role === MANAGER">Exportar PDF <i class="fa fa-file-pdf-o"></i></button>
-        <button class="btn btn-success" v-on:click="exportDocument('xlsx')"
-          v-if="applications.length > 0 && role === MANAGER">Exportar XLSX <i class="fa fa-file-excel-o"></i></button>
-        <button class="btn btn-info" v-on:click="exportDocument('numbers')"
-          v-if="applications.length > 0 && role === MANAGER">Exportar Numbers <i
-            class="fa fa-file-excel-o"></i></button>
+        <button class="btn btn-danger" v-on:click="exportPDF" v-if="applications.length > 0"
+          v-can="'exported_postulation'">Exportar PDF <i class="fa fa-file-pdf-o"></i></button>
+        <button class="btn btn-success" v-on:click="exportDocument('xlsx')" v-if="applications.length > 0"
+          v-can="'exported_postulation'">Exportar XLSX <i class="fa fa-file-excel-o"></i></button>
+        <button class="btn btn-info" v-on:click="exportDocument('numbers')" v-if="applications.length > 0"
+          v-can="'exported_postulation'">Exportar Numbers <i class="fa fa-file-excel-o"></i></button>
 
         <br>
         <div class="form-group" style="margin-bottom: 0px !important;">
@@ -420,6 +419,7 @@ import esMX from '../../lang/es_mx'
 import moment from 'moment'
 import settings from '../../config/settings'
 import util from '../../utils/util'
+import commonMethods from '../../commons/commonMethods'
 // Datatable Modules
 // require('datatables.net-buttons/js/dataTables.buttons.js')
 // require('datatables.net-buttons/js/buttons.colVis.js')
@@ -428,6 +428,7 @@ import util from '../../utils/util'
 // require('datatables.net-buttons/js/buttons.print.js')
 export default {
   name: 'Admins',
+  mixins: [commonMethods],
   components: {
     Modal,
     Select2
@@ -477,7 +478,6 @@ export default {
       idPostulation: 0,
       idMaterial: 0,
       role: 0,
-      MANAGER: util.MANAGER,
       hiddenDefaultCol: [],
       hiddenDefaultColAgency: [0, 6, 7],
       checkedNamesDefault: ['name', 'photo', 'age', 'agency', 'city', 'instagram', 'dropbox', 'casting_notes', 'director_notes', 'production_node', 'skills', 'sizes'],
@@ -494,7 +494,7 @@ export default {
         this.idProject = this.$route.params.id
         this.fetchProject()
       }
-      if (this.role === util.MANAGER) {
+      if (this.role === util.ADMIN && this.role === util.MANAGER) {
         if (localStorage.getItem('columnVisibleProyectDetail') === null || localStorage.getItem('columnVisibleProyectDetail').length === 0) {
           localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(this.hiddenDefaultCol))
         }
@@ -591,7 +591,8 @@ export default {
             console.log('tableProyects')
             that.applications = response['responseJSON'].data
             console.log(that.role)
-            if (that.role !== util.MANAGER) {
+
+            if (!that.can('delete_postulation')) {
               $('.delete').hide()
             }
             $('.delete').on('click', function () {
@@ -601,21 +602,21 @@ export default {
               that.viewMaterial(this.id)
             })
             $('.selectDelivery').on('change', function () {
-              if (that.role === util.MANAGER) {
+              if (!that.can('edit_postulation')) {
                 that.onChangeDelivery({ value: this.value, id: this.id })
                 return
               }
               that.alertShow('Permisos', 'No tienes los permisos suficientes para realizar esta accion', 'error', 'fa fa-error')
             })
             $('.selectCharacter').on('change', function () {
-              if (that.role === util.MANAGER) {
+              if (!that.can('edit_postulation')) {
                 that.onChangeCharacter({ value: this.value, id: this.id })
                 return
               }
               that.alertShow('Permisos', 'No tienes los permisos suficientes para realizar esta accion', 'error', 'fa fa-error')
             })
             $('.selectPostulation').on('change', function () {
-              if (that.role === util.MANAGER) {
+              if (!that.can('edit_postulation')) {
                 that.onChangeStatus({ value: this.value, id: this.id })
                 return
               }
@@ -728,7 +729,7 @@ export default {
           }
         ],
         'columnDefs': [
-          { 'visible': false, 'targets': JSON.parse(that.role === util.MANAGER ? localStorage.getItem('columnVisibleProyectDetail') : localStorage.getItem('columnVisibleProyectDetailAgency')) }
+          { 'visible': false, 'targets': JSON.parse((that.role === util.ADMIN && that.role === util.ADMIN) ? localStorage.getItem('columnVisibleProyectDetail') : localStorage.getItem('columnVisibleProyectDetailAgency')) }
         ],
         'language': esMX
       })
@@ -789,7 +790,7 @@ export default {
         if (index !== '-1') {
           var column = that.table.column(index)
           var columns
-          if (this.role === util.MANAGER) {
+          if (this.role === util.ADMIN && that.role === util.MANAGER) {
             columns = JSON.parse(localStorage.getItem('columnVisibleProyectDetail'))
           } else {
             columns = JSON.parse(localStorage.getItem('columnVisibleProyectDetailAgency'))
@@ -800,7 +801,7 @@ export default {
           } else {
             columns = columns.filter(column => column !== parseInt(index))
           }
-          if (this.role === util.MANAGER) {
+          if (this.role === util.ADMIN && that.role === util.MANAGER) {
             localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(columns))
           } else {
             localStorage.setItem('columnVisibleProyectDetailAgency', JSON.stringify(columns))
@@ -825,7 +826,7 @@ export default {
     },
     fetchProject() {
       api
-        .request('get', 'projects/' + this.idProject + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'projects/' + this.idProject + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulation')
         .then(response => {
           var json = response.data
           this.project = json
@@ -855,7 +856,7 @@ export default {
     },
     deletePostulation() {
       api
-        .request('delete', 'applications/' + this.idPostulation + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('delete', 'applications/' + this.idPostulation + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_postulation')
         .then(response => {
           this.showModalDelete = false
           this.fetchProject()
@@ -875,8 +876,9 @@ export default {
       this.idPostulation = id
       this.materials = []
       api
-        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulation')
         .then(response => {
+          this.showModalMaterial = true
           console.log(response)
           this.materials = response.data.material
         })
@@ -886,13 +888,12 @@ export default {
             console.log(errors)
           }
         })
-      this.showModalMaterial = true
     },
     onChangeDelivery({ value, id }) {
       var deliveryId = value
       var applicationId = id
       api
-        .request('patch', 'applications/' + applicationId + '/', { delivery: deliveryId }, { 'Authorization': this.$store.state.token })
+        .request('patch', 'applications/' + applicationId + '/', { delivery: deliveryId }, { 'Authorization': this.$store.state.token }, 'edit_postulation')
         .then(response => {
           this.alertShow('Entrega', 'Se modifico la entrega', 'success', 'fa fa-check')
         })
@@ -907,7 +908,7 @@ export default {
       var characterId = value
       var applicationId = id
       api
-        .request('patch', 'applications/' + applicationId + '/', { character: characterId }, { 'Authorization': this.$store.state.token })
+        .request('patch', 'applications/' + applicationId + '/', { character: characterId }, { 'Authorization': this.$store.state.token }, 'edit_postulation')
         .then(response => {
           this.alertShow('Personaje', 'Se modifico el personaje', 'success', 'fa fa-check')
         })
@@ -922,7 +923,7 @@ export default {
       var status = value
       var applicationId = id
       api
-        .request('patch', 'applications/' + applicationId + '/', { status: status }, { 'Authorization': this.$store.state.token })
+        .request('patch', 'applications/' + applicationId + '/', { status: status }, { 'Authorization': this.$store.state.token }, 'edit_postulation')
         .then(response => {
           this.alertShow('Estatus', 'Se actualizo el estatus', 'success', 'fa fa-check')
         })
@@ -1051,7 +1052,7 @@ export default {
     },
     detail(id) {
       api
-        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulation')
         .then(response => {
           this.showModalDetail = true
           console.log(response)
@@ -1098,7 +1099,7 @@ export default {
       this.showModalMaterial = true
       this.showModalDeleteMaterial = false
       api
-        .request('delete', `applications/${this.idPostulation}/material/${this.idMaterial}/`, {}, { 'Authorization': this.$store.state.token })
+        .request('delete', `applications/${this.idPostulation}/material/${this.idMaterial}/`, {}, { 'Authorization': this.$store.state.token }, 'delete_postulation')
         .then(response => {
           this.alertShow('Estatus', 'Se elimino la imagen', 'success', 'fa fa-check')
           this.viewMaterial(this.idPostulation)

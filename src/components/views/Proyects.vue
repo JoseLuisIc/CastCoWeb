@@ -70,7 +70,7 @@
                       <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;">Acciones</th>
                     </tr>
                   </thead>
-                  <tfoot>
+                  <thead>
                     <tr>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Productora" data-index="0"></th>
@@ -116,7 +116,7 @@
                         </select></th>
                       <th rowspan="1" colspan="1"></th>
                     </tr>
-                  </tfoot>
+                  </thead>
                 </table>
               </div>
             </div>
@@ -170,6 +170,7 @@ $.fn.dataTable.Api.register('sum()', function () {
 })
 import toastr from 'toastr'
 import store from '../../store'
+import util from '../../utils/util'
 
 // Require needed datatables modules
 require('datatables.net')
@@ -213,7 +214,11 @@ export default {
     },
     editProyect(idProject) {
       this.isNew = false
-      this.$router.push({ path: `/admin/proyects/${idProject}/edit`, params: { id: idProject, project: this.project } })
+      if (this.role === util.ADMIN) {
+        this.$router.push({ path: `/admin/proyects/${idProject}/edit`, params: { id: idProject, project: this.project } })
+      } else {
+        this.$router.push({ path: `/manager/proyects/${idProject}/edit`, params: { id: idProject, project: this.project } })
+      }
     },
     callProyect() {
       const params = new URLSearchParams()
@@ -343,7 +348,7 @@ export default {
         </li>`)
       }
       // Filter event handler
-      $('#tableProyects').on('keyup', 'tfoot input', function () {
+      $('#tableProyects').on('keyup', 'thead input', function () {
         var col = $(this).data('index')
         console.log(col)
         that.table
@@ -488,7 +493,13 @@ export default {
         })
     },
     detailProyect(idProject) {
-      this.$router.push({ path: `/admin/proyects/detail/${idProject}`, params: this.project })
+      if (this.role === util.ADMIN) {
+        this.$router.push({ path: `/admin/proyects/detail/${idProject}`, params: this.project })
+      } else if (this.role === util.MANAGER) {
+        this.$router.push({ path: `/manager/proyects/detail/${idProject}`, params: this.project })
+      } else {
+        this.$router.push({ path: `/agency/proyects/detail/${idProject}`, params: this.project })
+      }
     }
   }
 }
