@@ -592,7 +592,7 @@ export default {
             that.applications = response['responseJSON'].data
             console.log(that.role)
 
-            if (!that.can('delete_postulation')) {
+            if (that.can('delete_postulation')) {
               $('.delete').hide()
             }
             $('.delete').on('click', function () {
@@ -602,21 +602,21 @@ export default {
               that.viewMaterial(this.id)
             })
             $('.selectDelivery').on('change', function () {
-              if (!that.can('edit_postulation')) {
+              if (that.can('edit_postulation')) {
                 that.onChangeDelivery({ value: this.value, id: this.id })
                 return
               }
               that.alertShow('Permisos', 'No tienes los permisos suficientes para realizar esta accion', 'error', 'fa fa-error')
             })
             $('.selectCharacter').on('change', function () {
-              if (!that.can('edit_postulation')) {
+              if (that.can('edit_postulation')) {
                 that.onChangeCharacter({ value: this.value, id: this.id })
                 return
               }
               that.alertShow('Permisos', 'No tienes los permisos suficientes para realizar esta accion', 'error', 'fa fa-error')
             })
             $('.selectPostulation').on('change', function () {
-              if (!that.can('edit_postulation')) {
+              if (that.can('edit_postulation')) {
                 that.onChangeStatus({ value: this.value, id: this.id })
                 return
               }
