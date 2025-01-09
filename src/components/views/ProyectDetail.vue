@@ -592,7 +592,7 @@ export default {
             that.applications = response['responseJSON'].data
             console.log(that.role)
 
-            if (that.can('delete_postulation')) {
+            if (!that.can('delete_postulation')) {
               $('.delete').hide()
             }
             $('.delete').on('click', function () {
