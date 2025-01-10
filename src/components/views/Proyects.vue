@@ -69,9 +69,7 @@
                       <th colspan="1" rowspan="1" class="no-sort">Status de Postulacion</th>
                       <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;">Acciones</th>
                     </tr>
-                  </thead>
-                  <tfoot>
-                    <tr>
+                    <tr role="row">
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Productora" data-index="0"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
@@ -108,15 +106,17 @@
                           placeholder="Fitting" data-index="6"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Shoot dates" data-index="7"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><select id="selectFilterStatusProject"
-                          class="form-control" name="status" data-index="8">
+                      <th rowspan="1" colspan="1" class="sorting_disabled">
+                        <select id="selectFilterStatusProject" class="selected form-control" name="status"
+                          data-index="8">
                           <option value="1" selected="">En Entrega</option>
                           <option value="2">Callback</option>
                           <option value="3">Finalizado</option>
-                        </select></th>
+                        </select>
+                      </th>
                       <th rowspan="1" colspan="1"></th>
                     </tr>
-                  </tfoot>
+                  </thead>
                 </table>
               </div>
             </div>
@@ -170,7 +170,7 @@ $.fn.dataTable.Api.register('sum()', function () {
 })
 import toastr from 'toastr'
 import store from '../../store'
-
+import 'select2'
 // Require needed datatables modules
 require('datatables.net')
 require('datatables.net-bs')
@@ -182,6 +182,7 @@ export default {
   mixins: [commonMethods],
   data() {
     return {
+      columnVisibles: ['Produccion', 'Nombre', 'Nombre público', 'Status', 'Locación', 'Callback', 'Fitting', 'Shoot dates', 'Status de Postulacion', 'Acciones'],
       showModalDelete: false,
       table: null,
       project: project,
@@ -275,7 +276,7 @@ export default {
           {
             'data': 'is_active',
             render: function (data, type, row) {
-              return `<select class="selectStatus" class="form-control" name="status" data-index="${row.id}">
+              return `<select class="form-control selectStatus" name="status" data-index="${row.id}">
                   <option value="true" ${row.is_active ? 'selected' : ''}>Activo</option>
                   <option value="false" ${row.is_active ? '' : 'selected'}>Inactivo</option>
               </select>
@@ -295,7 +296,7 @@ export default {
           {
             'data': 'status',
             render: function (data, type, row) {
-              return `<select class="selectStatusProject" class="form-control" name="status" data-index="${row.id}">
+              return `<select class="form-control selectStatusProject" name="status" data-index="${row.id}">
                   <option value="1" ${row.status === 1 ? 'selected' : ''}>En Entrega</option>
                   <option value="2" ${row.status === 2 ? 'selected' : ''}>Callback</option>
                   <option value="3" ${row.status === 3 ? 'selected' : ''}>Finalizado</option>
@@ -324,10 +325,13 @@ export default {
         ],
         'language': esMX
       })
-      var columns = that.table.columns().header()
-      for (let index = 0; index < columns.length; index++) {
-        const element = columns[index]
-        var title = $(element).text()
+      // var columns = that.table.columns().header()
+      // var elements = $('#tableProyects > thead > tr:nth-child(1) th')
+      // const arrayOfStrings = Array.from(elements).map(element => element.textContent.trim())
+
+      // console.log(JSON.stringify(arrayOfStrings))
+      for (let index = 0; index < that.columnVisibles.length; index++) {
+        const title = that.columnVisibles[index]
         var checked = !that.table.column(index).visible() ? 'checked' : ''
         $('#hiddenColumns').append(`
         <li>
@@ -343,7 +347,7 @@ export default {
         </li>`)
       }
       // Filter event handler
-      $('#tableProyects').on('keyup', 'tfoot input', function () {
+      $('#tableProyects').on('keyup', 'thead input', function () {
         var col = $(this).data('index')
         console.log(col)
         that.table
@@ -390,6 +394,7 @@ export default {
         // Get the column API object
         var index = $(this).val()
         if (index !== '-1') {
+          $('#checkAll').prop('checked', !$(this).prop('checked'))
           var column = that.table.column(index)
           var columns = JSON.parse(localStorage.getItem('columnVisibleProyect'))
           if ($(this).prop('checked')) {
@@ -404,6 +409,7 @@ export default {
         }
       })
       $('#checkAll').click(function () {
+        $('input:checkbox').prop('checked', $(this).prop('checked'))
         $('input:checkbox').not(this).trigger('click')
       })
     },
