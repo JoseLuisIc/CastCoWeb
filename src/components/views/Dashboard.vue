@@ -4,17 +4,21 @@
     <div class="row">
       <!-- Info boxes -->
       <!-- /.col -->
-      <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="col-md-3 col-sm-6 col-xs-12" v-can="'view_admins'">
         <info-box color-class="bg-black" :icon-classes="['fa', 'fa-user']" text="Administradores" :number="admins"
           link="admins"></info-box>
       </div>
+      <div class="col-md-3 col-sm-6 col-xs-12" v-can="'view_managers'">
+        <info-box color-class="bg-orange" :icon-classes="['fa', 'fa-user']" text="Managers" :number="managers"
+          link="admins"></info-box>
+      </div>
       <!-- /.col -->
-      <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="col-md-3 col-sm-6 col-xs-12" v-can="'view_talents'">
         <info-box color-class="bg-red" :icon-classes="['fa', 'fa-users']" text="Talentos" :number="talents"
           link="talents"></info-box>
       </div>
       <!-- /.col -->
-      <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="col-md-3 col-sm-6 col-xs-12" v-can="'view_agencies'">
         <info-box color-class="bg-green" :icon-classes="['fa', 'fa-user']" text="Agencias" :number="agencies"
           link="agencies"></info-box>
       </div>
@@ -23,11 +27,11 @@
       <!-- fix for small devices only -->
       <div class="clearfix visible-sm-block"></div>
 
-      <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="col-md-3 col-sm-6 col-xs-12" v-can="'view_projects'">
         <info-box color-class="bg-blue" :icon-classes="['fa', 'fa-list-alt']" text="Proyectos" :number="projects"
           link="proyects"></info-box>
       </div>
-      <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="col-md-3 col-sm-6 col-xs-12" v-can="'view_postulations'">
         <info-box color-class="bg-yellow" :icon-classes="['fa', 'fa-list-alt']" text="Postulaciones" :number="applications"
           link="proyects"></info-box>
       </div>
@@ -85,6 +89,7 @@ export default {
       talents: 0,
       agencies: 0,
       projects: 0,
+      managers: 0,
       applications: 0,
       generateRandomNumbers(numbers, max, min) {
         var a = []
@@ -100,10 +105,11 @@ export default {
       api.request('get', `dashboard-analytics/`, {}, { 'Authorization': this.$store.state.token })
         .then(response => {
           var json = response.data
-          this.admins = json.managers
+          this.admins = json.admins
           this.talents = json.talents
           this.agencies = json.agencies
           this.projects = json.projects
+          this.managers = json.managers
           this.applications = json.applications
         })
         .catch(console.log())

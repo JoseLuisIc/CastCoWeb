@@ -8,6 +8,7 @@
 </template>
 <script>
 import util from '../../utils/util'
+import MenuAdmin from './MenuAdmin.vue'
 import MenuManager from './MenuManager.vue'
 import MenuAgency from './MenuAgency.vue'
 import MenuTalent from './MenuTalent.vue'
@@ -16,6 +17,7 @@ export default {
   name: 'SidebarMenu',
   props: ['user'],
   components: {
+    MenuAdmin,
     MenuManager,
     MenuAgency,
     MenuTalent
@@ -45,7 +47,9 @@ export default {
           break
         case util.TALENT: rolString = 'Talento'
           break
-        case util.MANAGER: rolString = 'Administrador'
+        case util.ADMIN: rolString = 'Administrador'
+          break
+        case util.MANAGER: rolString = 'Manager'
           break
       }
       return rolString

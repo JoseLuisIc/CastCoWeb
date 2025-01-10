@@ -69,6 +69,7 @@
                       <th colspan="1" rowspan="1" class="no-sort">Status de Postulacion</th>
                       <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;">Acciones</th>
                     </tr>
+
                     <tr role="row">
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Productora" data-index="0"></th>
@@ -171,6 +172,7 @@ $.fn.dataTable.Api.register('sum()', function () {
 import toastr from 'toastr'
 import store from '../../store'
 import 'select2'
+import util from '../../utils/util'
 // Require needed datatables modules
 require('datatables.net')
 require('datatables.net-bs')
@@ -214,7 +216,11 @@ export default {
     },
     editProyect(idProject) {
       this.isNew = false
-      this.$router.push({ path: `/admin/proyects/${idProject}/edit`, params: { id: idProject, project: this.project } })
+      if (this.role === util.ADMIN) {
+        this.$router.push({ path: `/admin/proyects/${idProject}/edit`, params: { id: idProject, project: this.project } })
+      } else {
+        this.$router.push({ path: `/manager/proyects/${idProject}/edit`, params: { id: idProject, project: this.project } })
+      }
     },
     callProyect() {
       const params = new URLSearchParams()
@@ -494,7 +500,13 @@ export default {
         })
     },
     detailProyect(idProject) {
-      this.$router.push({ path: `/admin/proyects/detail/${idProject}`, params: this.project })
+      if (this.role === util.ADMIN) {
+        this.$router.push({ path: `/admin/proyects/detail/${idProject}`, params: this.project })
+      } else if (this.role === util.MANAGER) {
+        this.$router.push({ path: `/manager/proyects/detail/${idProject}`, params: this.project })
+      } else {
+        this.$router.push({ path: `/agency/proyects/detail/${idProject}`, params: this.project })
+      }
     }
   }
 }
