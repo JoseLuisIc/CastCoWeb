@@ -10,7 +10,7 @@
       </div>
       <div class="col-md-3 col-sm-6 col-xs-12" v-can="'view_managers'">
         <info-box color-class="bg-orange" :icon-classes="['fa', 'fa-user']" text="Managers" :number="managers"
-          link="admins"></info-box>
+          link="managers"></info-box>
       </div>
       <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-xs-12" v-can="'view_talents'">

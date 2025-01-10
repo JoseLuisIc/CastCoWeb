@@ -50,13 +50,13 @@
                   <thead>
                     <tr role="row">
                       <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                        class="sorting_asc">Produccion</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="1">Nombre</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="2">Nombre público
+                        class="no-sort">Produccion</th>
+                      <th colspan="1" rowspan="1" class="no-sort" tabindex="1">Nombre</th>
+                      <th colspan="1" rowspan="1" class="no-sort" tabindex="2">Nombre público
                       </th>
                       <!-- <th colspan="1" rowspan="1" class="sorting" tabindex="3">Dias de casting</th>
                       <th colspan="1" rowspan="1" class="sorting" tabindex="4">Dinamica de casting</th> -->
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="5">Status</th>
+                      <th colspan="1" rowspan="1" class="no-sort" tabindex="5">Status</th>
                       <th colspan="1" rowspan="1" class="no-sort">Locación</th>
                       <!-- <th colspan="1" rowspan="1" class="no-sort">Competencia</th>
                       <th colspan="1" rowspan="1" class="no-sort">Work day</th>
@@ -71,25 +71,25 @@
                     </tr>
 
                     <tr role="row">
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Productora" data-index="0"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Nombre" data-index="1"></th>
                       <!-- <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Nombre público" data-index="2"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Descripción" data-index="3"></th> -->
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Tipo de material" data-index="2">
                       </th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled">
+                      <th rowspan="1" colspan="1" class="no-sort">
                         <select class="form-control" data-index="3" id="status">
                           <option value="">Todos</option>
                           <option value="true">Activo</option>
                           <option value="false">Inactivo</option>
                         </select>
                       </th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Locación" data-index="4"></th>
                       <!-- <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Competencia" data-index="7"></th>
@@ -101,13 +101,13 @@
                           placeholder="Temporalidad" data-index="10"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Agencia" data-index="11"></th> -->
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Callback" data-index="5"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Fitting" data-index="6"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Shoot dates" data-index="7"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled">
+                      <th rowspan="1" colspan="1" class="no-sort">
                         <select id="selectFilterStatusProject" class="selected form-control" name="status"
                           data-index="8">
                           <option value="1" selected="">En Entrega</option>
@@ -237,6 +237,7 @@ export default {
         'responsive': true,
         'processing': true,
         'serverSide': true,
+        'ordering': false,
         'drawCallback': function () {
           // var api = this.api()
           // $(api.column(5).footer()).html(

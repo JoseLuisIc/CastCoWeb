@@ -59,8 +59,6 @@
                             <th data-index="9">Dispositivo</th>
                             <th>Acciones</th>
                           </tr>
-                        </thead>
-                        <thead>
                           <tr role="row">
                             <th v-can="'view_column'">
                               <select2 :id="selectedCharacter" :options="filterCharacters" v-model="filters.character"
@@ -435,6 +433,7 @@ export default {
   },
   data() {
     return {
+      columnsVisibles: ['Personaje', 'Postulante', 'Instagram', 'Edad', 'Agencia', 'Material', '# Entrega', 'Status Postulacion', 'Status Proyecto', 'Dispositivo', 'Acciones'],
       showModalMaterial: false,
       showModalDelete: false,
       showModalDetail: false,
@@ -494,11 +493,13 @@ export default {
         this.idProject = this.$route.params.id
         this.fetchProject()
       }
-      if (this.role === util.ADMIN && this.role === util.MANAGER) {
+      console.log(this.role)
+      if (this.role === util.ADMIN || this.role === util.MANAGER) {
         if (localStorage.getItem('columnVisibleProyectDetail') === null || localStorage.getItem('columnVisibleProyectDetail').length === 0) {
           localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(this.hiddenDefaultCol))
         }
       } else {
+        this.columnsVisibles = ['Postulante', 'Instagram', 'Edad', 'Agencia', 'Material', '# Entrega', 'Dispositivo', 'Acciones']
         if (localStorage.getItem('columnVisibleProyectDetailAgency') === null) {
           localStorage.setItem('columnVisibleProyectDetailAgency', JSON.stringify(this.hiddenDefaultColAgency))
         }
@@ -546,6 +547,7 @@ export default {
         'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, '']],
         'dom': 'Blfrtip',
         'autoWidth': false,
+        'ordering': false,
         'buttons': [
           {
             'extend': 'copy',
@@ -733,10 +735,13 @@ export default {
         ],
         'language': esMX
       })
-      var columns = that.table.columns().header()
-      for (let index = 0; index < columns.length; index++) {
-        const element = columns[index]
-        var title = $(element).text()
+      // var columns = that.table.columns().header()
+      // var elements = $('#tableProyects > thead > tr:nth-child(1) th')
+      // const arrayOfStrings = Array.from(elements).map(element => element.textContent.trim())
+
+      // console.log(JSON.stringify(arrayOfStrings))
+      for (let index = 0; index < that.columnsVisibles.length; index++) {
+        const title = that.columnsVisibles[index]
         var checked = !that.table.column(index).visible() ? 'checked' : ''
         $('#hiddenColumns').append(`
         <li>
@@ -801,7 +806,7 @@ export default {
           } else {
             columns = columns.filter(column => column !== parseInt(index))
           }
-          if (this.role === util.ADMIN && that.role === util.MANAGER) {
+          if (this.role === util.ADMIN || that.role === util.MANAGER) {
             localStorage.setItem('columnVisibleProyectDetail', JSON.stringify(columns))
           } else {
             localStorage.setItem('columnVisibleProyectDetailAgency', JSON.stringify(columns))

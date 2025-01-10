@@ -15,7 +15,7 @@ export const roles = {
     'create_talents', 'edit_talents', 'delete_talents', 'view_talents',
     'create_managers', 'edit_managers', 'delete_managers', 'view_managers',
     'create_projects', 'edit_projects', 'view_projects', 'visible_columns_projects',
-    'view_postulation', 'edit_postulation', 'visible_columns_postulation', 'dowload_report', 'exported_postulation'
+    'view_postulation', 'edit_postulation', 'view_column', 'delete_postulation', 'visible_columns_postulation', 'dowload_report', 'exported_postulation'
   ],
   2: [
     'view_profile', 'create_talents', 'edit_talents', 'delete_talents', 'view_talents', 'view_projects',
