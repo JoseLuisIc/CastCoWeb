@@ -149,7 +149,7 @@
     <!-- Main row -->
     <div class="row" v-if="project.id !== 0">
       <!-- Left col -->
-      <div class="col-md-6">
+      <div class="col-md-12 col-lg-12 col-sm-12">
         <!-- MAP & BOX PANE -->
         <div class="box box-success collapsed-box">
           <div class="box-header with-border">
@@ -206,14 +206,14 @@
 
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
-                      <a class="btn btn-default btn pull-left deleteFile" :id="material.id" @click="deleteFile(material.id)"><i
+                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile(material.id)"><i
                           class="fa fa-trash"></i></a>
                       <span class="mailbox-attachment-size">
-                        <a class="btn btn-default btn pull-left editFile" :id="material.id" @click="editFile(material.id)"><i
+                        <a class="btn btn-default btn-xs pull-left editFile" :id="material.id" @click="editFile(material.id)"><i
                             class="fa fa-edit"></i></a>
-                        &nbsp;
-                        <a :href="material.file" class="btn btn-default btn-xs pull-right downloadFile"
-                          @click="downloadFile" :id="material.id" :name="material.name"><i
+                        &nbsp; &nbsp;
+                        <a class="btn btn-default btn-xs pull-right downloadFile"
+                          @click="downloadFile(material)" :id="material.id" :name="material.name"><i
                             class="fa fa-cloud-download"></i></a>
                       </span>
                     </div>
@@ -477,11 +477,9 @@ export default {
           }
         })
     },
-    downloadFile(e) {
-      e.preventDefault()
-      const link = e.target
-      console.log(link.href)
-      this.download(link.href, link.name)
+    downloadFile(material) {
+      console.log(material)
+      this.download(material.file, material.name)
     },
     download(url, filename) {
       fetch(url)

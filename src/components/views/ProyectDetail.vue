@@ -18,10 +18,10 @@
                 <div class="box-header">
                   <h3 class="box-title"></h3>
                   <button class="btn btn-default" v-on:click="downloadReport" v-if="applications.length > 0"
-                    v-can="'dowload_report'">Descargar Reporte <i class="fa fa-download"></i></button>
+                    v-can="'download_report'">Descargar Reporte <i class="fa fa-download"></i></button>
                   <div class="btn-group" style="float: right;">
                     <button href="javascript:;" class="dropdown-toggle btn btn-danger" data-toggle="dropdown"
-                      v-can="'visible_columns_postulation'" aria-haspopup="true" aria-expanded="false"> Columnas
+                      v-can="'visible_columns_postulations'" aria-haspopup="true" aria-expanded="false"> Columnas
                       Visibles
                     </button>
                     <ul class="dropdown-menu" id="hiddenColumns">
@@ -245,11 +245,11 @@
       <h3 slot="header">Descargar Reporte</h3>
       <div slot="body">
         <button class="btn btn-danger" v-on:click="exportPDF" v-if="applications.length > 0"
-          v-can="'exported_postulation'">Exportar PDF <i class="fa fa-file-pdf-o"></i></button>
+          v-can="'exported_postulations'">Exportar PDF <i class="fa fa-file-pdf-o"></i></button>
         <button class="btn btn-success" v-on:click="exportDocument('xlsx')" v-if="applications.length > 0"
-          v-can="'exported_postulation'">Exportar XLSX <i class="fa fa-file-excel-o"></i></button>
+          v-can="'exported_postulations'">Exportar XLSX <i class="fa fa-file-excel-o"></i></button>
         <button class="btn btn-info" v-on:click="exportDocument('numbers')" v-if="applications.length > 0"
-          v-can="'exported_postulation'">Exportar Numbers <i class="fa fa-file-excel-o"></i></button>
+          v-can="'exported_postulations'">Exportar Numbers <i class="fa fa-file-excel-o"></i></button>
 
         <br>
         <div class="form-group" style="margin-bottom: 0px !important;">
@@ -826,7 +826,7 @@ export default {
     },
     fetchProject() {
       api
-        .request('get', 'projects/' + this.idProject + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulation')
+        .request('get', 'projects/' + this.idProject + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulations')
         .then(response => {
           var json = response.data
           this.project = json
@@ -876,7 +876,7 @@ export default {
       this.idPostulation = id
       this.materials = []
       api
-        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulation')
+        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulations')
         .then(response => {
           this.showModalMaterial = true
           console.log(response)
@@ -1052,7 +1052,7 @@ export default {
     },
     detail(id) {
       api
-        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulation')
+        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulations')
         .then(response => {
           this.showModalDetail = true
           console.log(response)

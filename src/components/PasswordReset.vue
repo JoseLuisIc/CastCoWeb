@@ -4,15 +4,16 @@
     <div class="login-box">
       <!-- /.login-logo -->
       <div class="login-box-body">
-        <p class="login-box-msg">Inicia sesión</p>
+        <p class="login-box-msg">Reestablecer contraseña</p>
 
         <form @submit.prevent="checkCreds" method="post" class="signin-form">
-          <div class="form-group has-feedback" v-bind:class="emailError ? 'has-error' : ''">
-            <input class="form-control" name="email" placeholder="Username" type="text" v-model="email">
-            <span class="form-control-feedback"> <i class="fa fa-envelope"></i></span>
-          </div>
           <div class="form-group has-feedback" v-bind:class="passwordError ? 'has-error' : ''">
             <input class="form-control" name="password" placeholder="Password" type="password" v-model="password">
+            <span class="form-control-feedback"> <i class="fa fa-lock"></i></span>
+          </div>
+          <div class="form-group has-feedback" v-bind:class="passwordConfirmError ? 'has-error' : ''">
+            <input class="form-control" name="password" placeholder="Confirmar Password" type="password"
+              v-model="passwordConfirm">
             <span class="form-control-feedback"> <i class="fa fa-lock"></i></span>
           </div>
           <div class="row">
@@ -21,7 +22,7 @@
             </div>
             <!-- /.col -->
             <div class="col-xs-6">
-              <button type="submit" v-bind:class="'btn btn-primary btn-block btn-flat' + loading">Iniciar</button>
+              <button type="submit" v-bind:class="'btn btn-primary btn-block btn-flat' + loading">Restablecer</button>
             </div>
 
             <!-- /.col -->
@@ -39,7 +40,7 @@
           </div>
            /.social-auth-links -->
 
-        <a href="email_validation">Olvidé mi contraseña</a><br>
+        <!--<a href="login">Iniciar Sesion</a><br>-->
         <div v-if=response class="text-red">
           <p class="vertical-5p lead">{{ response }}</p>
         </div>
@@ -51,25 +52,28 @@
 
 <script>
 import api from '../api'
-import jwtdecode from 'jwt-decode'
-import util from '../utils/util'
-import store from '../store'
 export default {
-  name: 'Login',
+  name: 'ResetPassword',
   data(router) {
     return {
       section: 'Login',
       loading: '',
-      email: '',
       password: '',
+      passwordConfirm: '',
       response: '',
       passwordError: false,
-      emailError: false
+      passwordConfirmError: false,
+      token: ''
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.token = this.$route.params.token
+    })
   },
   methods: {
     checkCreds() {
-      const { email, password } = this
+      const { token, password, passwordConfirm } = this
 
       this.toggleLoading()
       this.resetResponse()
@@ -79,41 +83,10 @@ export default {
       }
       /* Making API call to authenticate a user */
       api
-        .request('post', 'token/', { email, password })
+        .request('post', 'recover_password/', { token: token, password: password, confirm_password: passwordConfirm })
         .then(response => {
           this.toggleLoading()
-
-          var data = response.data
-          /* Setting user in the state and caching record to the localStorage */
-          if (data) {
-            var token = 'Bearer ' + data.access
-
-            var decoded = jwtdecode(data.access)
-            this.$store.commit('SET_USER', decoded.user)
-            this.$store.commit('SET_TOKEN', token)
-            store.state.user = decoded.user
-            console.log(decoded)
-            if (window.localStorage) {
-              window.localStorage.setItem('user', JSON.stringify(decoded.user))
-              window.localStorage.setItem('token', token)
-              window.localStorage.setItem('access', data.access)
-              window.localStorage.setItem('refresh', data.refresh)
-            }
-            switch (decoded.user.role) {
-              case util.ADMIN:
-                this.$router.push({ path: 'admin/dashboard' })
-                break
-              case util.MANAGER:
-                this.$router.push({ path: 'manager/dashboard' })
-                break
-              case util.AGENCY:
-                this.$router.push({ path: 'agency/talents' })
-                break
-              default:
-                this.$router.push('talent/profile')
-                break
-            }
-          }
+          this.$router.push({ path: '/login' })
         })
         .catch(error => {
           this.$store.commit('TOGGLE_LOADING')
@@ -134,15 +107,9 @@ export default {
     validateForm() {
       this.response = ''
       this.emailError = false
-      this.passwordError = false
       if (this.email === '') {
         this.emailError = true
         this.response = 'El campo email no puede estar en blanco.'
-        return false
-      }
-      if (this.password === '') {
-        this.passwordError = true
-        this.response = 'El campo password no puede estar en blanco.'
         return false
       }
       return true

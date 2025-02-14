@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-3">
+  <div class="col-md-6 col-lg-6 col-sm-12">
 
     <div class="box box-warning">
       <div class="box-header with-border">

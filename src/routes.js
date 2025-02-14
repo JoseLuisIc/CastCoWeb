@@ -18,12 +18,27 @@ import ProyectsDetailView from './components/views/ProyectDetail.vue'
 import PostulateView from './components/views/Postulate.vue'
 import StatesView from './components/views/State.vue'
 import ManagerView from './components/views/Manager.vue'
+import PasswordReset from './components/PasswordReset.vue'
+import EmailValidation from './components/EmailValidation.vue'
+import CodeValidation from './components/CodeValidation.vue'
 
 // Routes
 const routes = [
   {
     path: '/login',
     component: LoginView
+  },
+  {
+    path: '/email_validation',
+    component: EmailValidation
+  },
+  {
+    path: '/code_validation',
+    component: CodeValidation
+  },
+  {
+    path: '/password_reset/:token',
+    component: PasswordReset
   },
   {
     path: '/admin',
