@@ -50,13 +50,13 @@
                   <thead>
                     <tr role="row">
                       <th aria-sort="ascending" colspan="1" rowspan="1" aria-controls="example1" tabindex="0"
-                        class="sorting_asc">Produccion</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="1">Nombre</th>
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="2">Nombre público
+                        class="no-sort">Produccion</th>
+                      <th colspan="1" rowspan="1" class="no-sort" tabindex="1">Nombre</th>
+                      <th colspan="1" rowspan="1" class="no-sort" tabindex="2">Nombre público
                       </th>
                       <!-- <th colspan="1" rowspan="1" class="sorting" tabindex="3">Dias de casting</th>
                       <th colspan="1" rowspan="1" class="sorting" tabindex="4">Dinamica de casting</th> -->
-                      <th colspan="1" rowspan="1" class="sorting" tabindex="5">Status</th>
+                      <th colspan="1" rowspan="1" class="no-sort" tabindex="5">Status</th>
                       <th colspan="1" rowspan="1" class="no-sort">Locación</th>
                       <!-- <th colspan="1" rowspan="1" class="no-sort">Competencia</th>
                       <th colspan="1" rowspan="1" class="no-sort">Work day</th>
@@ -69,28 +69,27 @@
                       <th colspan="1" rowspan="1" class="no-sort">Status de Postulacion</th>
                       <th colspan="1" rowspan="1" class="no-sort" style="width: 207px;">Acciones</th>
                     </tr>
-                  </thead>
-                  <thead>
-                    <tr>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+
+                    <tr role="row">
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Productora" data-index="0"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Nombre" data-index="1"></th>
                       <!-- <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Nombre público" data-index="2"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Descripción" data-index="3"></th> -->
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Tipo de material" data-index="2">
                       </th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled">
+                      <th rowspan="1" colspan="1" class="no-sort">
                         <select class="form-control" data-index="3" id="status">
                           <option value="">Todos</option>
                           <option value="true">Activo</option>
                           <option value="false">Inactivo</option>
                         </select>
                       </th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Locación" data-index="4"></th>
                       <!-- <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Competencia" data-index="7"></th>
@@ -102,18 +101,20 @@
                           placeholder="Temporalidad" data-index="10"></th>
                       <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
                           placeholder="Agencia" data-index="11"></th> -->
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Callback" data-index="5"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Fitting" data-index="6"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><input type="text" class="form-control"
+                      <th rowspan="1" colspan="1" class="no-sort"><input type="text" class="form-control"
                           placeholder="Shoot dates" data-index="7"></th>
-                      <th rowspan="1" colspan="1" class="sorting_disabled"><select id="selectFilterStatusProject"
-                          class="form-control" name="status" data-index="8">
+                      <th rowspan="1" colspan="1" class="no-sort">
+                        <select id="selectFilterStatusProject" class="selected form-control" name="status"
+                          data-index="8">
                           <option value="1" selected="">En Entrega</option>
                           <option value="2">Callback</option>
                           <option value="3">Finalizado</option>
-                        </select></th>
+                        </select>
+                      </th>
                       <th rowspan="1" colspan="1"></th>
                     </tr>
                   </thead>
@@ -170,8 +171,8 @@ $.fn.dataTable.Api.register('sum()', function () {
 })
 import toastr from 'toastr'
 import store from '../../store'
+import 'select2'
 import util from '../../utils/util'
-
 // Require needed datatables modules
 require('datatables.net')
 require('datatables.net-bs')
@@ -183,6 +184,7 @@ export default {
   mixins: [commonMethods],
   data() {
     return {
+      columnVisibles: ['Produccion', 'Nombre', 'Nombre público', 'Status', 'Locación', 'Callback', 'Fitting', 'Shoot dates', 'Status de Postulacion', 'Acciones'],
       showModalDelete: false,
       table: null,
       project: project,
@@ -235,6 +237,7 @@ export default {
         'responsive': true,
         'processing': true,
         'serverSide': true,
+        'ordering': false,
         'drawCallback': function () {
           // var api = this.api()
           // $(api.column(5).footer()).html(
@@ -280,7 +283,7 @@ export default {
           {
             'data': 'is_active',
             render: function (data, type, row) {
-              return `<select class="selectStatus" class="form-control" name="status" data-index="${row.id}">
+              return `<select class="form-control selectStatus" name="status" data-index="${row.id}">
                   <option value="true" ${row.is_active ? 'selected' : ''}>Activo</option>
                   <option value="false" ${row.is_active ? '' : 'selected'}>Inactivo</option>
               </select>
@@ -300,7 +303,7 @@ export default {
           {
             'data': 'status',
             render: function (data, type, row) {
-              return `<select class="selectStatusProject" class="form-control" name="status" data-index="${row.id}">
+              return `<select class="form-control selectStatusProject" name="status" data-index="${row.id}">
                   <option value="1" ${row.status === 1 ? 'selected' : ''}>En Entrega</option>
                   <option value="2" ${row.status === 2 ? 'selected' : ''}>Callback</option>
                   <option value="3" ${row.status === 3 ? 'selected' : ''}>Finalizado</option>
@@ -329,10 +332,13 @@ export default {
         ],
         'language': esMX
       })
-      var columns = that.table.columns().header()
-      for (let index = 0; index < columns.length; index++) {
-        const element = columns[index]
-        var title = $(element).text()
+      // var columns = that.table.columns().header()
+      // var elements = $('#tableProyects > thead > tr:nth-child(1) th')
+      // const arrayOfStrings = Array.from(elements).map(element => element.textContent.trim())
+
+      // console.log(JSON.stringify(arrayOfStrings))
+      for (let index = 0; index < that.columnVisibles.length; index++) {
+        const title = that.columnVisibles[index]
         var checked = !that.table.column(index).visible() ? 'checked' : ''
         $('#hiddenColumns').append(`
         <li>
@@ -395,6 +401,7 @@ export default {
         // Get the column API object
         var index = $(this).val()
         if (index !== '-1') {
+          $('#checkAll').prop('checked', !$(this).prop('checked'))
           var column = that.table.column(index)
           var columns = JSON.parse(localStorage.getItem('columnVisibleProyect'))
           if ($(this).prop('checked')) {
@@ -409,6 +416,7 @@ export default {
         }
       })
       $('#checkAll').click(function () {
+        $('input:checkbox').prop('checked', $(this).prop('checked'))
         $('input:checkbox').not(this).trigger('click')
       })
     },
