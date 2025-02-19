@@ -17,7 +17,9 @@
           </div>
           <div class="row">
             <div class="col-xs-6">
-
+              <router-link to="/email_validation" class="btn btn-warning">
+                Olvidé mi contraseña
+              </router-link>
             </div>
             <!-- /.col -->
             <div class="col-xs-6">
@@ -38,8 +40,6 @@
               Google+</a>
           </div>
            /.social-auth-links -->
-
-        <a href="email_validation">Olvidé mi contraseña</a><br>
         <div v-if=response class="text-red">
           <p class="vertical-5p lead">{{ response }}</p>
         </div>

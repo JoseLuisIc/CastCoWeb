@@ -18,7 +18,9 @@
           </div>
           <div class="row">
             <div class="col-xs-6">
-
+              <router-link  v-if=response to="/email_validation" class="btn btn-success"> 
+                Solicitar código
+              </router-link>
             </div>
             <!-- /.col -->
             <div class="col-xs-6">
@@ -41,8 +43,8 @@
            /.social-auth-links -->
 
         <!--<a href="login">Iniciar Sesion</a><br>-->
-        <div v-if=response class="text-red">
-          <p class="vertical-5p lead">{{ response }}</p>
+        <div v-if=response>
+          <p class="vertical-5p lead text-red">{{ response }}</p>
         </div>
       </div>
       <!-- /.login-box-body -->
