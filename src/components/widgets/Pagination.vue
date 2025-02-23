@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="pull-left" style="padding: 20px;">Mostrando {{ calculatePage }} a {{ perPage * currentPage }} de {{ totalPages * perPage }} entradas</div>
+    <div class="pull-left" style="padding: 20px;">Mostrando {{ calculatePage }} a {{ calculateEndPage }} de {{ count }}
+      entradas</div>
     <div class="pull-right">
       <ul class="pagination">
         <!-- <li class="pagination-item" :disabled="isInFirstPage">
@@ -38,6 +39,7 @@ export default {
   name: 'pagination',
   template: 'pagination',
   props: {
+    count: 0,
     maxVisibleButtons: {
       type: Number,
       required: false,
@@ -93,6 +95,12 @@ export default {
         return 1
       }
       return this.perPage * (this.currentPage - 1) + 1
+    },
+    calculateEndPage() {
+      if (this.currentPage === this.totalPages) {
+        return this.count
+      }
+      return this.perPage * this.currentPage
     }
   },
   methods: {
