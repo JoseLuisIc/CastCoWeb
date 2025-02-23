@@ -64,7 +64,7 @@
                       </center>
                     </div>
                     <pagination :totalPages="totalPage" :perPage="parseInt(length)" :currentPage="currentPage"
-                      @pagechanged="onPageChange" />
+                      @pagechanged="onPageChange" :count="count"/>
                   </div>
                 </div>
               </div>
