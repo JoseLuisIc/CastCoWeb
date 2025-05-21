@@ -194,9 +194,9 @@
               <strong class="subtitle"><i class="fa fa-building-o margin-r-5"></i> Agencia</strong>
               <div class="user-block">
                 <span class="description"><strong> Nombre de Agencia: </strong> {{ postulation.user.agency.name
-                  }}</span>
+                }}</span>
                 <span class="description"><strong> Nombre de encargado: </strong> {{ postulation.user.agency.booker_name
-                  }}</span>
+                }}</span>
                 <span class="description"><strong> Telefono: </strong> {{ postulation.user.agency.phone }}</span>
                 <span class="description"><strong> Ciudad: </strong> {{ postulation.user.agency.city }}</span>
               </div>
@@ -214,7 +214,7 @@
           <strong class="subtitle"><i class="fa fa-list-alt margin-r-5"></i> Proyecto</strong>
           <div class="user-block">
             <span class="description"><strong> Nombre del Proyecto: </strong> {{ postulation.project.public_name
-              }}</span>
+            }}</span>
             <span class="description"><strong> Descripción: </strong> {{ postulation.project.description }}</span>
           </div>
           <hr>
@@ -648,7 +648,7 @@ export default {
           {
             'data': 'user',
             render: function (data, type, row) {
-              return `<div class="widget-user-image"><img src="${row.user.photo}"
+              return `<div class="widget-user-image"><img src="${row.user.photo || 'https://ui-avatars.com/api/?background=random&name=' + row.user.first_name + row.user.last_name}"
                                   class="img-circle"> ${row.user.first_name} ${row.user.last_name}</div> ${row.user.email}`
             }
           },

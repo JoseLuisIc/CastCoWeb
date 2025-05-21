@@ -6,7 +6,7 @@
         <div class="box">
           <div class="box-header">
             <h3 class="box-title"></h3>
-            <router-link to="/admin/proyects/create" class="btn btn-primary" v-can="'create_projects'"> <i
+            <router-link to="/manager/proyects/create" class="btn btn-primary" v-can="'create_projects'"> <i
                 class="fa fa-plus"> </i> Agregar
               Nuevo</router-link>
             <input id="btnModalDelete" type="hidden" class="btn btn-primary" data-toggle="modal"
