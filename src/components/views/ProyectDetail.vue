@@ -648,7 +648,7 @@ export default {
           {
             'data': 'user',
             render: function (data, type, row) {
-              return `<div class="widget-user-image"><img src="${row.user.photo}"
+              return `<div class="widget-user-image"><img src="${row.user.photo || 'https://ui-avatars.com/api/?background=random&name=' + row.user.first_name + row.user.last_name}"
                                   class="img-circle"> ${row.user.first_name} ${row.user.last_name}</div> ${row.user.email}`
             }
           },
