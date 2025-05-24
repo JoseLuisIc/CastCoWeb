@@ -367,21 +367,23 @@ export default {
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
           switch (key) {
-            case 'state':
-              var state = this.user[key]
+            case 'state': {
+              const state = this.user[key]
               userFormData.append(key, state.id)
               break
+            }
             case 'photo':
               if (this.user[key] instanceof File) {
                 userFormData.append(key, this.file)
               }
               break
-            case 'agency':
-              var agency = this.user[key]
+            case 'agency': {
+              const agency = this.user[key]
               if (agency.user !== null && agency.user !== '' && agency.user !== undefined) {
                 userFormData.append(key, agency.user)
               }
               break
+            }
             case 'email':
               console.log(key)
               break
