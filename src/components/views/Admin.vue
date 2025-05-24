@@ -1,7 +1,6 @@
 <template>
   <section class="content">
     <div class="row center-block">
-      <h2></h2>
       <div class="col-md-12">
         <div class="box">
           <div class="box-header">
@@ -204,7 +203,7 @@ export default {
     },
     updateUser(dUser) {
       api
-        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token }, 'edit_admins')
+        .request('put', 'users/' + dUser.id + '/', this.user, { Authorization: this.$store.state.token }, 'edit_admins')
         .then(response => {
           this.showModal = false
           this.callUser()
@@ -212,14 +211,14 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
     },
     saveUser() {
       api
-        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token }, 'create_admins')
+        .request('post', 'users/', this.user, { Authorization: this.$store.state.token }, 'create_admins')
         .then(response => {
           this.showModal = false
           this.callUser()
@@ -227,7 +226,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
             this.error.nombres = errors.nombres[1]
           }
@@ -237,14 +236,14 @@ export default {
       console.log(idUser)
       this.isNew = false
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'edit_admins')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'edit_admins')
         .then(response => {
           this.user = response.data
           this.showModal = true
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -256,37 +255,37 @@ export default {
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token }, 'view_admins')
+        .request('get', 'users/?' + params.toString(), {}, { Authorization: this.$store.state.token }, 'view_admins')
         .then(response => {
-          var json = response.data
+          const json = response.data
           this.users = json.results
           this.count = json.count
           this.totalPage = Math.ceil(this.count / this.length)
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_admins')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'delete_admins')
         .then(response => {
           this.user = response.data
           this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     deleteUser() {
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_admins')
+        .request('delete', 'users/' + this.user.id + '/', {}, { Authorization: this.$store.state.token }, 'delete_admins')
         .then(response => {
           this.showModalDelete = false
           toastr.error('Eliminación', 'Se ha eliminado el usuario')
@@ -294,13 +293,13 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
     },
     validateEmail(e) {
-      var email = e.target.value
+      const email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
         this.error.email = ''
       } else {
@@ -309,7 +308,7 @@ export default {
     },
     modalResetPwd(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'reset_password')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'reset_password')
         .then(response => {
           this.user = response.data
           this.showModalReset = true
@@ -319,20 +318,20 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     resetPassword() {
-      var that = this
-      var json = {
+      const that = this
+      const json = {
         id: this.user.id,
         password: this.reset.password,
         confirm_password: this.reset.confirm_password
       }
       api
-        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token }, 'reset_password')
+        .request('post', 'reset/password/', json, { Authorization: this.$store.state.token }, 'reset_password')
         .then(response => {
           this.reset.password = ''
           this.reset.confirm_password = ''
@@ -343,7 +342,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
             that.reset.error = errors.password[0]
           }

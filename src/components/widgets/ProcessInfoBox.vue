@@ -39,7 +39,7 @@ export default {
     },
     iconClasses: {
       type: Array,
-      default: []
+      default: () => []
     },
     colorClass: {
       type: String,

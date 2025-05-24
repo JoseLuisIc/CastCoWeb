@@ -4,11 +4,6 @@
       entradas</div>
     <div class="pull-right">
       <ul class="pagination">
-        <!-- <li class="pagination-item" :disabled="isInFirstPage">
-        <a type="button" @click="onClickFirstPage">
-          Primero
-        </a>
-      </li> -->
         <li class="pagination-item" :disabled="isInFirstPage">
           <a type="button" @click="onClickPreviousPage">
             Anterior
@@ -39,7 +34,10 @@ export default {
   name: 'pagination',
   template: 'pagination',
   props: {
-    count: 0,
+    count: {
+      type: Number, // Aquí estamos diciendo que `count` debe ser de tipo `Number`.
+      default: 0 // Y su valor por defecto será `0`.
+    },
     maxVisibleButtons: {
       type: Number,
       required: false,

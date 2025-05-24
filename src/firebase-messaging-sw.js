@@ -1,4 +1,4 @@
-importScripts('https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js')
+/* importScripts('https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/10.3.1/firebase-messaging.js')
 
 const firebaseConfig = {
@@ -24,3 +24,4 @@ messaging.onBackgroundMessage((payload) => {
 
   self.registration.showNotification(notificationTitle, notificationOptions)
 })
+*/

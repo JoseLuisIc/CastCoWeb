@@ -92,8 +92,8 @@ export default {
       managers: 0,
       applications: 0,
       generateRandomNumbers(numbers, max, min) {
-        var a = []
-        for (var i = 0; i < numbers; i++) {
+        const a = []
+        for (let i = 0; i < numbers; i++) {
           a.push(Math.floor(Math.random() * (max - min + 1)) + max)
         }
         return a
@@ -102,9 +102,9 @@ export default {
   },
   methods: {
     getTotal() {
-      api.request('get', `dashboard-analytics/`, {}, { 'Authorization': this.$store.state.token })
+      api.request('get', 'dashboard-analytics/', {}, { Authorization: this.$store.state.token })
         .then(response => {
-          var json = response.data
+          const json = response.data
           this.admins = json.admins
           this.talents = json.talents
           this.agencies = json.agencies
@@ -129,8 +129,8 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.getTotal()
-      var ctx = document.getElementById('trafficBar').getContext('2d')
-      var config = {
+      const ctx = document.getElementById('trafficBar').getContext('2d')
+      const config = {
         type: 'line',
         data: {
           labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -167,8 +167,8 @@ export default {
 
       new Chart(ctx, config) // eslint-disable-line no-new
 
-      var pieChartCanvas = document.getElementById('languagePie').getContext('2d')
-      var pieConfig = {
+      const pieChartCanvas = document.getElementById('languagePie').getContext('2d')
+      const pieConfig = {
         type: 'pie',
         data: {
           labels: ['HTML', 'JavaScript', 'CSS'],

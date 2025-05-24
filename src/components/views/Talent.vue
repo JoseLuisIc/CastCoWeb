@@ -415,7 +415,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      if (this.$route.params.hasOwnProperty('id')) {
+      if (Object.prototype.hasOwnProperty.call(this.$route.params, 'id')) {
         this.agencyId = this.$route.params.id
       }
       this.callUser()
@@ -454,7 +454,7 @@ export default {
       this.isDisabled = false
     },
     updateUser(dUser) {
-      var userFormData = new FormData()
+      const userFormData = new FormData()
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
           switch (key) {
@@ -484,7 +484,7 @@ export default {
       })
       this.isLoading = true
       api
-        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token }, 'edit_talents')
+        .request('patch', 'users/' + dUser.id + '/', userFormData, { Authorization: this.$store.state.token }, 'edit_talents')
         .then(response => {
           this.showModal = false
           this.callUser()
@@ -495,7 +495,7 @@ export default {
         .catch(error => {
           this.resetErrors()
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             Object.keys(errors).forEach(key => {
               this.error[key] = errors[key][0]
             })
@@ -506,9 +506,9 @@ export default {
     saveUser() {
       this.isLoading = true
       api
-        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token }, 'create_talents')
+        .request('post', 'users/', this.user, { Authorization: this.$store.state.token }, 'create_talents')
         .then(response => {
-          var user = response.data
+          const user = response.data
           this.showModal = false
           this.editUser(user.id)
           toastr.success('Guardado', 'Se ha guardado el usuario')
@@ -516,24 +516,24 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
           this.isLoading = false
         })
     },
     editUser(idUser) {
-      var that = this
+      const that = this
       this.isNew = false
       this.resetErrors()
       this.isLoading = true
       this.isDisabled = false
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'edit_talents')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'edit_talents')
         .then(response => {
-          var userData = response.data
-          var state = userData.extras.state === null ? { id: 0, code: '', name: '' } : userData.extras.state
-          var agency = userData.extras.agency === null || userData.extras.agency === undefined ? { id: 0, code: '', name: '' } : userData.extras.agency
+          const userData = response.data
+          const state = userData.extras.state === null ? { id: 0, code: '', name: '' } : userData.extras.state
+          const agency = userData.extras.agency === null || userData.extras.agency === undefined ? { id: 0, code: '', name: '' } : userData.extras.agency
           userData.extras.state = state
           userData.extras.agency = agency
           Object.assign(this.user, userData)
@@ -549,7 +549,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
           this.isLoading = false
@@ -571,9 +571,9 @@ export default {
       console.log(this.agencyId)
       this.isLoading = true
       api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token }, 'view_talents')
+        .request('get', 'users/?' + params.toString(), {}, { Authorization: this.$store.state.token }, 'view_talents')
         .then(response => {
-          var json = response.data
+          const json = response.data
           this.users = json.results
           this.count = json.count
           this.totalPage = Math.ceil(this.count / this.length)
@@ -581,7 +581,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
           this.isLoading = false
@@ -589,14 +589,14 @@ export default {
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_talents')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'delete_talents')
         .then(response => {
           this.user = response.data
           this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -605,7 +605,7 @@ export default {
       console.log(this.user)
       this.isLoading = true
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_talents')
+        .request('delete', 'users/' + this.user.id + '/', {}, { Authorization: this.$store.state.token }, 'delete_talents')
         .then(response => {
           this.showModalDelete = false
           this.callUser()
@@ -613,21 +613,21 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
           this.isLoading = false
         })
     },
     onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files
+      const files = e.target.files || e.dataTransfer.files
       if (files.length) {
         this.createImage(files[0])
       }
     },
     createImage(file) {
-      var that = this
-      var reader = new FileReader()
+      const that = this
+      const reader = new FileReader()
       reader.onload = function (e) {
         that.file = file
         that.previewSrc = e.target.result
@@ -643,14 +643,14 @@ export default {
       const params = new URLSearchParams()
       params.append('pagination', false)
       api
-        .request('get', 'states/?' + params, {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'states/?' + params, {}, { Authorization: this.$store.state.token })
         .then(response => {
           console.log(response.data)
           this.states = response.data
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
@@ -659,7 +659,7 @@ export default {
       const params = new URLSearchParams()
       params.append('pagination', false)
       api
-        .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'agencies/?' + params.toString(), {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.agencies = response.data
           // this.agencies.unshift({id: null, name: 'Particular'})
@@ -667,7 +667,7 @@ export default {
         .catch(console.log)
     },
     validateEmail(e) {
-      var email = e.target.value
+      const email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
         this.error.email = ''
       } else {
@@ -676,7 +676,7 @@ export default {
       this.validateForm()
     },
     validateNumber(e) {
-      var number = e.target.value
+      const number = e.target.value
       if (/^\d{10}$/.test(number)) {
         this.error.phone = ''
       } else {
@@ -685,7 +685,7 @@ export default {
       this.validateForm()
     },
     validateInstagram(e) {
-      var instagram = e.target.value
+      const instagram = e.target.value
       if (/^@[a-zA-Z0-9._]{1,30}$/.test(instagram)) {
         this.error.instagram = ''
       } else {
@@ -696,7 +696,7 @@ export default {
     modalResetPwd(idUser) {
       this.isLoading = true
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.user = response.data
           this.showModalReset = true
@@ -707,22 +707,22 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
           this.isLoading = false
         })
     },
     resetPassword() {
-      var that = this
-      var json = {
+      const that = this
+      const json = {
         id: this.user.id,
         password: this.reset.password,
         confirm_password: this.reset.confirm_password
       }
       this.isLoading = true
       api
-        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token })
+        .request('post', 'reset/password/', json, { Authorization: this.$store.state.token })
         .then(response => {
           this.reset.password = ''
           this.reset.confirm_password = ''
@@ -734,7 +734,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             that.reset.error = errors.password[0]
           }
           this.isLoading = false
@@ -759,7 +759,7 @@ export default {
       return this.$store.state.user.role
     },
     validateForm() {
-      var values = Object.values(this.error).filter(value => {
+      const values = Object.values(this.error).filter(value => {
         return value.length > 0
       })
       console.log(values)

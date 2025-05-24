@@ -161,7 +161,7 @@ export default {
     },
     updateData(pData) {
       api
-        .request('put', 'state-handler/' + pData.id + '/', this.state, { 'Authorization': this.$store.state.token })
+        .request('put', 'state-handler/' + pData.id + '/', this.state, { Authorization: this.$store.state.token })
         .then(response => {
           this.showModal = false
           this.callData()
@@ -169,14 +169,14 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
     },
     saveData() {
       api
-        .request('post', 'state-handler/', this.state, { 'Authorization': this.$store.state.token })
+        .request('post', 'state-handler/', this.state, { Authorization: this.$store.state.token })
         .then(response => {
           this.showModal = false
           this.callData()
@@ -184,7 +184,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
           toastr.error('Creación', 'No se ha creado correctamente')
@@ -194,14 +194,14 @@ export default {
       console.log(id)
       this.isNew = false
       api
-        .request('get', 'state-handler/' + id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'state-handler/' + id + '/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.state = response.data
           this.showModal = true
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -213,37 +213,37 @@ export default {
       params.append('page', this.currentPage)
       params.append('length', this.length)
       api
-        .request('get', 'state-handler/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'state-handler/?' + params.toString(), {}, { Authorization: this.$store.state.token })
         .then(response => {
-          var json = response.data
+          const json = response.data
           this.states = json.results
           this.count = json.count
           this.totalPage = Math.ceil(this.count / this.length)
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     confirmDelete(id) {
       api
-        .request('get', 'state-handler/' + id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'state-handler/' + id + '/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.state = response.data
           this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     deleteData() {
       api
-        .request('delete', 'state-handler/' + this.state.id + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('delete', 'state-handler/' + this.state.id + '/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.showModalDelete = false
           toastr.error('Eliminación', 'Se ha eliminado el estado')
@@ -251,7 +251,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })

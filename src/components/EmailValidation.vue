@@ -53,11 +53,11 @@ export default {
       }
       /* Making API call to authenticate a user */
       api
-        .request('post', 'verification_code/', { email: email })
+        .request('post', 'verification_code/', { email })
         .then(response => {
           this.toggleLoading()
 
-          var data = response.data
+          const data = response.data
           /* Setting user in the state and caching record to the localStorage */
           if (data) {
             console.log(data)
@@ -68,7 +68,7 @@ export default {
           this.$store.commit('TOGGLE_LOADING')
           console.log(error.response)
           if (error.response) {
-            var data = error.response.data
+            const data = error.response.data
             this.response = data.detail
           }
           this.toggleLoading()

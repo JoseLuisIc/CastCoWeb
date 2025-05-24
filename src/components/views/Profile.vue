@@ -305,12 +305,12 @@ export default {
   },
   methods: {
     fetchProfile() {
-      var that = this
+      const that = this
       this.role = this.$store.state.user.role
       api
-        .request('get', 'me/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'me/', {}, { Authorization: this.$store.state.token })
         .then(response => {
-          var userData = response.data
+          const userData = response.data
           Object.assign(that.user, userData)
           Object.assign(that.user, userData.extras)
           if (that.user.photo !== null) {
@@ -321,7 +321,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -332,13 +332,13 @@ export default {
       params.append('ordering', '')
       params.append('length', 32)
       api
-        .request('get', 'states/?' + params, {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'states/?' + params, {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.states = response.data.results
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -347,7 +347,7 @@ export default {
       const params = new URLSearchParams()
       params.append('pagination', false)
       api
-        .request('get', 'agencies/?' + params.toString(), {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'agencies/?' + params.toString(), {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.agencies = response.data
           // this.agencies.unshift({id: null, name: 'Particular'})
@@ -355,7 +355,7 @@ export default {
         .catch(console.log)
     },
     validateEmail(e) {
-      var email = e.target.value
+      const email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
         this.error.email = ''
       } else {
@@ -363,7 +363,7 @@ export default {
       }
     },
     updateUser(dUser) {
-      var userFormData = new FormData()
+      const userFormData = new FormData()
       Object.keys(this.user).forEach(key => {
         if (key !== 'role' && key !== 'extras') {
           switch (key) {
@@ -395,7 +395,7 @@ export default {
         this.error[key] = ''
       })
       api
-        .request('patch', 'users/' + dUser.id + '/', userFormData, { 'Authorization': this.$store.state.token })
+        .request('patch', 'users/' + dUser.id + '/', userFormData, { Authorization: this.$store.state.token })
         .then(response => {
           this.alertShow('Exito', 'Se guardo correctamente los datos', 'success')
         })
@@ -405,7 +405,7 @@ export default {
             this.error[key] = ''
           })
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             Object.keys(errors).forEach(key => {
               this.error[key] = errors[key][0]
             })
@@ -413,14 +413,14 @@ export default {
         })
     },
     onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files
+      const files = e.target.files || e.dataTransfer.files
       if (files.length) {
         this.createImage(files[0])
       }
     },
     createImage(file) {
-      var that = this
-      var reader = new FileReader()
+      const that = this
+      const reader = new FileReader()
       reader.onload = function (e) {
         that.file = file
         that.previewSrc = e.target.result

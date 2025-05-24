@@ -26,11 +26,11 @@ export default {
     },
     number: {
       type: Number,
-      default: ''
+      default: 0
     },
     iconClasses: {
       type: Array,
-      default: []
+      default: () => []
     },
     colorClass: {
       type: String,

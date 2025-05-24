@@ -171,7 +171,6 @@ $.fn.dataTable.Api.register('sum()', function () {
 })
 import toastr from 'toastr'
 import store from '../../store'
-import 'select2'
 import util from '../../utils/util'
 // Require needed datatables modules
 require('datatables.net')
@@ -187,7 +186,7 @@ export default {
       columnVisibles: ['Produccion', 'Nombre', 'Nombre público', 'Status', 'Locación', 'Callback', 'Fitting', 'Shoot dates', 'Status de Postulacion', 'Acciones'],
       showModalDelete: false,
       table: null,
-      project: project,
+      project,
       error: project,
       projects: [],
       agencies: [],
@@ -225,7 +224,7 @@ export default {
     callProyect() {
       const params = new URLSearchParams()
       params.append('format', 'datatables')
-      var that = this
+      const that = this
       if (that.isAgency()) {
         $('#status').val('true')
         that.is_active = true
@@ -339,7 +338,7 @@ export default {
       // console.log(JSON.stringify(arrayOfStrings))
       for (let index = 0; index < that.columnVisibles.length; index++) {
         const title = that.columnVisibles[index]
-        var checked = !that.table.column(index).visible() ? 'checked' : ''
+        const checked = !that.table.column(index).visible() ? 'checked' : ''
         $('#hiddenColumns').append(`
         <li>
           <!-- Task item -->
@@ -355,7 +354,7 @@ export default {
       }
       // Filter event handler
       $('#tableProyects').on('keyup', 'thead input', function () {
-        var col = $(this).data('index')
+        const col = $(this).data('index')
         console.log(col)
         that.table
           .column(col)
@@ -363,7 +362,7 @@ export default {
           .draw()
       })
       $('#tableProyects').on('change', '#status', function () {
-        var col = $(this).data('index')
+        const col = $(this).data('index')
         console.log(col)
         that.is_active = this.value
         that.table
@@ -372,7 +371,7 @@ export default {
           .draw()
       })
       $('#tableProyects').on('change', '#selectFilterStatusProject', function () {
-        var col = $(this).data('index')
+        const col = $(this).data('index')
         console.log(col)
         that.table
           .column(col)
@@ -380,7 +379,7 @@ export default {
           .draw()
       })
       $('#tableProyects').on('change', '.selectStatus', function () {
-        var col = $(this).data('index')
+        const col = $(this).data('index')
         console.log(col, $(this).val())
         if (that.can('edit_projects')) {
           that.updateProyect({ id: col, is_active: $(this).val() })
@@ -389,7 +388,7 @@ export default {
         toastr.error('Permisos', 'No tienes los permisos suficientes para realizar esta accion')
       })
       $('#tableProyects').on('change', '.selectStatusProject', function () {
-        var col = $(this).data('index')
+        const col = $(this).data('index')
         console.log(col, $(this).val())
         if (that.can('edit_projects')) {
           that.updateProyect({ id: col, status: $(this).val() })
@@ -399,11 +398,11 @@ export default {
       })
       $('input[type=checkbox]').on('click', function (e) {
         // Get the column API object
-        var index = $(this).val()
+        const index = $(this).val()
         if (index !== '-1') {
           $('#checkAll').prop('checked', !$(this).prop('checked'))
-          var column = that.table.column(index)
-          var columns = JSON.parse(localStorage.getItem('columnVisibleProyect'))
+          const column = that.table.column(index)
+          let columns = JSON.parse(localStorage.getItem('columnVisibleProyect'))
           if ($(this).prop('checked')) {
             columns.push(parseInt(index))
           } else {
@@ -433,25 +432,25 @@ export default {
     confirmDelete(idProject) {
       this.confirmNameProyect = ''
       api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'projects/' + idProject + '/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.project = response.data
           this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     updateProyect(dProyect) {
-      var projectFormData = new FormData()
+      const projectFormData = new FormData()
       Object.keys(dProyect).forEach(key => {
         projectFormData.append(key, dProyect[key])
       })
       api
-        .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { 'Authorization': this.$store.state.token })
+        .request('patch', 'projects/' + dProyect.id + '/', projectFormData, { Authorization: this.$store.state.token })
         .then(response => {
           toastr.success('Estatus', 'Se ha cambiado el estatus')
         })
@@ -460,7 +459,7 @@ export default {
             this.error[key] = ''
           })
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             Object.keys(errors).forEach(key => {
               this.error[key] = errors[key][0]
             })
@@ -470,14 +469,14 @@ export default {
     deleteProyect() {
       if (this.project.name === this.confirmNameProyect) {
         api
-          .request('delete', 'projects/' + this.project.id + '/', {}, { 'Authorization': this.$store.state.token })
+          .request('delete', 'projects/' + this.project.id + '/', {}, { Authorization: this.$store.state.token })
           .then(response => {
             this.table.ajax.reload()
             this.showModalDelete = false
           })
           .catch(error => {
             if (error.response) {
-              var errors = error.response.data
+              const errors = error.response.data
               console.log(errors)
             }
           })
@@ -489,13 +488,13 @@ export default {
     },
     getStates() {
       api
-        .request('get', 'states/?', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'states/?', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.states = response.data.results
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })

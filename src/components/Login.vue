@@ -83,12 +83,12 @@ export default {
         .then(response => {
           this.toggleLoading()
 
-          var data = response.data
+          const data = response.data
           /* Setting user in the state and caching record to the localStorage */
           if (data) {
-            var token = 'Bearer ' + data.access
+            const token = 'Bearer ' + data.access
 
-            var decoded = jwtdecode(data.access)
+            const decoded = jwtdecode(data.access)
             this.$store.commit('SET_USER', decoded.user)
             this.$store.commit('SET_TOKEN', token)
             store.state.user = decoded.user
@@ -119,7 +119,7 @@ export default {
           this.$store.commit('TOGGLE_LOADING')
           console.log(error.response)
           if (error.response) {
-            var data = error.response.data
+            const data = error.response.data
             this.response = data.detail
           }
           this.toggleLoading()

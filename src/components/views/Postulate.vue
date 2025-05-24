@@ -38,9 +38,9 @@
 
                     <tbody>
                       <tr v-for="application in applications">
-                        <td>{{ application.project.name }} </td>
-                        <td>{{ application.project.description }} </td>
-                        <td>{{ application.character.name }}</td>
+                        <td>{{ application.project && application.project.name }} </td>
+                        <td>{{ application.project && application.project.description }} </td>
+                        <td>{{ application.character && application.character.name }}</td>
                         <td><span @click="viewMaterial(application)"><i class="fa fa-file-image-o fa-3x"
                               aria-hidden="true"></i></span><br>Archivos</td>
                         <td>
@@ -78,7 +78,7 @@
       <div slot="body">
         <div class="box-footer">
           <ul class="mailbox-attachments clearfix">
-            <li v-for="(material, index) in materials">
+            <li v-for="(material) in materials">
               <div v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" class="gallery center">
 
                 <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())" :src='material.file' alt="">
@@ -147,7 +147,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      if (this.$route.params.hasOwnProperty('id')) {
+      if (Object.prototype.hasOwnProperty.call(this.$route.params, 'id')) {
         this.idUser = this.$route.params.id
         // this.fetchProyect(this.$route.params.id)
       }
@@ -169,7 +169,7 @@ export default {
       }
     },
     fetchApplications() {
-      var params = new FormData()
+      const params = new FormData()
       params.append('search', '')
       params.append('project', '')
       params.append('character', '')
@@ -178,17 +178,17 @@ export default {
       params.append('page_size', this.length)
       params.append('page', this.currentPage)
       api
-        .request('get', `applications/?` + new URLSearchParams(params).toString(), {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'applications/?' + new URLSearchParams(params).toString(), {}, { Authorization: this.$store.state.token })
         .then(response => {
           console.log(response)
-          var json = response.data
+          const json = response.data
           this.count = json.count
           this.applications = json.results
           this.totalPage = Math.ceil(this.count / this.length)
         })
         .catch(error => {
           if (error.response) {
-
+            console.log(error)
           }
         })
     },
@@ -198,7 +198,7 @@ export default {
     },
     deletePostulation() {
       api
-        .request('delete', 'applications/' + this.idPostulation + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('delete', 'applications/' + this.idPostulation + '/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.showModalDelete = false
           this.fetchApplications()

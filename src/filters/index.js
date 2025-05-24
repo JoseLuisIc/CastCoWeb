@@ -10,7 +10,7 @@ export function count (arr) {
 }
 
 export function prettyDate (date) {
-  var a = new Date(date)
+  const a = new Date(date)
   return a.toDateString()
 }
 

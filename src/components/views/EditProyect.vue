@@ -179,7 +179,7 @@
                 <div class="form-group" v-if="!isEditMaterial">
                   <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange"
                     accept="image/*,video/*">
-
+                  <!--<VideoConverter @conversion-finished="handleFinished" />-->
                   <p class="help-block">Max. 50MB</p>
                 </div>
                 <button type="button" class="btn btn-primary" v-on:click="uploadFile"
@@ -194,7 +194,7 @@
             </div><!-- /.box-footer -->
             <div class="box-footer">
               <ul class="mailbox-attachments clearfix">
-                <li v-for="(material, index) in materials">
+                <li v-for="(material) in materials">
                   <div
                     v-show="['jpg', 'png', 'jpeg', 'mp4', 'mov', 'avi', 'wmv', 'mkv'].includes(material.type.toLowerCase())">
                     <span class="mailbox-attachment-icon">
@@ -240,6 +240,7 @@ import ModulePersonaje from './project/ModulePersonaje.vue'
 import ModuleDelivery from './project/ModuleDelivery.vue'
 import toastr from 'toastr'
 import project from '../../models/project'
+// import VideoConverter from '../widgets/VideoConverter.vue'
 
 export default {
   name: 'Admins',
@@ -309,7 +310,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      if (this.$route.params.hasOwnProperty('id')) {
+      if (Object.prototype.hasOwnProperty.call(this.$route.params, 'id')) {
         this.project.id = this.$route.params.id
         this.fetchProyect(this.$route.params.id)
       }
@@ -318,22 +319,22 @@ export default {
   methods: {
     fetchProyect(idProject) {
       api
-        .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'projects/' + idProject + '/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.project = response.data
           this.fetchMaterial(this.project.id)
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     updateProyect(dProyect) {
-      var that = this
+      const that = this
       api
-        .request('patch', 'projects/' + dProyect.id + '/', this.project, { 'Authorization': this.$store.state.token })
+        .request('patch', 'projects/' + dProyect.id + '/', this.project, { Authorization: this.$store.state.token })
         .then(response => {
           this.alertShow('Actualizacion', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
           that.project = project
@@ -346,7 +347,7 @@ export default {
             this.error[key] = ''
           })
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             Object.keys(errors).forEach(key => {
               this.error[key] = errors[key][0]
             })
@@ -354,10 +355,10 @@ export default {
         })
     },
     saveProyect() {
-      var that = this
+      const that = this
       if (this.validateForm()) {
         api
-          .request('post', 'projects/', this.project, { 'Authorization': this.$store.state.token })
+          .request('post', 'projects/', this.project, { Authorization: this.$store.state.token })
           .then(response => {
             this.alertShow('Guardar', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
             that.project = project
@@ -366,7 +367,7 @@ export default {
           .catch(error => {
             this.alertShow('Guardar', 'No se pudo actualizar intente nuevamente', 'error', 'fa fa-ban')
             if (error.response) {
-              var errors = error.response.data
+              const errors = error.response.data
               Object.keys(errors).forEach(key => {
                 this.error[key] = errors[key][0]
               })
@@ -378,7 +379,7 @@ export default {
       return `<td><button class="btn delete" id="${data}"><i class="fa fa-trash"></i></button><button class="btn edit" id="${data}"><i class="fa fa-edit"></i></button></td>`
     },
     onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files
+      const files = e.target.files || e.dataTransfer.files
       if (files.length) {
         this.previewSrc.src = ''
         this.previewSrc.type = ''
@@ -387,8 +388,8 @@ export default {
       }
     },
     createImage(file) {
-      var that = this
-      var reader = new FileReader()
+      const that = this
+      const reader = new FileReader()
       reader.onload = function (e) {
         that.file = file
         that.previewSrc.src = e.target.result
@@ -414,13 +415,13 @@ export default {
         this.alertShow('Limite', 'No  se permite un archivo mayor a 50MB', 'error', 'fa fa-check')
         return false
       }
-      var formData = new FormData()
+      const formData = new FormData()
       formData.append('file', this.file)
       formData.append('name', this.nameMaterial)
       api
-        .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': this.$store.state.token })
+        .request('post', 'projects/' + this.project.id + '/material/', formData, { Authorization: this.$store.state.token })
         .then(response => {
-          var material = response.data
+          const material = response.data
           this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
           document.getElementById('materials').value = ''
           this.previewSrc.src = ''
@@ -430,15 +431,15 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     fetchMaterial(idProject) {
-      var that = this
+      const that = this
       api
-        .request('get', 'projects/' + idProject + '/material/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'projects/' + idProject + '/material/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           that.materials = response.data.map(function (elem) {
             return { id: elem['id'], name: elem['name'], file: elem['file'], type: elem['file'].split('.').pop() }
@@ -446,13 +447,13 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     validatePresupuestoAgencia(e) {
-      var number = e.target.value
+      const number = e.target.value
       if (/^(?!0+\.00)(?=.{1,9}(\.|$))(?!0(?!\.))\d{1,3}(,\d{3})*(\.\d+)?$/.test(number)) {
         this.error.agency_budget = ''
         console.log(number)
@@ -463,16 +464,16 @@ export default {
     },
     deleteFile(materialId) {
       console.log(materialId)
-      var that = this
+      const that = this
       api
-        .request('delete', `projects/${this.project.id}/material/${materialId}/`, {}, { 'Authorization': this.$store.state.token })
+        .request('delete', `projects/${this.project.id}/material/${materialId}/`, {}, { Authorization: this.$store.state.token })
         .then(response => {
           that.materials = that.materials.filter(el => el.id !== parseInt(materialId))
           this.alertShow('Eliminacion', 'Se elimino el material', 'success', 'fa fa-check')
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -493,9 +494,9 @@ export default {
         .catch(console.error)
     },
     editFile(materialId) {
-      var that = this
+      const that = this
       api
-        .request('get', `projects/${this.project.id}/material/${materialId}/`, {}, { 'Authorization': this.$store.state.token })
+        .request('get', `projects/${this.project.id}/material/${materialId}/`, {}, { Authorization: this.$store.state.token })
         .then(response => {
           that.idMaterial = response.data.id
           that.nameMaterial = response.data.name
@@ -506,7 +507,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -514,16 +515,16 @@ export default {
     updateMaterial(e) {
       e.preventDefault()
       console.log(e.target)
-      var that = this
+      const that = this
       api
-        .request('patch', `projects/${this.project.id}/material/${this.idMaterial}/`, { name: this.nameMaterial }, { 'Authorization': this.$store.state.token })
+        .request('patch', `projects/${this.project.id}/material/${this.idMaterial}/`, { name: this.nameMaterial }, { Authorization: this.$store.state.token })
         .then(response => {
           that.cancelMaterial()
           that.fetchMaterial(this.project.id)
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })

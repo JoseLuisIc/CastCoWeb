@@ -1,50 +1,51 @@
-var path = require('path')
-var config = require('../config')
+const path = require('path');
+const config = require('../config');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-exports.assetsPath = function (_path) {
-  var assetsSubDirectory = process.env.NODE_ENV === 'production'
+/**
+ * Devuelve la ruta de los activos (CSS, JS, imágenes, etc.) según el entorno.
+ */
+exports.assetsPath = (_path) => {
+  const assetsSubDirectory = process.env.NODE_ENV === 'production'
     ? config.build.assetsSubDirectory
-    : config.dev.assetsSubDirectory
-  return path.posix.join(assetsSubDirectory, _path)
-}
+    : config.dev.assetsSubDirectory;
+  return path.posix.join(assetsSubDirectory, _path);
+};
 
-exports.cssLoaders = function (options) {
-  options = options || {}
+/**
+ * Genera los loaders para los archivos CSS y sus variantes (less, sass, etc.).
+ */
+exports.cssLoaders = (options = {}) => {
+  const { sourceMap, extract } = options;
 
-  var cssLoader = {
+  // Cargador básico para CSS
+  const cssLoader = {
     loader: 'css-loader',
     options: {
-      minimize: process.env.NODE_ENV === 'production',
-      sourceMap: options.sourceMap
-    }
-  }
+      sourceMap,
+    },
+  };
 
-  // generate loader string to be used with extract text plugin
-  function generateLoaders (loader, loaderOptions) {
-    var loaders = [cssLoader]
+  // Generar el array de loaders para un tipo de archivo y su configuración
+  const generateLoaders = (loader, loaderOptions = {}) => {
+    const loaders = [cssLoader];
     if (loader) {
       loaders.push({
-        loader: loader + '-loader',
-        options: Object.assign({}, loaderOptions, {
-          sourceMap: options.sourceMap
-        })
-      })
+        loader: `${loader}-loader`,
+        options: {
+          ...loaderOptions,
+          sourceMap: options.sourceMap,
+        },
+      });
     }
 
-    // Extract CSS when that option is specified
-    // (which is the case during production build)
-    if (options.extract) {
-      return [
-        MiniCssExtractPlugin.loader,  // Este es el nuevo cargador
-        ...loaders                   // El resto de los loaders
-      ]
-    } else {
-      return ['vue-style-loader'].concat(loaders)
-    }
-  }
+    return options.extract
+      ? [MiniCssExtractPlugin.loader, ...loaders]  // Extraer CSS en producción
+      : ['vue-style-loader', ...loaders];          // Cargar en el DOM para desarrollo
+  };
 
-  // http://vuejs.github.io/vue-loader/en/configurations/extract-css.html
+  // Retorna los loaders configurados para cada tipo de archivo
   return {
     css: generateLoaders(),
     postcss: generateLoaders(),
@@ -52,20 +53,17 @@ exports.cssLoaders = function (options) {
     sass: generateLoaders('sass', { indentedSyntax: true }),
     scss: generateLoaders('sass'),
     stylus: generateLoaders('stylus'),
-    styl: generateLoaders('stylus')
-  }
-}
+    styl: generateLoaders('stylus'),
+  };
+};
 
-// Generate loaders for standalone style files (outside of .vue)
-exports.styleLoaders = function (options) {
-  var output = []
-  var loaders = exports.cssLoaders(options)
-  for (var extension in loaders) {
-    var loader = loaders[extension]
-    output.push({
-      test: new RegExp('\\.' + extension + '$'),
-      use: loader
-    })
-  }
-  return output
-}
+/**
+ * Genera los loaders para archivos de estilo fuera de archivos .vue
+ */
+exports.styleLoaders = (options) => {
+  const loaders = exports.cssLoaders(options);
+  return Object.keys(loaders).map((extension) => ({
+    test: new RegExp(`\\.${extension}$`),
+    use: loaders[extension],
+  }));
+};

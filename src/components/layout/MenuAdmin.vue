@@ -82,12 +82,17 @@ import commonMethods from '../../commons/commonMethods'
 export default {
   name: 'MenuAdmin',
   props: ['slug', 'isActive'],
+  data() {
+    return {
+      localIsActive: this.isActive
+    }
+  },
   mixins: [commonMethods],
   mounted() {
     if (['admins', 'talents', 'agencies'].includes(this.slug)) {
-      this.isActive = true
+      this.localIsActive = true
     } else {
-      this.isActive = false
+      this.localIsActive = false
     }
   }
 }

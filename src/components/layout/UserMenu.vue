@@ -43,7 +43,7 @@ export default {
   mixins: [commonMethods],
   mounted() {
     $.ajaxSetup({
-      headers: { 'Authorization': this.$store.state.token },
+      headers: { Authorization: this.$store.state.token },
       error: function (x, status, error) {
         console.log(x, status, error)
       }
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     getRol(rolId) {
-      var rolString = ''
+      let rolString = ''
       switch (rolId) {
         case util.AGENCY: rolString = 'Agencia'
           break

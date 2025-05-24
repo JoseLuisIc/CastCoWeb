@@ -1,14 +1,16 @@
 {
+  "sourceType": "module", 
   "presets": [
-    ["env", { "modules": false }],
-    "stage-2"
+    "@babel/preset-env"
   ],
-  "plugins": ["transform-runtime"],
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ],
   "comments": false,
   "env": {
     "test": {
-      "presets": ["env", "stage-2"],
-      "plugins": [ "istanbul" ]
+      "presets": ["@babel/preset-env", "stage-2"],
+      "plugins": ["istanbul", "@babel/plugin-proposal-optional-chaining"]
     }
   }
 }

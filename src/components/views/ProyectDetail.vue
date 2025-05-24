@@ -109,7 +109,7 @@
       <div slot="body">
         <div class="box-footer">
           <ul class="mailbox-attachments clearfix">
-            <li v-for="(material, index) in materials"
+            <li v-for="(material) in materials"
               v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())">
               <span class="mailbox-attachment-icon has-img">
                 <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())"
@@ -127,26 +127,6 @@
                       class="fa fa-cloud-download"></i> Descargar</a>
                 </span>
               </div>
-              <!--<div
-                v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())"
-                class="gallery center">
-
-                <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())"
-                  :src='material.file' alt="">
-                <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.file'
-                  controls width="200px"></video>
-                <p style="text-align: center;">{{ material.name }}</p>
-                <div class="mailbox-attachment-info">
-                  <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"><i
-                      class="fa fa-trash"></i> Eliminar</a>
-                  <span class="mailbox-attachment-size">
-                    &nbsp;
-                    <a :href="material.file" class="btn btn-default btn-xs pull-right downloadImage"
-                      @click="downloadImage" :id="material.id" :name="material.name" :type="material.type"><i
-                        class="fa fa-cloud-download"></i> Descargar</a>
-                  </span>
-                </div>
-              </div>-->
             </li>
           </ul>
 
@@ -181,32 +161,30 @@
               <div class="user-block">
 
                 <span class="username">
-                  {{ postulation.user.first_name }} {{ postulation.user.last_name }}
+                   {{ getFullName(postulation) }}
                 </span>
-                <span class="description"><strong> Correo: </strong> {{ postulation.user.email }}</span>
-                <span class="description"><strong> Instagram: </strong> {{ postulation.user.instagram }}</span>
-                <span class="description"><strong> Telefono: </strong> {{ postulation.user.phone }}</span>
-                <span class="description"><strong> Edad: </strong> {{ postulation.user.age }}</span>
-                <span class="description"><strong> Skills: </strong> {{ postulation.user.skills }}</span>
+                <span class="description"><strong> Correo: </strong> {{ postulation?.user?.email || 'No disponible' }}</span>
+                <span class="description"><strong> Instagram: </strong> {{ postulation?.user?.instagram || 'No disponible' }}</span>
+                <span class="description"><strong> Telefono: </strong> {{ postulation?.user?.phone || 'No disponible' }}</span>
+                <span class="description"><strong> Edad: </strong> {{ postulation?.user?.age || 'No disponible' }}</span>
+                <span class="description"><strong> Skills: </strong> {{ postulation?.user?.skills || 'No disponible' }}</span>
               </div>
             </div>
             <div class="col-md-6">
               <strong class="subtitle"><i class="fa fa-building-o margin-r-5"></i> Agencia</strong>
               <div class="user-block">
-                <span class="description"><strong> Nombre de Agencia: </strong> {{ postulation.user.agency.name
-                  }}</span>
-                <span class="description"><strong> Nombre de encargado: </strong> {{ postulation.user.agency.booker_name
-                  }}</span>
-                <span class="description"><strong> Telefono: </strong> {{ postulation.user.agency.phone }}</span>
-                <span class="description"><strong> Ciudad: </strong> {{ postulation.user.agency.city }}</span>
+                <span class="description"><strong> Nombre de Agencia: </strong> {{ postulation?.user?.agency?.name }}</span>
+                <span class="description"><strong> Nombre de encargado: </strong> {{ postulation?.user?.agency?.booker_name }}</span>
+                <span class="description"><strong> Telefono: </strong> {{ postulation?.user?.agency?.phone }}</span>
+                <span class="description"><strong> Ciudad: </strong> {{ postulation?.user?.agency?.city }}</span>
               </div>
               <br>
               <div class="user-block">
                 <strong class="subtitle"><i class="fa fa-arrows-h margin-r-5"></i> Sizes</strong>
-                <span class="description"><strong> Height: </strong>{{ postulation.user.height }} cm</span>
-                <span class="description"><strong> Shirts: </strong> {{ postulation.user.shirt_size }}</span>
-                <span class="description"><strong> Pants: </strong>{{ postulation.user.pant_size }}</span>
-                <span class="description"><strong> Shoes: </strong> {{ postulation.user.shoe_size }} cm (MX)</span>
+                <span class="description"><strong> Height: </strong> {{ postulation?.user?.height || 'No disponible' }} cm</span>
+                <span class="description"><strong> Shirts: </strong> {{ postulation?.user?.shirt_size || 'No disponible' }}</span>
+                <span class="description"><strong> Pants: </strong> {{ postulation?.user?.pant_size || 'No disponible' }}</span>
+                <span class="description"><strong> Shoes: </strong> {{ postulation?.user?.shoe_size || 'No disponible' }} cm (MX)</span>
               </div>
             </div>
           </div>
@@ -214,7 +192,7 @@
           <strong class="subtitle"><i class="fa fa-list-alt margin-r-5"></i> Proyecto</strong>
           <div class="user-block">
             <span class="description"><strong> Nombre del Proyecto: </strong> {{ postulation.project.public_name
-              }}</span>
+            }}</span>
             <span class="description"><strong> Descripción: </strong> {{ postulation.project.description }}</span>
           </div>
           <hr>
@@ -489,7 +467,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.role = this.$store.state.user.role
-      if (this.$route.params.hasOwnProperty('id')) {
+      if (Object.prototype.hasOwnProperty.call(this.$route.params, 'id')) {
         this.idProject = this.$route.params.id
         this.fetchProject()
       }
@@ -507,17 +485,23 @@ export default {
     })
   },
   methods: {
+    getFullName(postulation) {
+      if (postulation && postulation.user) {
+        return `${postulation.user.first_name} ${postulation.user.last_name}`
+      }
+      return '' // Valor por defecto si no existe postulation o user
+    },
     getStatus(idStatus) {
-      var status = ''
+      let status = ''
       switch (idStatus) {
         case 1:
-          status = `<span class="label label-default">En Entrega</span>`
+          status = '<span class="label label-default">En Entrega</span>'
           break
         case 2:
-          status = `<span class="label label-info">Callback</span>`
+          status = '<span class="label label-info">Callback</span>'
           break
         case 3:
-          status = `<span class="label label-success">Finalizado</span>`
+          status = '<span class="label label-success">Finalizado</span>'
           break
         default:
           break
@@ -532,7 +516,7 @@ export default {
       this.fetchProject()
     },
     fetchApplications() {
-      var params = new URLSearchParams()
+      const params = new URLSearchParams()
       params.append('format', 'datatables')
       params.append('search', this.filters.name)
       params.append('project', this.idProject)
@@ -542,7 +526,7 @@ export default {
       params.append('user', '')
       params.append('page_size', this.length)
       params.append('page', this.currentPage)
-      var that = this
+      const that = this
       this.table = $('#tableProyects').DataTable({
         'lengthMenu': [[10, 25, 50, 100, -1], [10, 25, 50, 100, '']],
         'dom': 'Blfrtip',
@@ -635,7 +619,7 @@ export default {
           {
             'data': 'character',
             render: function (data, type, row) {
-              var options = ''
+              let options = ''
               for (let index = 0; index < that.characters.length; index++) {
                 options += `<option value='${that.characters[index].id}'  ${row.character === null ? 0 : row.character.id === that.characters[index].id ? 'selected' : ''}>${that.characters[index].text}</option>`
               }
@@ -681,7 +665,7 @@ export default {
           {
             'data': 'delivery',
             render: function (data, type, row) {
-              var options = ''
+              let options = ''
               for (let index = 0; index < that.deliveries.length; index++) {
                 options += `<option value='${that.deliveries[index].id}'  ${row.delivery === null ? 0 : row.delivery.id === that.deliveries[index].id ? 'selected' : ''}>${that.deliveries[index].text}</option>`
               }
@@ -710,7 +694,7 @@ export default {
           {
             'data': 'device',
             render: function (data, type, row) {
-              var view = `<span class="label label-info">Desconocido</span>`
+              let view = `<span class="label label-info">Desconocido</span>`
               if (row.device === 'android') {
                 view = `<span class="label label-info"> <i class="fa fa-android"/> Android</span>`
               }
@@ -742,7 +726,7 @@ export default {
       // console.log(JSON.stringify(arrayOfStrings))
       for (let index = 0; index < that.columnsVisibles.length; index++) {
         const title = that.columnsVisibles[index]
-        var checked = !that.table.column(index).visible() ? 'checked' : ''
+        const checked = !that.table.column(index).visible() ? 'checked' : ''
         $('#hiddenColumns').append(`
         <li>
           <!-- Task item -->
@@ -757,11 +741,11 @@ export default {
         </li>`)
       }
       this.table.on('page.dt', function (d) {
-        var info = that.table.page.info()
+        const info = that.table.page.info()
         console.log(info)
         that.currentPage = info.page === 0 ? 1 : info.page + 1
         that.length = info.length
-        var params = new URLSearchParams()
+        const params = new URLSearchParams()
         params.append('format', 'datatables')
         params.append('search', that.filters.name)
         params.append('project', that.idProject)
@@ -774,10 +758,10 @@ export default {
         that.table.ajax.url(config.serverURI + 'applications/?' + params)
       })
       this.table.on('length.dt', function (e, settings, len) {
-        var info = that.table.page.info()
+        const info = that.table.page.info()
         console.log(info)
         that.currentPage = info.page === 0 ? 1 : info.page + 1
-        var params = new URLSearchParams()
+        const params = new URLSearchParams()
         params.append('format', 'datatables')
         params.append('search', that.filters.name)
         params.append('project', that.idProject)
@@ -791,10 +775,10 @@ export default {
       })
       $('#hiddenColumns input[type=checkbox]').on('click', function (e) {
         // Get the column API object
-        var index = $(this).val()
+        const index = $(this).val()
         if (index !== '-1') {
-          var column = that.table.column(index)
-          var columns
+          const column = that.table.column(index)
+          let columns
           if (this.role === util.ADMIN && that.role === util.MANAGER) {
             columns = JSON.parse(localStorage.getItem('columnVisibleProyectDetail'))
           } else {
@@ -831,14 +815,14 @@ export default {
     },
     fetchProject() {
       api
-        .request('get', 'projects/' + this.idProject + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulations')
+        .request('get', 'projects/' + this.idProject + '/', {}, { Authorization: this.$store.state.token }, 'view_postulations')
         .then(response => {
-          var json = response.data
+          const json = response.data
           this.project = json
-          var tmpCharacters = json.characters.map(e => {
+          const tmpCharacters = json.characters.map(e => {
             return { id: e.id, text: e.name }
           })
-          var tmpDeliveries = json.deliveries.map(e => {
+          const tmpDeliveries = json.deliveries.map(e => {
             return { id: e.id, text: e.name }
           })
 
@@ -854,21 +838,21 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     deletePostulation() {
       api
-        .request('delete', 'applications/' + this.idPostulation + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_postulation')
+        .request('delete', 'applications/' + this.idPostulation + '/', {}, { Authorization: this.$store.state.token }, 'delete_postulation')
         .then(response => {
           this.showModalDelete = false
           this.fetchProject()
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -881,7 +865,7 @@ export default {
       this.idPostulation = id
       this.materials = []
       api
-        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulations')
+        .request('get', 'applications/' + id + '/', {}, { Authorization: this.$store.state.token }, 'view_postulations')
         .then(response => {
           this.showModalMaterial = true
           console.log(response)
@@ -889,52 +873,52 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     onChangeDelivery({ value, id }) {
-      var deliveryId = value
-      var applicationId = id
+      const deliveryId = value
+      const applicationId = id
       api
-        .request('patch', 'applications/' + applicationId + '/', { delivery: deliveryId }, { 'Authorization': this.$store.state.token }, 'edit_postulation')
+        .request('patch', 'applications/' + applicationId + '/', { delivery: deliveryId }, { Authorization: this.$store.state.token }, 'edit_postulation')
         .then(response => {
           this.alertShow('Entrega', 'Se modifico la entrega', 'success', 'fa fa-check')
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.alertShow('Error', errors.detail, 'error', 'fa fa-error')
           }
         })
     },
     onChangeCharacter({ value, id }) {
-      var characterId = value
-      var applicationId = id
+      const characterId = value
+      const applicationId = id
       api
-        .request('patch', 'applications/' + applicationId + '/', { character: characterId }, { 'Authorization': this.$store.state.token }, 'edit_postulation')
+        .request('patch', 'applications/' + applicationId + '/', { character: characterId }, { Authorization: this.$store.state.token }, 'edit_postulation')
         .then(response => {
           this.alertShow('Personaje', 'Se modifico el personaje', 'success', 'fa fa-check')
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     onChangeStatus({ value, id }) {
-      var status = value
-      var applicationId = id
+      const status = value
+      const applicationId = id
       api
-        .request('patch', 'applications/' + applicationId + '/', { status: status }, { 'Authorization': this.$store.state.token }, 'edit_postulation')
+        .request('patch', 'applications/' + applicationId + '/', { status }, { Authorization: this.$store.state.token }, 'edit_postulation')
         .then(response => {
           this.alertShow('Estatus', 'Se actualizo el estatus', 'success', 'fa fa-check')
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -947,7 +931,7 @@ export default {
       toastr[type](message, title)
     },
     search(e) {
-      var params = new URLSearchParams()
+      const params = new URLSearchParams()
       params.append('format', 'datatables')
       params.append('search', this.filters.name)
       params.append('project', this.idProject)
@@ -960,23 +944,23 @@ export default {
       this.table.ajax.url(config.serverURI + 'applications/?' + params).load()
     },
     exportPDF() {
-      var that = this
-      var url = `${config.serverURI}projects/${this.idProject}/export/`
+      const that = this
+      const url = `${config.serverURI}projects/${this.idProject}/export/`
       console.log(this.filters)
-      var data = new FormData()
+      const data = new FormData()
       data.append('character', this.filters.character)
       data.append('delivery', this.filters.delivery)
       data.append('status', this.filters.postulation)
       this.isShowDownload = true
       this.checkedNamesDefault.forEach(element => {
-        var check = that.checkedNames.find(e => e === element)
+        const check = that.checkedNames.find(e => e === element)
         if (check) {
           data.append(element, true)
         } else {
           data.append(element, false)
         }
       })
-      var oReq = new XMLHttpRequest()
+      const oReq = new XMLHttpRequest()
       oReq.timeout = 72000
       oReq.open('post', url, true)
       oReq.setRequestHeader('Authorization', this.$store.state.token)
@@ -987,7 +971,7 @@ export default {
       }
       oReq.onload = function (oEvent) {
         if (this.status === 200) {
-          var filename = `${that.project.name}.pdf`
+          const filename = `${that.project.name}.pdf`
           that.downloadFile(oReq.response, filename, null)
           that.isShowDownload = false
         } else {
@@ -997,15 +981,15 @@ export default {
       oReq.send(data)
     },
     exportDocument(ext) {
-      var that = this
-      var url = `${config.serverURI}projects/${this.idProject}/document/`
+      const that = this
+      const url = `${config.serverURI}projects/${this.idProject}/document/`
       console.log(this.filters)
-      var data = new FormData()
+      const data = new FormData()
       data.append('character', this.filters.character)
       data.append('delivery', this.filters.delivery)
       data.append('status', this.filters.postulation)
       this.checkedNamesDefault.forEach(element => {
-        var check = that.checkedNames.find(e => e === element)
+        const check = that.checkedNames.find(e => e === element)
         if (check) {
           data.append(element, true)
         } else {
@@ -1014,7 +998,7 @@ export default {
         }
       })
       data.append('ext', ext)
-      var oReq = new XMLHttpRequest()
+      const oReq = new XMLHttpRequest()
       oReq.timeout = 72000
       oReq.open('post', url, true)
       oReq.setRequestHeader('Authorization', this.$store.state.token)
@@ -1025,7 +1009,7 @@ export default {
       }
       oReq.onload = function (oEvent) {
         if (this.status === 200) {
-          var filename = `${that.project.name}.${ext}`
+          const filename = `${that.project.name}.${ext}`
           that.downloadFile(oReq.response, filename, null)
           that.isShowDownload = false
         } else {
@@ -1057,7 +1041,7 @@ export default {
     },
     detail(id) {
       api
-        .request('get', 'applications/' + id + '/', {}, { 'Authorization': this.$store.state.token }, 'view_postulations')
+        .request('get', 'applications/' + id + '/', {}, { Authorization: this.$store.state.token }, 'view_postulations')
         .then(response => {
           this.showModalDetail = true
           console.log(response)
@@ -1065,7 +1049,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -1104,7 +1088,7 @@ export default {
       this.showModalMaterial = true
       this.showModalDeleteMaterial = false
       api
-        .request('delete', `applications/${this.idPostulation}/material/${this.idMaterial}/`, {}, { 'Authorization': this.$store.state.token }, 'delete_postulation')
+        .request('delete', `applications/${this.idPostulation}/material/${this.idMaterial}/`, {}, { Authorization: this.$store.state.token }, 'delete_postulation')
         .then(response => {
           this.alertShow('Estatus', 'Se elimino la imagen', 'success', 'fa fa-check')
           this.viewMaterial(this.idPostulation)
@@ -1112,7 +1096,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })

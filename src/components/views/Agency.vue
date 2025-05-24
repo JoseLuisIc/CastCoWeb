@@ -247,7 +247,7 @@ export default {
     },
     updateUser(dUser) {
       api
-        .request('patch', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token }, 'edit_agencies')
+        .request('patch', 'users/' + dUser.id + '/', this.user, { Authorization: this.$store.state.token }, 'edit_agencies')
         .then(response => {
           console.log(response.data)
           this.showModal = false
@@ -256,23 +256,23 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
     },
     saveUser() {
       api
-        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token }, 'create_agencies')
+        .request('post', 'users/', this.user, { Authorization: this.$store.state.token }, 'create_agencies')
         .then(response => {
-          var user = response.data
+          const user = response.data
           this.editUser(user.id)
           this.callUser()
           toastr.success('Guardado', 'Se ha guardado con exito')
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
@@ -284,9 +284,9 @@ export default {
       })
       this.isNew = false
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'edit_agencies')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'edit_agencies')
         .then(response => {
-          var userData = response.data
+          const userData = response.data
           Object.assign(this.user, userData)
           Object.assign(this.user, userData.extras)
           this.showModal = true
@@ -294,7 +294,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -307,30 +307,30 @@ export default {
       params.append('page', this.currentPage)
       params.append('page_size', this.length)
       api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token }, 'view_agencies')
+        .request('get', 'users/?' + params.toString(), {}, { Authorization: this.$store.state.token }, 'view_agencies')
         .then(response => {
-          var json = response.data
+          const json = response.data
           this.users = json.results
           this.count = json.count
           this.totalPage = Math.ceil(this.count / this.length)
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_agencies')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'delete_agencies')
         .then(response => {
           this.user = response.data
           this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -338,20 +338,20 @@ export default {
     deleteUser() {
       console.log(this.user)
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_agencies')
+        .request('delete', 'users/' + this.user.id + '/', {}, { Authorization: this.$store.state.token }, 'delete_agencies')
         .then(response => {
           this.callUser()
           this.showModalDelete = false
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
     },
     validateEmail(e) {
-      var email = e.target.value
+      const email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
         this.error.email = ''
       } else {
@@ -360,7 +360,7 @@ export default {
     },
     modalResetPwd(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'reset_password')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'reset_password')
         .then(response => {
           this.user = response.data
           this.showModalReset = true
@@ -370,20 +370,20 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     resetPassword() {
-      var that = this
-      var json = {
+      const that = this
+      const json = {
         id: this.user.id,
         password: this.reset.password,
         confirm_password: this.reset.confirm_password
       }
       api
-        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token }, 'reset_password')
+        .request('post', 'reset/password/', json, { Authorization: this.$store.state.token }, 'reset_password')
         .then(response => {
           this.reset.password = ''
           this.reset.confirm_password = ''
@@ -393,7 +393,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             that.reset.error = errors.password[0]
           }
         })

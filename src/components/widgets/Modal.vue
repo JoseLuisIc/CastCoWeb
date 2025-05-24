@@ -42,7 +42,7 @@ export default {
     },
     iconClasses: {
       type: Array,
-      default: []
+      default: () => []
     },
     title: {
       type: String

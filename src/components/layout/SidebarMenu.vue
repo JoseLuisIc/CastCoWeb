@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     getRol(rolId) {
-      var rolString = ''
+      let rolString = ''
       switch (rolId) {
         case util.AGENCY: rolString = 'Agencia'
           break

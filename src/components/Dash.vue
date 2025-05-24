@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     user () {
-      var user = store.state.user
+      const user = store.state.user
       return {
         displayName: user.first_name + ' ' + user.last_name,
         avatar: '',

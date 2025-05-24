@@ -213,7 +213,7 @@ export default {
     },
     updateUser(dUser) {
       api
-        .request('put', 'users/' + dUser.id + '/', this.user, { 'Authorization': this.$store.state.token }, 'edit_managers')
+        .request('put', 'users/' + dUser.id + '/', this.user, { Authorization: this.$store.state.token }, 'edit_managers')
         .then(response => {
           this.showModal = false
           this.callUser()
@@ -221,14 +221,14 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
     },
     saveUser() {
       api
-        .request('post', 'users/', this.user, { 'Authorization': this.$store.state.token }, 'create_managers')
+        .request('post', 'users/', this.user, { Authorization: this.$store.state.token }, 'create_managers')
         .then(response => {
           this.showModal = false
           this.callUser()
@@ -236,7 +236,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
             this.error.nombres = errors.nombres[1]
           }
@@ -247,7 +247,7 @@ export default {
       this.isNew = false
       this.isLoading = true
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'edit_managers')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'edit_managers')
         .then(response => {
           this.user = response.data
           this.showModal = true
@@ -255,7 +255,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
           this.isLoading = false
@@ -269,9 +269,9 @@ export default {
       params.append('page_size', this.length)
       this.isLoading = true
       api
-        .request('get', 'users/?' + params.toString(), {}, { 'Authorization': this.$store.state.token }, 'view_managers')
+        .request('get', 'users/?' + params.toString(), {}, { Authorization: this.$store.state.token }, 'view_managers')
         .then(response => {
-          var json = response.data
+          const json = response.data
           this.users = json.results
           this.count = json.count
           this.totalPage = Math.ceil(this.count / this.length)
@@ -279,7 +279,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
           this.isLoading = false
@@ -287,21 +287,21 @@ export default {
     },
     confirmDelete(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_managers')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'delete_managers')
         .then(response => {
           this.user = response.data
           this.showModalDelete = true
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     deleteUser() {
       api
-        .request('delete', 'users/' + this.user.id + '/', {}, { 'Authorization': this.$store.state.token }, 'delete_managers')
+        .request('delete', 'users/' + this.user.id + '/', {}, { Authorization: this.$store.state.token }, 'delete_managers')
         .then(response => {
           this.showModalDelete = false
           toastr.error('Eliminación', 'Se ha eliminado el usuario')
@@ -309,13 +309,13 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             this.error.email = errors.email[0]
           }
         })
     },
     validateEmail(e) {
-      var email = e.target.value
+      const email = e.target.value
       if (/^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
         this.error.email = ''
       } else {
@@ -324,7 +324,7 @@ export default {
     },
     modalResetPwd(idUser) {
       api
-        .request('get', 'users/' + idUser + '/', {}, { 'Authorization': this.$store.state.token }, 'reset_password')
+        .request('get', 'users/' + idUser + '/', {}, { Authorization: this.$store.state.token }, 'reset_password')
         .then(response => {
           this.user = response.data
           this.showModalReset = true
@@ -334,20 +334,20 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     resetPassword() {
-      var that = this
-      var json = {
+      const that = this
+      const json = {
         id: this.user.id,
         password: this.reset.password,
         confirm_password: this.reset.confirm_password
       }
       api
-        .request('post', 'reset/password/', json, { 'Authorization': this.$store.state.token }, 'reset_password')
+        .request('post', 'reset/password/', json, { Authorization: this.$store.state.token }, 'reset_password')
         .then(response => {
           this.reset.password = ''
           this.reset.confirm_password = ''
@@ -358,7 +358,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
             that.reset.error = errors.password[0]
           }

@@ -20,16 +20,16 @@
   </div>
 </template>
 <script>
-  import {servers} from '../../demo'
+import { servers } from '../../demo'
 
-  export default {
-    name: 'Servers',
-    data () {
-      return {
-        servers
-      }
+export default {
+  name: 'Servers',
+  data () {
+    return {
+      servers
     }
   }
+}
 </script>
 
 <style>

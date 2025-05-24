@@ -1,3 +1,4 @@
+// Reemplazar el uso de `plugin` por los hooks adecuados en Webpack 5
 require('./check-versions')()
 
 var config = require('../config')
@@ -19,26 +20,28 @@ var port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
 var autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
-// https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
 var app = express()
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
-  publicPath: webpackConfig.output.publicPath,
-  quiet: true
+  publicPath: webpackConfig.output.publicPath
 })
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler, {
   log: () => {}
 })
-// force page reload when html-webpack-plugin template changes
-compiler.plugin('compilation', function (compilation) {
-  compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-    hotMiddleware.publish({ action: 'reload' })
-    cb()
-  })
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+// Usar hooks de Webpack 5 en lugar de `plugin`
+compiler.hooks.compilation.tap('MyPlugin', (compilation) => {
+  HtmlWebpackPlugin.getHooks(compilation).afterEmit.tapAsync(
+    'MyPlugin',
+    (data, cb) => {
+      hotMiddleware.publish({ action: 'reload' })
+      cb()
+    }
+  )
 })
 
 // proxy api requests

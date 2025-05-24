@@ -26,11 +26,16 @@ export default {
   name: 'MenuTalent',
   props: ['slug', 'isActive'],
   mixins: [commonMethods],
+  data() {
+    return {
+      localIsActive: this.isActive
+    }
+  },
   mounted() {
     if (['admins', 'talents', 'agencies'].includes(this.slug)) {
-      this.isActive = true
+      this.localIsActive = true
     } else {
-      this.isActive = false
+      this.localIsActive = false
     }
   }
 }

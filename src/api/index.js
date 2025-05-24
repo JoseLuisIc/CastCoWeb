@@ -19,7 +19,7 @@ export default {
       toastr.error('Acceso denegado', 'No tienes permiso para realizar esta acción.')
       return Promise.reject(new Error('Permiso denegado'))
     }
-    var url = config.serverURI + uri
+    const url = config.serverURI + uri
     return axios({ method, url, data, headers })
   }
 }

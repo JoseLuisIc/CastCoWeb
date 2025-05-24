@@ -14,6 +14,8 @@ import { domain, count, prettyDate, pluralize } from './filters'
 
 // Import Views - Top level
 import AppView from './components/App.vue'
+
+import { roles } from './roles.js' // Importa los roles y permisos definidos
 // import registerServiceWorker from './registerServiceWorker'
 
 // Import Install and register helper items
@@ -21,7 +23,6 @@ Vue.filter('count', count)
 Vue.filter('domain', domain)
 Vue.filter('prettyDate', prettyDate)
 Vue.filter('pluralize', pluralize)
-import { roles } from './roles.js' // Importa los roles y permisos definidos
 
 Vue.directive('can', {
   bind(el, binding) {
@@ -37,8 +38,8 @@ Vue.directive('can', {
 Vue.use(VueRouter)
 
 // Routing logic
-var router = new VueRouter({
-  routes: routes,
+const router = new VueRouter({
+  routes,
   mode: 'history',
   base: process.env.BASE_URL,
   linkExactActiveClass: 'active',
@@ -102,9 +103,9 @@ router.beforeEach((to, from, next) => {
 sync(store, router)
 // Check local storage to handle refreshes
 if (window.localStorage) {
-  var localUserString = window.localStorage.getItem('user') || null
+  const localUserString = window.localStorage.getItem('user') || null
   try {
-    var localUser = JSON.parse(localUserString)
+    const localUser = JSON.parse(localUserString)
     if (localUser && store.state.user !== localUser) {
       store.commit('SET_USER', localUser)
       store.commit('SET_TOKEN', window.localStorage.getItem('token'))
@@ -117,8 +118,8 @@ if (window.localStorage) {
 // eslint-disable-next-line no-new
 new Vue({
   el: '#root',
-  router: router,
-  store: store,
+  router,
+  store,
   render: h => h(AppView)
 })
 

@@ -85,7 +85,7 @@ export default {
       }
       /* Making API call to authenticate a user */
       api
-        .request('post', 'recover_password/', { token: token, password: password, confirm_password: passwordConfirm })
+        .request('post', 'recover_password/', { token, password, confirm_password: passwordConfirm })
         .then(response => {
           this.toggleLoading()
           this.$router.push({ path: '/login' })
@@ -94,7 +94,7 @@ export default {
           this.$store.commit('TOGGLE_LOADING')
           console.log(error.response)
           if (error.response) {
-            var data = error.response.data
+            const data = error.response.data
             this.response = data.detail
           }
           this.toggleLoading()

@@ -9,8 +9,8 @@
           Found an error
         </div>
         <div v-else>
-          <div class="col-md-4" v-if="response" v-for="repo in response" >
-            <div class="box box-widget widget-user">
+          <div class="col-md-4" v-for="repo in response" >
+            <div class="box box-widget widget-user" v-if="response">
               <div class="widget-user-header bg-aqua-active text-center">
                 <h3 class="widget-user-username center-text">{{repo.name }}</h3>
               </div>

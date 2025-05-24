@@ -14,7 +14,6 @@
         <!-- /.error-content -->
       </div>
   </div>
-  
 </template>
 <script>
 export default {

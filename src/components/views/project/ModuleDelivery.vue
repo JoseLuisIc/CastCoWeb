@@ -37,24 +37,26 @@
         </div><!-- /.table-responsive -->
       </div><!-- /.box-body -->
       <div class="box-footer clearfix">
-        <button id="btnModalDelivery" class="btn btn-sm btn-info btn-flat pull-left" @click="showModal"> <i class="fa fa-plus"></i> Agregar</button>
+        <button id="btnModalDelivery" class="btn btn-sm btn-info btn-flat pull-left" @click="showModal"> <i
+            class="fa fa-plus"></i> Agregar</button>
       </div><!-- /.box-footer -->
     </div><!-- /.box -->
     <modal v-if="showModalDelivery" @close="showModalDelivery = false" :iconClasses="['modal-md']">
       <h3 slot="header">Nuevo Entrega</h3>
       <div slot="body">
         <form>
-              <div class="form-group" v-bind:class="errorName !== '' ? 'has-error' : ''">
-                <label for="name" class="col-form-label">Nombre:</label>
-                <input type="text" class="form-control" id="name" v-model="name">
-                <div v-if=errorName class="text-red">
-                  <p>{{ errorName }}</p>
-                </div>
-              </div>
-            </form>
+          <div class="form-group" v-bind:class="errorName !== '' ? 'has-error' : ''">
+            <label for="name" class="col-form-label">Nombre:</label>
+            <input type="text" class="form-control" id="name" v-model="name">
+            <div v-if=errorName class="text-red">
+              <p>{{ errorName }}</p>
+            </div>
+          </div>
+        </form>
       </div>
 
-      <button slot="footer" type="button" v-show="id != 0" class="btn btn-primary" v-on:click="update">Actualizar</button>
+      <button slot="footer" type="button" v-show="id != 0" class="btn btn-primary"
+        v-on:click="update">Actualizar</button>
       <button slot="footer" type="button" v-show="id == 0" class="btn btn-primary" v-on:click="save">Guardar</button>
     </modal>
   </div><!-- /.col -->
@@ -81,7 +83,10 @@ export default {
     }
   },
   props: {
-    idProject: 0,
+    idProject: {
+      type: Number, // Aquí estamos diciendo que `idProject` debe ser de tipo `Number`.
+      default: 0 // Y su valor por defecto será `0`.
+    },
     edit: {
       type: Function
     }
@@ -99,7 +104,7 @@ export default {
     },
     update() {
       api
-        .request('patch', `projects/${this.idProject}/deliveries/${this.id}/`, { name: this.name }, { 'Authorization': this.$store.state.token })
+        .request('patch', `projects/${this.idProject}/deliveries/${this.id}/`, { name: this.name }, { Authorization: this.$store.state.token })
         .then(response => {
           console.log(response)
           this.alertShow('Actualizacion', 'Se ha actualizado correctamente', 'success', 'fa fa-check')
@@ -121,9 +126,9 @@ export default {
         return
       }
       api
-        .request('post', `projects/${this.idProject}/deliveries/`, { name: this.name }, { 'Authorization': this.$store.state.token })
+        .request('post', `projects/${this.idProject}/deliveries/`, { name: this.name }, { Authorization: this.$store.state.token })
         .then(response => {
-          var delivery = response.data
+          const delivery = response.data
           this.deliveries.unshift(delivery)
 
           this.showModalDelivery = false
@@ -146,7 +151,7 @@ export default {
     },
     index() {
       api
-        .request('get', 'projects/' + this.idProject + '/deliveries/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'projects/' + this.idProject + '/deliveries/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.deliveries = response.data
         })
@@ -155,14 +160,13 @@ export default {
         })
     },
     deleteDeliveries(id) {
-      api
-            .request('delete', `projects/${this.idProject}/deliveries/${id}/`, {}, { 'Authorization': this.$store.state.token })
-            .then(response => {
-              $('#derivery' + id).remove()
-            })
-            .catch(error => {
-              console.log(error)
-            })
+      api.request('delete', `projects/${this.idProject}/deliveries/${id}/`, {}, { Authorization: this.$store.state.token })
+        .then(response => {
+          $('#derivery' + id).remove()
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     showEdit(delivery) {
       this.id = delivery.id

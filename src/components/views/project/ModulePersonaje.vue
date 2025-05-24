@@ -128,7 +128,7 @@
           </div><!-- /.box-footer -->
           <div class="box-footer">
             <ul class="mailbox-attachments clearfix">
-              <li v-for="(material, index) in materials">
+              <li v-for="(material) in materials">
                 <div v-show="['jpg', 'png', 'jpeg', 'mp4', 'avi', 'PNG', 'jfif'].includes(material.type)">
                   <span class="mailbox-attachment-icon has-img">
                     <img class="reference-visual" v-show="['jpg', 'png', 'jpeg', 'PNG'].includes(material.type)"
@@ -192,7 +192,10 @@ export default {
     }
   },
   props: {
-    idProject: 0,
+    idProject: {
+      type: Number, // Aquí estamos diciendo que `idProject` debe ser de tipo `Number`.
+      default: 0 // Y su valor por defecto será `0`.
+    },
     edit: {
       type: Function
     }
@@ -210,7 +213,7 @@ export default {
     },
     update() {
       api
-        .request('patch', `projects/${this.idProject}/characters/${this.id}/`, { name: this.name, description: this.description, gender: this.gender, apparent_age: this.apparent_age, ethnic_group: this.ethnic_group }, { 'Authorization': this.$store.state.token })
+        .request('patch', `projects/${this.idProject}/characters/${this.id}/`, { name: this.name, description: this.description, gender: this.gender, apparent_age: this.apparent_age, ethnic_group: this.ethnic_group }, { Authorization: this.$store.state.token })
         .then(response => {
           console.log(response.data)
           this.alertShow('Actualizacion', 'Se ha actualizado correctamente', 'success', 'fa fa-check')
@@ -231,10 +234,10 @@ export default {
         return
       }
       api
-        .request('post', `projects/${this.idProject}/characters/`, { name: this.name, description: this.description }, { 'Authorization': this.$store.state.token })
+        .request('post', `projects/${this.idProject}/characters/`, { name: this.name, description: this.description }, { Authorization: this.$store.state.token })
         .then(response => {
           this.alertShow('Guardado', 'Se ha guardado correctamente', 'success', 'fa fa-check')
-          var character = response.data
+          const character = response.data
           this.characters.unshift(character)
 
           this.showModalCharacter = false
@@ -264,7 +267,7 @@ export default {
       return this.errorName.length > 0
     },
     onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files
+      const files = e.target.files || e.dataTransfer.files
       if (files.length) {
         this.file = files[0]
       }
@@ -272,17 +275,17 @@ export default {
     deleteFile(e) {
       e.preventDefault()
       console.log(e.target)
-      var materialId = e.target.id
-      var that = this
+      const materialId = e.target.id
+      const that = this
       api
-        .request('delete', `projects/${this.idProject}/characters/${this.id}/visual-reference/${materialId}/`, {}, { 'Authorization': this.$store.state.token })
+        .request('delete', `projects/${this.idProject}/characters/${this.id}/visual-reference/${materialId}/`, {}, { Authorization: this.$store.state.token })
         .then(response => {
           that.materials = that.materials.filter(el => el.id !== parseInt(materialId))
           this.alertShow('Eliminacion', 'Se elimino el material', 'success', 'fa fa-check')
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -293,13 +296,13 @@ export default {
         this.alertShow('Limite', 'Se alcanzo el limite permitido', 'error', 'fa fa-check')
         return false
       }
-      var formData = new FormData()
+      const formData = new FormData()
       formData.append('file', this.file)
       formData.append('name', this.nameReference)
       api
-        .request('post', `projects/${this.idProject}/characters/${this.id}/visual-reference/`, formData, { 'Authorization': this.$store.state.token })
+        .request('post', `projects/${this.idProject}/characters/${this.id}/visual-reference/`, formData, { Authorization: this.$store.state.token })
         .then(response => {
-          var material = response.data
+          const material = response.data
           this.materials.push({ id: material['id'], file: material['file'], name: material['name'], type: material['file'].split('.').pop() })
           document.getElementById('materials').value = ''
           this.previewSrc.src = ''
@@ -309,14 +312,14 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
     },
     index() {
       api
-        .request('get', 'projects/' + this.idProject + '/characters/', {}, { 'Authorization': this.$store.state.token })
+        .request('get', 'projects/' + this.idProject + '/characters/', {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.characters = response.data
         })
@@ -326,7 +329,7 @@ export default {
     },
     deleteCharacters(id) {
       api
-        .request('delete', `projects/${this.idProject}/characters/${id}/`, {}, { 'Authorization': this.$store.state.token })
+        .request('delete', `projects/${this.idProject}/characters/${id}/`, {}, { Authorization: this.$store.state.token })
         .then(response => {
           $('#character' + id).remove()
         })
@@ -346,7 +349,7 @@ export default {
     showMaterial(characterId) {
       this.id = characterId
       api
-        .request('get', `projects/${this.idProject}/characters/${characterId}/visual-reference/`, {}, { 'Authorization': this.$store.state.token })
+        .request('get', `projects/${this.idProject}/characters/${characterId}/visual-reference/`, {}, { Authorization: this.$store.state.token })
         .then(response => {
           this.showModalMaterial = true
           this.materials = response.data
@@ -382,10 +385,10 @@ export default {
     editFile(e) {
       e.preventDefault()
       console.log(e.target)
-      var materialId = e.target.id
-      var that = this
+      const materialId = e.target.id
+      const that = this
       api
-        .request('get', `projects/${this.idProject}/characters/${this.id}/visual-reference/${materialId}/`, {}, { 'Authorization': this.$store.state.token })
+        .request('get', `projects/${this.idProject}/characters/${this.id}/visual-reference/${materialId}/`, {}, { Authorization: this.$store.state.token })
         .then(response => {
           that.idMaterial = response.data.id
           that.nameReference = response.data.name
@@ -393,7 +396,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
@@ -401,9 +404,9 @@ export default {
     updateMaterial(e) {
       e.preventDefault()
       console.log(e.target)
-      var that = this
+      const that = this
       api
-        .request('patch', `projects/${this.idProject}/characters/${this.id}/visual-reference/${this.idMaterial}/`, { name: this.nameReference }, { 'Authorization': this.$store.state.token })
+        .request('patch', `projects/${this.idProject}/characters/${this.id}/visual-reference/${this.idMaterial}/`, { name: this.nameReference }, { Authorization: this.$store.state.token })
         .then(response => {
           console.log(response.data)
           that.cancelMaterial()
@@ -411,7 +414,7 @@ export default {
         })
         .catch(error => {
           if (error.response) {
-            var errors = error.response.data
+            const errors = error.response.data
             console.log(errors)
           }
         })
