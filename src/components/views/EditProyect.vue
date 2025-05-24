@@ -206,15 +206,14 @@
 
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
-                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile(material.id)"><i
-                          class="fa fa-trash"></i></a>
+                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id"
+                        @click="deleteFile(material.id)"><i class="fa fa-trash"></i></a>
                       <span class="mailbox-attachment-size">
-                        <a class="btn btn-default btn-xs pull-left editFile" :id="material.id" @click="editFile(material.id)"><i
-                            class="fa fa-edit"></i></a>
+                        <a class="btn btn-default btn-xs pull-left editFile" :id="material.id"
+                          @click="editFile(material.id)"><i class="fa fa-edit"></i></a>
                         &nbsp; &nbsp;
-                        <a class="btn btn-default btn-xs pull-right downloadFile"
-                          @click="downloadFile(material)" :id="material.id" :name="material.name"><i
-                            class="fa fa-cloud-download"></i></a>
+                        <a class="btn btn-default btn-xs pull-right downloadFile" @click="downloadFile(material)"
+                          :id="material.id" :name="material.name"><i class="fa fa-cloud-download"></i></a>
                       </span>
                     </div>
                   </div>
@@ -240,6 +239,7 @@ import ModulePersonaje from './project/ModulePersonaje.vue'
 import ModuleDelivery from './project/ModuleDelivery.vue'
 import toastr from 'toastr'
 import project from '../../models/project'
+import { compressImage, compressVideo } from '../../utils/compress'
 
 export default {
   name: 'Admins',
@@ -389,10 +389,18 @@ export default {
     createImage(file) {
       var that = this
       var reader = new FileReader()
-      reader.onload = function (e) {
-        that.file = file
+      reader.onload = async function (e) {
+        console.log(`file size ${file.size}`)
         that.previewSrc.src = e.target.result
         that.previewSrc.type = file.type.split('/').pop()
+
+        if (['jpg', 'png', 'jpeg'].includes(that.previewSrc.type.toLowerCase())) {
+          that.file = await compressImage(file, 0.6, 800, 800)
+          console.log(`file size ${that.file.size}`)
+        } else if (['mp4', 'avi', 'mov', 'wmv', 'mkv'].includes(that.previewSrc.type.toLowerCase())) {
+          that.file = await compressVideo(file, 400000)
+          console.log(`file size ${that.file.size}`)
+        }
         that.isPreviewFile = true
         console.log(that.previewSrc)
       }
