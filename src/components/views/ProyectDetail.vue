@@ -168,15 +168,16 @@
                 <span class="description"><strong> Telefono: </strong> {{ postulation?.user?.phone || 'No disponible' }}</span>
                 <span class="description"><strong> Edad: </strong> {{ postulation?.user?.age || 'No disponible' }}</span>
                 <span class="description"><strong> Skills: </strong> {{ postulation?.user?.skills || 'No disponible' }}</span>
+                <span class="description"><strong> Notas Casting: </strong> {{ postulation?.casting_notes || 'No disponible' }}</span>
               </div>
             </div>
             <div class="col-md-6">
               <strong class="subtitle"><i class="fa fa-building-o margin-r-5"></i> Agencia</strong>
               <div class="user-block">
-                <span class="description"><strong> Nombre de Agencia: </strong> {{ postulation?.user?.agency?.name }}</span>
-                <span class="description"><strong> Nombre de encargado: </strong> {{ postulation?.user?.agency?.booker_name }}</span>
-                <span class="description"><strong> Telefono: </strong> {{ postulation?.user?.agency?.phone }}</span>
-                <span class="description"><strong> Ciudad: </strong> {{ postulation?.user?.agency?.city }}</span>
+                <span class="description"><strong> Nombre de Agencia: </strong> {{ postulation?.user?.agency?.name || 'No disponible'}}</span>
+                <span class="description"><strong> Nombre de encargado: </strong> {{ postulation?.user?.agency?.booker_name || 'No disponible' }}</span>
+                <span class="description"><strong> Telefono: </strong> {{ postulation?.user?.agency?.phone || 'No disponible' }}</span>
+                <span class="description"><strong> Ciudad: </strong> {{ postulation?.user?.agency?.city || 'No disponible' }}</span>
               </div>
               <br>
               <div class="user-block">
@@ -192,17 +193,17 @@
           <strong class="subtitle"><i class="fa fa-list-alt margin-r-5"></i> Proyecto</strong>
           <div class="user-block">
             <span class="description"><strong> Nombre del Proyecto: </strong> {{ postulation.project.public_name
-            }}</span>
-            <span class="description"><strong> Descripción: </strong> {{ postulation.project.description }}</span>
+            || 'No disponible' }}</span>
+            <span class="description"><strong> Descripción: </strong> {{ postulation.project.description || 'No disponible' }}</span>
           </div>
           <hr>
           <strong class="subtitle"><i class="fa fa-male margin-r-5"></i> Personaje</strong>
           <div class="user-block">
-            <span class="description"><strong> Nombre: </strong>{{ postulation.character.name }}</span>
-            <span class="description"><strong> Descripción: </strong> {{ postulation.character.description }}</span>
-            <span class="description"><strong> Genero: </strong> {{ postulation.character.gender }}</span>
-            <span class="description"><strong> Etnia: </strong> {{ postulation.character.ethnic_group }}</span>
-            <span class="description"><strong> Edad Aparente: </strong> {{ postulation.character.apparent_age }}</span>
+            <span class="description"><strong> Nombre: </strong>{{ postulation.character.name || 'No disponible' }}</span>
+            <span class="description"><strong> Descripción: </strong> {{ postulation.character.description || 'No disponible' }}</span>
+            <span class="description"><strong> Genero: </strong> {{ postulation.character.gender || 'No disponible' }}</span>
+            <span class="description"><strong> Etnia: </strong> {{ postulation.character.ethnic_group || 'No disponible' }}</span>
+            <span class="description"><strong> Edad Aparente: </strong> {{ postulation.character.apparent_age || 'No disponible' }}</span>
           </div>
         </div>
       </div>
