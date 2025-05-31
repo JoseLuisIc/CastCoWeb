@@ -70,7 +70,7 @@
                   <div class="form-group">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="" id="is_active"
-                        v-model="project.is_active">
+                        v-model="project.is_active" @change="changeStatus"  :disabled="isDisable">
                       <label class="form-check-label" for="is_active">
                         Activo
                       </label>
@@ -206,15 +206,14 @@
 
                     <div class="mailbox-attachment-info">
                       <p>{{ material.name }}</p>
-                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile(material.id)"><i
-                          class="fa fa-trash"></i></a>
+                      <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id"
+                        @click="deleteFile(material.id)"><i class="fa fa-trash"></i></a>
                       <span class="mailbox-attachment-size">
-                        <a class="btn btn-default btn-xs pull-left editFile" :id="material.id" @click="editFile(material.id)"><i
-                            class="fa fa-edit"></i></a>
+                        <a class="btn btn-default btn-xs pull-left editFile" :id="material.id"
+                          @click="editFile(material.id)"><i class="fa fa-edit"></i></a>
                         &nbsp; &nbsp;
-                        <a class="btn btn-default btn-xs pull-right downloadFile"
-                          @click="downloadFile(material)" :id="material.id" :name="material.name"><i
-                            class="fa fa-cloud-download"></i></a>
+                        <a class="btn btn-default btn-xs pull-right downloadFile" @click="downloadFile(material)"
+                          :id="material.id" :name="material.name"><i class="fa fa-cloud-download"></i></a>
                       </span>
                     </div>
                   </div>
@@ -225,8 +224,16 @@
         </div><!-- /.box -->
       </div><!-- /.col -->
 
-      <module-personaje :idProject="this.$route.params.id"></module-personaje>
-      <module-delivery :idProject="this.$route.params.id"></module-delivery>
+      <module-personaje :idProject="parseInt(this.$route.params.id)"></module-personaje>
+      <module-delivery :idProject="parseInt(this.$route.params.id)"></module-delivery>
+      <modal v-if="showModalStatus" @close="showModalStatus = false" :iconClasses="['modal-md']">
+        <h3 slot="header">Actualizar Status</h3>
+        <div slot="body">
+          <p>Al actualizar el status, se le notificara a los usuarios del cambio desea continuar?</p>
+        </div>
+        <button slot="footer" type="button" class="btn btn-info" v-on:click="changeUpdateStatus">Continuar</button>
+
+      </modal>
     </div><!-- /.row -->
   </section>
 </template>
@@ -240,13 +247,16 @@ import ModulePersonaje from './project/ModulePersonaje.vue'
 import ModuleDelivery from './project/ModuleDelivery.vue'
 import toastr from 'toastr'
 import project from '../../models/project'
+import Modal from '../widgets/Modal.vue'
+import util from '../../utils/util'
 // import VideoConverter from '../widgets/VideoConverter.vue'
 
 export default {
   name: 'Admins',
   components: {
     ModulePersonaje,
-    ModuleDelivery
+    ModuleDelivery,
+    Modal
   },
   data() {
     return {
@@ -255,6 +265,9 @@ export default {
       file: null,
       previewSrc: { src: '', type: '' },
       isPreviewFile: false,
+      showModalStatus: false,
+      role: 0,
+      isDisable: true,
       project: {
         id: 0,
         name: '',
@@ -310,13 +323,19 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      this.role = this.$store.state.user.role
       if (Object.prototype.hasOwnProperty.call(this.$route.params, 'id')) {
+        this.isDisable = false
         this.project.id = this.$route.params.id
         this.fetchProyect(this.$route.params.id)
       }
     })
   },
   methods: {
+    changeStatus(event) {
+      this.project.is_active = event.target.checked
+      this.showModalStatus = true
+    },
     fetchProyect(idProject) {
       api
         .request('get', 'projects/' + idProject + '/', {}, { Authorization: this.$store.state.token })
@@ -338,8 +357,12 @@ export default {
         .then(response => {
           this.alertShow('Actualizacion', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
           that.project = project
-          console.log(that.project)
-          that.$router.push({ name: 'admin/proyects' })
+          console.log(this.role)
+          if (this.role === util.ADMIN) {
+            that.$router.push({ name: 'admin/proyects' })
+          } else {
+            that.$router.push({ name: 'manager/proyects' })
+          }
         })
         .catch(error => {
           this.alertShow('Actualizacion', 'No se pudo guardar intente nuevamente', 'error', 'fa fa-ban')
@@ -354,6 +377,28 @@ export default {
           }
         })
     },
+    changeUpdateStatus() {
+      const that = this
+      api
+        .request('patch', 'projects/' + that.project.id + '/', { 'is_active': this.project.is_active, 'is_notify': true }, { Authorization: this.$store.state.token })
+        .then(response => {
+          that.alertShow('Notificar', 'Los usuarios seran notificados del cambio', 'success', 'fa fa-check')
+          console.log(this.project)
+          that.showModalStatus = false
+        })
+        .catch(error => {
+          that.alertShow('Notificar', 'No se pudo realizar el cambio', 'error', 'fa fa-ban')
+          Object.keys(this.error).forEach(key => {
+            that.error[key] = ''
+          })
+          if (error.response) {
+            const errors = error.response.data
+            Object.keys(errors).forEach(key => {
+              that.error[key] = errors[key][0]
+            })
+          }
+        })
+    },
     saveProyect() {
       const that = this
       if (this.validateForm()) {
@@ -362,7 +407,11 @@ export default {
           .then(response => {
             this.alertShow('Guardar', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
             that.project = project
-            that.$router.push({ name: 'admin/proyects' })
+            if (this.role === util.ADMIN) {
+              that.$router.push({ name: 'admin/proyects' })
+            } else {
+              that.$router.push({ name: 'manager/proyects' })
+            }
           })
           .catch(error => {
             this.alertShow('Guardar', 'No se pudo actualizar intente nuevamente', 'error', 'fa fa-ban')
