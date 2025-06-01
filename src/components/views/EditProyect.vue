@@ -70,7 +70,7 @@
                   <div class="form-group">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="" id="is_active"
-                        v-model="project.is_active">
+                        v-model="project.is_active" @change="changeStatus" :disabled="isDisable">
                       <label class="form-check-label" for="is_active">
                         Activo
                       </label>
@@ -121,7 +121,7 @@
                   </div>
                   <div class="form-group">
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="is_active"
+                      <input class="form-check-input" type="checkbox" value="" id="multi_character"
                         v-model="project.multi_character">
                       <label class="form-check-label" for="is_active">
                         Permitir multiples postulaciones por personaje
@@ -160,17 +160,6 @@
           </div><!-- /.box-header -->
           <div class="box-body">
             <div class='col-sm-6'>
-              <div id="preview" v-show="isPreviewFile">
-                <form id="upload">
-                  <img v-show="['jpg', 'png', 'jpeg'].includes(previewSrc.type.toLowerCase())" class='img-responsive'
-                    :src='previewSrc.src' alt='Photo'>
-                  <video v-show="['mp4', 'avi', 'mov', 'wmv', 'mkv'].includes(previewSrc.type.toLowerCase())"
-                    :src='previewSrc.src' controls width="500px"></video>
-                </form>
-                <br>
-              </div>
-            </div><!-- /.col -->
-            <div class="box-footer clearfix">
               <div class="form-group">
                 <div class="form-group">
                   <label for="name" class="col-form-label">Nombre:</label>
@@ -182,6 +171,12 @@
 
                   <p class="help-block">Max. 50MB</p>
                 </div>
+                <!-- Barra de progreso -->
+                <div v-if="uploadProgress > 0" class="progress-container" :style="{ width: customWidth + 'px' }">
+                  <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
+                  <span class="progress-text">{{ uploadProgress }}%</span>
+                </div>
+                <br>
                 <button type="button" class="btn btn-primary" v-on:click="uploadFile"
                   v-if="!isEditMaterial">Agregar</button>
                 <div class="form-group">
@@ -191,8 +186,19 @@
                     v-if="isEditMaterial">Cancelar</button>
                 </div>
               </div>
+            </div><!-- /.col -->
+            <div class="box-footer clearfix col-sm-3">
+              <div id="preview" v-show="isPreviewFile" height="200px">
+                <form id="upload">
+                  <img v-show="['jpg', 'png', 'jpeg'].includes(previewSrc.type.toLowerCase())" class='img-responsive'
+                    :src='previewSrc.src' alt='Photo' style="height: 200px">
+                  <video v-show="['mp4', 'avi', 'mov', 'wmv', 'mkv'].includes(previewSrc.type.toLowerCase())"
+                    :src='previewSrc.src' controls width="500px"></video>
+                </form>
+                <br>
+              </div>
             </div><!-- /.box-footer -->
-            <div class="box-footer">
+            <div class="box-footer col-md-12">
               <ul class="mailbox-attachments clearfix">
                 <li v-for="(material, index) in materials">
                   <div
@@ -224,8 +230,16 @@
         </div><!-- /.box -->
       </div><!-- /.col -->
 
-      <module-personaje :idProject="this.$route.params.id"></module-personaje>
-      <module-delivery :idProject="this.$route.params.id"></module-delivery>
+      <module-personaje :idProject="parseInt(this.$route.params.id)"></module-personaje>
+      <module-delivery :idProject="parseInt(this.$route.params.id)"></module-delivery>
+      <modal v-if="showModalStatus" @close="showModalStatus = false" :iconClasses="['modal-md']">
+        <h3 slot="header">Actualizar Status</h3>
+        <div slot="body">
+          <p>Al actualizar el status, se le notificara a los usuarios del cambio desea continuar?</p>
+        </div>
+        <button slot="footer" type="button" class="btn btn-info" v-on:click="changeUpdateStatus">Continuar</button>
+
+      </modal>
     </div><!-- /.row -->
   </section>
 </template>
@@ -233,18 +247,21 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
 </style>
 <script>
-
+import axios from 'axios'
 import api from '../../api'
 import ModulePersonaje from './project/ModulePersonaje.vue'
 import ModuleDelivery from './project/ModuleDelivery.vue'
 import toastr from 'toastr'
 import project from '../../models/project'
-import { compressImage, compressVideo } from '../../utils/compress'
-
+import Modal from '../widgets/Modal.vue'
+import util from '../../utils/util'
+import { compressImage } from '../../utils/compress'
+import config from '../../config'
 export default {
   name: 'Admins',
   components: {
     ModulePersonaje,
+    Modal,
     ModuleDelivery
   },
   data() {
@@ -254,6 +271,10 @@ export default {
       file: null,
       previewSrc: { src: '', type: '' },
       isPreviewFile: false,
+      showModalStatus: false,
+      role: 0,
+      isDisable: true,
+      uploadProgress: 0,
       project: {
         id: 0,
         name: '',
@@ -309,13 +330,19 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
+      this.role = this.$store.state.user.role
       if (this.$route.params.hasOwnProperty('id')) {
+        this.isDisable = false
         this.project.id = this.$route.params.id
         this.fetchProyect(this.$route.params.id)
       }
     })
   },
   methods: {
+    changeStatus(event) {
+      this.project.is_active = event.target.checked
+      this.showModalStatus = true
+    },
     fetchProyect(idProject) {
       api
         .request('get', 'projects/' + idProject + '/', {}, { 'Authorization': this.$store.state.token })
@@ -337,8 +364,12 @@ export default {
         .then(response => {
           this.alertShow('Actualizacion', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
           that.project = project
-          console.log(that.project)
-          that.$router.push({ name: 'admin/proyects' })
+          console.log(this.role)
+          if (this.role === util.ADMIN) {
+            that.$router.push({ name: 'admin/proyects' })
+          } else {
+            that.$router.push({ name: 'manager/proyects' })
+          }
         })
         .catch(error => {
           this.alertShow('Actualizacion', 'No se pudo guardar intente nuevamente', 'error', 'fa fa-ban')
@@ -353,6 +384,28 @@ export default {
           }
         })
     },
+    changeUpdateStatus() {
+      const that = this
+      api
+        .request('patch', 'projects/' + that.project.id + '/', { 'is_active': this.project.is_active, 'is_notify': true }, { Authorization: this.$store.state.token })
+        .then(response => {
+          that.alertShow('Notificar', 'Los usuarios seran notificados del cambio', 'success', 'fa fa-check')
+          console.log(this.project)
+          that.showModalStatus = false
+        })
+        .catch(error => {
+          that.alertShow('Notificar', 'No se pudo realizar el cambio', 'error', 'fa fa-ban')
+          Object.keys(this.error).forEach(key => {
+            that.error[key] = ''
+          })
+          if (error.response) {
+            const errors = error.response.data
+            Object.keys(errors).forEach(key => {
+              that.error[key] = errors[key][0]
+            })
+          }
+        })
+    },
     saveProyect() {
       var that = this
       if (this.validateForm()) {
@@ -361,7 +414,12 @@ export default {
           .then(response => {
             this.alertShow('Guardar', 'Se guardo correctamente los datos', 'success', 'fa fa-check')
             that.project = project
-            that.$router.push({ name: 'admin/proyects' })
+            console.log(this.role)
+            if (this.role === util.ADMIN) {
+              that.$router.push({ name: 'admin/proyects' })
+            } else {
+              that.$router.push({ name: 'manager/proyects' })
+            }
           })
           .catch(error => {
             this.alertShow('Guardar', 'No se pudo actualizar intente nuevamente', 'error', 'fa fa-ban')
@@ -395,10 +453,10 @@ export default {
         that.previewSrc.type = file.type.split('/').pop()
 
         if (['jpg', 'png', 'jpeg'].includes(that.previewSrc.type.toLowerCase())) {
-          that.file = await compressImage(file, 0.6, 800, 800)
+          that.file = await compressImage(file, 0.7, 800, 800)
           console.log(`file size ${that.file.size}`)
         } else if (['mp4', 'avi', 'mov', 'wmv', 'mkv'].includes(that.previewSrc.type.toLowerCase())) {
-          that.file = await compressVideo(file, 400000)
+          that.file = file
           console.log(`file size ${that.file.size}`)
         }
         that.isPreviewFile = true
@@ -425,23 +483,44 @@ export default {
       var formData = new FormData()
       formData.append('file', this.file)
       formData.append('name', this.nameMaterial)
-      api
-        .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': this.$store.state.token })
-        .then(response => {
-          var material = response.data
-          this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
-          document.getElementById('materials').value = ''
-          this.previewSrc.src = ''
-          this.previewSrc.type = ''
-          this.isPreviewFile = false
-          this.alertShow('Guardar', 'Se guardo el material', 'success', 'fa fa-check')
-        })
-        .catch(error => {
-          if (error.response) {
-            var errors = error.response.data
-            console.log(errors)
-          }
-        })
+      axios.post(config.serverURI + 'projects/' + this.project.id + '/material/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data', 'Authorization': this.$store.state.token },
+        onUploadProgress: (progressEvent) => {
+          this.uploadProgress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+        }
+      }).then(response => {
+        console.log('Subido:', response.data)
+        this.uploadProgress = 0
+        var material = response.data
+        this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
+        document.getElementById('materials').value = ''
+        this.previewSrc.src = ''
+        this.previewSrc.type = ''
+        this.isPreviewFile = false
+        this.alertShow('Guardar', 'Se guardo el material', 'success', 'fa fa-check')
+      }).catch(error => {
+        console.error('Error al subir:', error)
+        this.uploadProgress = 0
+      })
+      // api
+      //   .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': this.$store.state.token })
+      //   .then(response => {
+      //     var material = response.data
+      //     this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
+      //     document.getElementById('materials').value = ''
+      //     this.previewSrc.src = ''
+      //     this.previewSrc.type = ''
+      //     this.isPreviewFile = false
+      //     this.alertShow('Guardar', 'Se guardo el material', 'success', 'fa fa-check')
+      //   })
+      //   .catch(error => {
+      //     if (error.response) {
+      //       var errors = error.response.data
+      //       console.log(errors)
+      //     }
+      //   })
     },
     fetchMaterial(idProject) {
       var that = this
@@ -622,5 +701,31 @@ div.desc {
   margin-bottom: 10px;
   margin-right: 10px;
   display: inline-block;
+}
+
+.progress-container {
+  position: relative;
+  width: 100%;
+  /* o 100%, o lo que necesites */
+  height: 24px;
+  background-color: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  color: white;
+  /* cambia según el contraste del fondo */
 }
 </style>

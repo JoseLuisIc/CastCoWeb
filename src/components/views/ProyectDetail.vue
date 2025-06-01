@@ -188,6 +188,7 @@
                 <span class="description"><strong> Telefono: </strong> {{ postulation.user.phone }}</span>
                 <span class="description"><strong> Edad: </strong> {{ postulation.user.age }}</span>
                 <span class="description"><strong> Skills: </strong> {{ postulation.user.skills }}</span>
+                <span class="description"><strong> Notas Casting: </strong> {{ postulation.casting_notes || 'No disponible' }}</span>
               </div>
             </div>
             <div class="col-md-6">
