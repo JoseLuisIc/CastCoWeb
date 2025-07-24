@@ -81,8 +81,8 @@
             <li v-for="(material) in materials">
               <div v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" class="gallery center">
 
-                <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())" :src='material.file' alt="">
-                <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.file' controls
+                <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())" :src='material.url' alt="">
+                <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.url' controls
                   width="200px"></video>
 
                 <!-- <div class="mailbox-attachment-info">

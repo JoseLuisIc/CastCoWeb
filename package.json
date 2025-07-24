@@ -31,6 +31,7 @@
     "es6-promise": "^4.2.8",
     "faker": "^3.1.0",
     "firebase": "^11.1.0",
+    "heic2any": "^0.0.4",
     "hideseek": "^0.7.0",
     "http-server": "^0.9.0",
     "jquery": "^2.2.2",

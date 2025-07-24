@@ -109,27 +109,26 @@
       <div slot="body">
         <div class="box-footer">
           <ul class="mailbox-attachments clearfix">
-            <li v-for="(material) in materials"
-              v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())">
-              <span class="mailbox-attachment-icon has-img">
-                <img v-show="['jpg', 'png', 'jpeg', 'heic'].includes(String(material.type).toLowerCase())"
-                  :src='material.file' alt="">
-                <video v-show="['mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())" :src='material.file'
-                  controls width="200px"></video>
-              </span>
+            <li v-for="material in materials" :key="material.id" v-show="['jpg', 'png', 'jpeg', 'heic', 'mp4', 'avi', 'mov'].includes(String(material.type).toLowerCase())">
+              
+              <MediaPreview :material="material" />
+
               <div class="mailbox-attachment-info">
-                <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id" @click="deleteFile"
-                  v-can="'delete_postulation'"><i class="fa fa-trash"></i> Eliminar</a>
+                <a class="btn btn-default btn-xs pull-left deleteFile" :id="material.id"
+                  @click="deleteFile" v-can="'delete_postulation'">
+                  <i class="fa fa-trash"></i> Eliminar
+                </a>
+
                 <span class="mailbox-attachment-size">
                   &nbsp;
-                  <a :href="material.file" class="btn btn-default btn-xs pull-right downloadImage"
-                    @click="downloadImage" :id="material.id" :name="material.name" :type="material.type"><i
-                      class="fa fa-cloud-download"></i> Descargar</a>
+                  <a :href="material.url" class="btn btn-default btn-xs pull-right downloadImage"
+                    @click="downloadImage" :id="material.id" :name="material.name" :type="material.type">
+                    <i class="fa fa-cloud-download"></i> Descargar
+                  </a>
                 </span>
               </div>
             </li>
           </ul>
-
           <div v-if="materials.length == 0">
             <center>
               <h3>El usuario aun no carga su material</h3>
@@ -397,6 +396,7 @@ import moment from 'moment'
 import settings from '../../config/settings'
 import util from '../../utils/util'
 import commonMethods from '../../commons/commonMethods'
+import MediaPreview from '../widgets/MediaPreview.vue'
 // Datatable Modules
 // require('datatables.net-buttons/js/dataTables.buttons.js')
 // require('datatables.net-buttons/js/buttons.colVis.js')
@@ -408,7 +408,8 @@ export default {
   mixins: [commonMethods],
   components: {
     Modal,
-    Select2
+    Select2,
+    MediaPreview
   },
   data() {
     return {
