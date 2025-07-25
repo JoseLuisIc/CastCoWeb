@@ -70,10 +70,11 @@
                   <div class="form-group">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="" id="is_active"
-                        v-model="project.is_active" @change="changeStatus"  :disabled="isDisable">
+                        v-model="project.is_active" @change="changeStatus" :disabled="isDisable">
                       <label class="form-check-label" for="is_active">
                         Activo
                       </label>
+
                     </div>
                   </div>
                 </div>
@@ -121,9 +122,9 @@
                   </div>
                   <div class="form-group">
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="is_active"
+                      <input class="form-check-input" type="checkbox" value="" id="multi_character"
                         v-model="project.multi_character">
-                      <label class="form-check-label" for="is_active">
+                      <label class="form-check-label" for="multi_character">
                         Permitir multiples postulaciones por personaje
                       </label>
                     </div>
@@ -159,40 +160,50 @@
             </div>
           </div><!-- /.box-header -->
           <div class="box-body">
+
             <div class='col-sm-6'>
-              <div id="preview" v-show="isPreviewFile">
+              <div class="box-footer clearfix">
+                <div class="form-group">
+                  <div class="form-group">
+                    <label for="name" class="col-form-label">Nombre:</label>
+                    <input type="text" class="form-control" id="nameMaterial" v-model="nameMaterial">
+                  </div>
+                  <div class="form-group" v-if="!isEditMaterial">
+                    <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange"
+                      accept="image/*,video/*">
+
+                    <p class="help-block">Max. 50MB</p>
+                  </div>
+                  <!-- Barra de progreso -->
+                  <div v-if="uploadProgress > 0" class="progress-container" :style="{ width: customWidth + 'px' }">
+                    <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
+                    <span class="progress-text">{{ uploadProgress }}%</span>
+                  </div>
+                  <br>
+                  <button type="button" class="btn btn-primary" v-on:click="uploadFile"
+                    v-if="!isEditMaterial">Agregar</button>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-primary" v-on:click="updateMaterial"
+                      v-if="isEditMaterial">Actualizar</button>
+                    <button type="button" class="btn btn-default" v-on:click="cancelMaterial"
+                      v-if="isEditMaterial">Cancelar</button>
+                  </div>
+                </div>
+              </div><!-- /.box-footer -->
+            </div>
+            <div class="box-footer clearfix col-sm-3">
+              <div id="preview" v-show="isPreviewFile" height="200px">
                 <form id="upload">
                   <img v-show="['jpg', 'png', 'jpeg'].includes(previewSrc.type.toLowerCase())" class='img-responsive'
-                    :src='previewSrc.src' alt='Photo'>
+                    :src='previewSrc.src' alt='Photo' style="height: 200px">
                   <video v-show="['mp4', 'avi', 'mov', 'wmv', 'mkv'].includes(previewSrc.type.toLowerCase())"
                     :src='previewSrc.src' controls width="500px"></video>
                 </form>
                 <br>
               </div>
-            </div><!-- /.col -->
-            <div class="box-footer clearfix">
-              <div class="form-group">
-                <div class="form-group">
-                  <label for="name" class="col-form-label">Nombre:</label>
-                  <input type="text" class="form-control" id="nameMaterial" v-model="nameMaterial">
-                </div>
-                <div class="form-group" v-if="!isEditMaterial">
-                  <input type="file" name="materials" class="form-control" id="materials" @change="onFileChange"
-                    accept="image/*,video/*">
-                  <!--<VideoConverter @conversion-finished="handleFinished" />-->
-                  <p class="help-block">Max. 50MB</p>
-                </div>
-                <button type="button" class="btn btn-primary" v-on:click="uploadFile"
-                  v-if="!isEditMaterial">Agregar</button>
-                <div class="form-group">
-                  <button type="button" class="btn btn-primary" v-on:click="updateMaterial"
-                    v-if="isEditMaterial">Actualizar</button>
-                  <button type="button" class="btn btn-default" v-on:click="cancelMaterial"
-                    v-if="isEditMaterial">Cancelar</button>
-                </div>
-              </div>
-            </div><!-- /.box-footer -->
-            <div class="box-footer">
+            </div>
+
+            <div class="box-footer col-md-12">
               <ul class="mailbox-attachments clearfix">
                 <li v-for="(material) in materials">
                   <div
@@ -241,7 +252,7 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
 </style>
 <script>
-
+import axios from 'axios'
 import api from '../../api'
 import ModulePersonaje from './project/ModulePersonaje.vue'
 import ModuleDelivery from './project/ModuleDelivery.vue'
@@ -249,14 +260,14 @@ import toastr from 'toastr'
 import project from '../../models/project'
 import Modal from '../widgets/Modal.vue'
 import util from '../../utils/util'
-// import VideoConverter from '../widgets/VideoConverter.vue'
+import config from '../../config'
 
 export default {
   name: 'Admins',
   components: {
     ModulePersonaje,
-    ModuleDelivery,
-    Modal
+    Modal,
+    ModuleDelivery
   },
   data() {
     return {
@@ -268,6 +279,7 @@ export default {
       showModalStatus: false,
       role: 0,
       isDisable: true,
+      uploadProgress: 0,
       project: {
         id: 0,
         name: '',
@@ -467,23 +479,44 @@ export default {
       const formData = new FormData()
       formData.append('file', this.file)
       formData.append('name', this.nameMaterial)
-      api
-        .request('post', 'projects/' + this.project.id + '/material/', formData, { Authorization: this.$store.state.token })
-        .then(response => {
-          const material = response.data
-          this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
-          document.getElementById('materials').value = ''
-          this.previewSrc.src = ''
-          this.previewSrc.type = ''
-          this.isPreviewFile = false
-          this.alertShow('Guardar', 'Se guardo el material', 'success', 'fa fa-check')
-        })
-        .catch(error => {
-          if (error.response) {
-            const errors = error.response.data
-            console.log(errors)
-          }
-        })
+      axios.post(config.serverURI + 'projects/' + this.project.id + '/material/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data', 'Authorization': this.$store.state.token },
+        onUploadProgress: (progressEvent) => {
+          this.uploadProgress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+        }
+      }).then(response => {
+        console.log('Subido:', response.data)
+        this.uploadProgress = 0
+        const material = response.data
+        this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
+        document.getElementById('materials').value = ''
+        this.previewSrc.src = ''
+        this.previewSrc.type = ''
+        this.isPreviewFile = false
+        this.alertShow('Guardar', 'Se guardo el material', 'success', 'fa fa-check')
+      }).catch(error => {
+        console.error('Error al subir:', error)
+        this.uploadProgress = 0
+      })
+      // api
+      //   .request('post', 'projects/' + this.project.id + '/material/', formData, { 'Authorization': this.$store.state.token })
+      //   .then(response => {
+      //     var material = response.data
+      //     this.materials.push({ id: material['id'], file: material['file'], type: material['file'].split('.').pop() })
+      //     document.getElementById('materials').value = ''
+      //     this.previewSrc.src = ''
+      //     this.previewSrc.type = ''
+      //     this.isPreviewFile = false
+      //     this.alertShow('Guardar', 'Se guardo el material', 'success', 'fa fa-check')
+      //   })
+      //   .catch(error => {
+      //     if (error.response) {
+      //       var errors = error.response.data
+      //       console.log(errors)
+      //     }
+      //   })
     },
     fetchMaterial(idProject) {
       const that = this
@@ -664,5 +697,31 @@ div.desc {
   margin-bottom: 10px;
   margin-right: 10px;
   display: inline-block;
+}
+
+.progress-container {
+  position: relative;
+  width: 100%;
+  /* o 100%, o lo que necesites */
+  height: 24px;
+  background-color: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  color: white;
+  /* cambia según el contraste del fondo */
 }
 </style>
