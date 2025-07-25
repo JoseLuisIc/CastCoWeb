@@ -1,6 +1,6 @@
 <template>
   <div class="mailbox-attachment-icon has-img">
-    <img v-if="isImage" :src="displayUrl" alt="" />
+    <img v-if="isImage" :src="displayUrl" :alt="extension" />
     <video v-else-if="isVideo" :src="displayUrl" controls width="200px"></video>
   </div>
 </template>
