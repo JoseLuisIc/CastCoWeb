@@ -16,6 +16,16 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
+    echo 'Limpiando proyecto...'
+    rm -rf node_modules package-lock.json dist
+  displayName: 'Limpiar proyecto'
+
+- script: |
+    echo 'Instalando dependencias...'
     npm install
+  displayName: 'Instalar dependencias'
+
+- script: |
+    echo 'Compilando aplicación Vue.js...'
     npm run build
-  displayName: 'npm install and build'
+  displayName: 'Compilar Vue.js'
