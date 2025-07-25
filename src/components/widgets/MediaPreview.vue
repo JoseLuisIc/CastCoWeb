@@ -11,6 +11,7 @@ import heic2any from 'heic2any'
 
 const props = defineProps({
   material: {
+    url: String,
     type: Object,
     required: true
   }
