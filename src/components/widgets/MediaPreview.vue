@@ -1,7 +1,8 @@
 <template>
   <div class="mailbox-attachment-icon has-img">
-    <img v-if="isImage" :src="displayUrl" :alt="extension" />
-    <video v-else-if="isVideo" :src="displayUrl" controls width="200px"></video>
+    <input type="text" style="display: none;" v-model="displayUrl">
+    <img v-show="isImage" :src="displayUrl" :alt="extension" />
+    <video v-show="isVideo" :src="displayUrl" controls width="200px"></video>
   </div>
 </template>
 
