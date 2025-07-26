@@ -4,6 +4,7 @@ import util from '../utils/util.js'
 export default {
   data() {
     return {
+      ADMIN: util.ADMIN,
       MANAGER: util.MANAGER,
       AGENCY: util.AGENCY,
       TALENT: util.TALENT
