@@ -57,7 +57,10 @@ export default {
           break
         case util.TALENT: rolString = 'Talento'
           break
-        case util.MANAGER: rolString = 'Administrador'
+        case util.ADMIN: rolString = 'Administrador'
+          break
+          
+        case util.MANAGER: rolString = 'Manager'
           break
       }
       return rolString
