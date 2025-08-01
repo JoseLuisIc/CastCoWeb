@@ -372,7 +372,7 @@
           </li>
         </ul>
         {{ checkedNames }}
-        <div class="progress progress-sm active" v-if="isShowDownload">
+        <div class="progress progress-sm active" v-show="isShowDownload">
           <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
             :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100" :style="percent">
             <span class="sr-only">{{ progress }}% Complete</span>

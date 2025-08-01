@@ -7,7 +7,7 @@ export const roles = {
     'create_managers', 'edit_managers', 'delete_managers', 'view_managers',
     'create_admins', 'edit_admins', 'delete_admins', 'view_admins',
     'create_projects', 'edit_projects', 'delete_projects', 'view_projects', 'visible_columns_projects',
-    'view_postulations', 'edit_postulation', 'view_column', 'delete_postulation', 'visible_columns_postulations', 'download_report', 'exported_postulation'
+    'view_postulations', 'edit_postulation', 'view_column', 'delete_postulation', 'visible_columns_postulations', 'download_report', 'exported_postulations'
   ],
   3: [
     'view_dashboard', 'reset_password', 'view_profile',
@@ -15,7 +15,7 @@ export const roles = {
     'create_talents', 'edit_talents', 'delete_talents', 'view_talents',
     'create_managers', 'edit_managers', 'delete_managers', 'view_managers',
     'create_projects', 'edit_projects', 'view_projects', 'visible_columns_projects',
-    'view_postulations', 'edit_postulation', 'view_column', 'delete_postulation', 'visible_columns_postulations', 'dowload_report', 'exported_postulation'
+    'view_postulations', 'edit_postulation', 'view_column', 'delete_postulation', 'visible_columns_postulations', 'download_report', 'exported_postulations'
   ],
   2: [
     'view_profile', 'create_talents', 'edit_talents', 'delete_talents', 'view_talents', 'view_projects',
